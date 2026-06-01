@@ -131,61 +131,62 @@ export default function LoginPage() {
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <Image src="/login2.png" alt="" fill priority quality={95}
           style={{ objectFit: 'cover', objectPosition: 'center right' }} />
-        {/* Overlay suave só à esquerda — direito fica livre */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(5,3,15,0.88) 0%, rgba(5,3,15,0.6) 30%, rgba(5,3,15,0.15) 55%, transparent 75%)' }} />
+        {/* Overlay leve — deixa imagem visível dos dois lados */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(4,2,12,0.72) 0%, rgba(4,2,12,0.4) 35%, rgba(4,2,12,0.05) 60%, transparent 80%)' }} />
+        {/* Luz suave iluminando o lado esquerdo */}
+        <div style={{ position: 'absolute', top: '20%', left: '-5%', width: '50%', height: '60%', background: 'radial-gradient(ellipse, rgba(90,62,148,0.28) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '10%', left: '5%', width: '35%', height: '40%', background: 'radial-gradient(ellipse, rgba(1,225,142,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
       </div>
 
       {/* ── LEFT PANEL ── */}
       <div style={{
         position: 'relative', zIndex: 10,
         width: '100%', maxWidth: 460,
-        padding: '48px 44px',
+        padding: '48px 40px',
         boxSizing: 'border-box',
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center',
         minHeight: '100vh',
       }}>
 
-        {/* Glow blobs */}
-        <div style={{ position: 'absolute', top: '15%', left: -80, width: 320, height: 320, borderRadius: '50%', background: 'rgba(66,44,118,0.22)', filter: 'blur(90px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '15%', left: 0, width: 200, height: 200, borderRadius: '50%', background: 'rgba(1,225,142,0.08)', filter: 'blur(70px)', pointerEvents: 'none' }} />
-
         {/* LOGO */}
-        <div style={{ marginBottom: 28 }}>
+        <div style={{ marginBottom: 24, width: '100%', display: 'flex', justifyContent: 'center' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/vendemmia-logo.png"
             alt="Bolão Vendemmia Copa 2026"
-            style={{ width: 280, maxWidth: '100%', height: 'auto', filter: 'drop-shadow(0 4px 20px rgba(1,225,142,0.25))' }}
+            style={{ width: 260, maxWidth: '100%', height: 'auto', filter: 'drop-shadow(0 4px 24px rgba(1,225,142,0.3))' }}
           />
         </div>
 
-        {/* COUNTDOWN */}
-        <div style={{ marginBottom: 32 }}>
+        {/* COUNTDOWN — centralizado */}
+        <div style={{ marginBottom: 28, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-            <div style={{ width: 24, height: 1, background: 'rgba(1,225,142,0.4)' }} />
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>
-              Faltam para a Copa 2026
+            <div style={{ width: 20, height: 1, background: 'rgba(1,225,142,0.35)' }} />
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+              ⚽ Faltam para a Copa 2026
             </span>
-            <div style={{ width: 24, height: 1, background: 'rgba(1,225,142,0.4)' }} />
+            <div style={{ width: 20, height: 1, background: 'rgba(1,225,142,0.35)' }} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Block value={cd.days}    label="Dias" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.7 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.6 }}>:</span>
             <Block value={cd.hours}   label="Horas" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.7 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.6 }}>:</span>
             <Block value={cd.minutes} label="Min" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.7 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.6 }}>:</span>
             <Block value={cd.seconds} label="Seg" />
           </div>
         </div>
 
         {/* LOGIN CARD */}
         <div style={{
+          width: '100%',
           borderRadius: 22,
-          background: 'rgba(10,7,25,0.7)',
-          backdropFilter: 'blur(40px) saturate(1.8)',
-          WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 1px 0 rgba(255,255,255,0.1) inset',
+          background: 'rgba(18,12,40,0.55)',
+          backdropFilter: 'blur(44px) saturate(1.9) brightness(1.15)',
+          WebkitBackdropFilter: 'blur(44px) saturate(1.9) brightness(1.15)',
+          boxShadow: '0 20px 70px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset, 0 0 40px rgba(66,44,118,0.15)',
           overflow: 'hidden',
         }}>
           {/* Neon top border */}
