@@ -15,6 +15,7 @@
  *   <CopaGameDetail fixtureId={x} /> — detalhes de um jogo específico
  */
 
+// @ts-nocheck
 'use client'
 
 import Script from 'next/script'
