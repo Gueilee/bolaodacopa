@@ -87,11 +87,13 @@ export default function LoginPage() {
             <div
               className="w-14 h-14 rounded-2xl flex items-center justify-center"
               style={{
+                width: 56, height: 56, borderRadius: 16,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'linear-gradient(135deg, #422c76 0%, #2a1a4e 100%)',
                 boxShadow: '0 0 24px rgba(66,44,118,0.6)',
               }}
             >
-              <svg viewBox="0 0 32 24" className="w-8 h-6" fill="none">
+              <svg viewBox="0 0 32 24" width={32} height={24} fill="none">
                 <path
                   d="M2 4 L8 20 L14 10 L16 14 L18 10 L24 20 L30 4"
                   stroke="#01E18E"
