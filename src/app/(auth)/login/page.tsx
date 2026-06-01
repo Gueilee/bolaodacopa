@@ -149,16 +149,6 @@ export default function LoginPage() {
         minHeight: '100vh',
       }}>
 
-        {/* LOGO */}
-        <div style={{ marginBottom: 24, width: '100%', display: 'flex', justifyContent: 'center' }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/vendemmia-logo.png"
-            alt="Bolão Vendemmia Copa 2026"
-            style={{ width: 260, maxWidth: '100%', height: 'auto', filter: 'drop-shadow(0 4px 24px rgba(1,225,142,0.3))' }}
-          />
-        </div>
-
         {/* COUNTDOWN — centralizado */}
         <div style={{ marginBottom: 28, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
