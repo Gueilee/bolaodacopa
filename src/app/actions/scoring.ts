@@ -5,54 +5,8 @@ import { predictions, tournamentPredictions, users, matches, settings } from '@/
 import { eq, and } from 'drizzle-orm'
 import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
-import { scoreMatchInternal } from '@/lib/scoring-engine'
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PONTUAÇÃO DE BÔNUS FINAL DE TORNEIO
-// ─────────────────────────────────────────────────────────────────────────────
-
-export type TournamentActual = {
-  champion:  string
-  runnerUp:  string
-  topScorer: string
-}
-
-export type TournamentBonusResult = {
-  points:    number
-  breakdown: string[]
-}
-
-/**
- *   50 — Campeão correto
- *   25 — Vice-campeão correto
- *   50 — Artilheiro correto
- */
-export function calculateTournamentBonus(
-  prediction: { champion: string; runnerUp: string; topScorer: string },
-  actual:     TournamentActual,
-): TournamentBonusResult {
-  let points = 0
-  const breakdown: string[] = []
-
-  if (prediction.champion === actual.champion) {
-    points += 50
-    breakdown.push(`Campeão: ${actual.champion} (+50)`)
-  }
-  if (prediction.runnerUp === actual.runnerUp) {
-    points += 25
-    breakdown.push(`Vice: ${actual.runnerUp} (+25)`)
-  }
-  if (
-    prediction.topScorer.trim().toLowerCase() ===
-    actual.topScorer.trim().toLowerCase()
-  ) {
-    points += 50
-    breakdown.push(`Artilheiro: ${actual.topScorer} (+50)`)
-  }
-
-  if (breakdown.length === 0) breakdown.push('Nenhum bônus de torneio')
-  return { points, breakdown }
-}
+import { scoreMatchInternal, calculateTournamentBonus } from '@/lib/scoring-engine'
+import type { TournamentActual } from '@/lib/scoring-engine'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REGISTRO ÚNICO: verifica se o usuário pode salvar palpites
