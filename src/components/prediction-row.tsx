@@ -13,10 +13,32 @@ type Props = {
 
 function PointsPill({ points }: { points: number }) {
   if (points === 10) return <span className="points-badge text-[11px]">⚡ {points}</span>
-  if (points === 7)  return <span className="points-badge text-yellow-400 bg-yellow-400/10 border-yellow-400/20 text-[11px]">🎯 {points}</span>
-  if (points === 5)  return <span className="points-badge text-blue-400 bg-blue-400/10 border-blue-400/20 text-[11px]">✓ {points}</span>
-  if (points === 0 ) return <span className="text-[11px] text-white/20">0 pts</span>
+  if (points === 7)  return <span className="text-[11px] font-bold" style={{ color: '#d4a017' }}>🎯 {points}</span>
+  if (points === 5)  return <span className="text-[11px] font-bold" style={{ color: '#2563eb' }}>✓ {points}</span>
+  if (points === 0)  return <span className="text-[11px]" style={{ color: '#c4bfba' }}>0 pts</span>
   return null
+}
+
+function ScoreInput({ value, onChange, disabled }: { value: string; onChange: (v: string) => void; disabled: boolean }) {
+  return (
+    <input
+      type="number" min="0" max="99"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      disabled={disabled}
+      style={{
+        width: 44, height: 44, textAlign: 'center',
+        fontSize: 16, fontWeight: 700,
+        borderRadius: 10,
+        background: '#ffffff',
+        border: '1.5px solid #d0cbc5',
+        color: '#1a1625',
+        outline: 'none',
+        appearance: 'textfield',
+        opacity: disabled ? 0.5 : 1,
+      }}
+    />
+  )
 }
 
 export function PredictionRow({ match, isUserLocked }: Props) {
@@ -27,7 +49,7 @@ export function PredictionRow({ match, isUserLocked }: Props) {
   const [home, setHome] = useState(prediction?.homeScore?.toString() ?? '')
   const [away, setAway] = useState(prediction?.awayScore?.toString() ?? '')
   const [isPending, startTransition] = useTransition()
-  const [saved,     setSaved]        = useState(false)
+  const [saved, setSaved] = useState(false)
 
   const isDirty    = prediction
     ? home !== String(prediction.homeScore) || away !== String(prediction.awayScore)
@@ -38,93 +60,95 @@ export function PredictionRow({ match, isUserLocked }: Props) {
   function handleSave() {
     startTransition(async () => {
       const result = await savePrediction(match.id, Number(home), Number(away))
-      if (result.success) {
-        setSaved(true)
-        setTimeout(() => setSaved(false), 2000)
-      }
+      if (result.success) { setSaved(true); setTimeout(() => setSaved(false), 2000) }
     })
   }
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 transition-colors ${isFinished && hasBet && prediction!.isScored ? '' : ''}`}>
-
-      {/* Date + time */}
-      <div className="w-16 shrink-0 text-center">
-        <p className="text-[10px] text-white/30">{formatMatchTime(match.matchDate)}</p>
+    <div
+      className="px-4 py-3 transition-colors"
+      style={{ borderBottom: '1px solid #f0ede8' }}
+    >
+      {/* Date + group */}
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-[10px]" style={{ color: '#aaa8b0' }}>{formatMatchTime(match.matchDate)}</span>
         {match.groupName && (
-          <p className="text-[9px] text-white/20 mt-0.5">{match.groupName.replace('Grupo ', 'Gr.')}</p>
+          <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+            style={{ background: '#f0ede8', color: '#8a8490' }}>
+            {match.groupName}
+          </span>
+        )}
+        {isFinished && (
+          <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+            style={{ background: '#fce8ee', color: '#ff2f69' }}>
+            Encerrado
+          </span>
         )}
       </div>
 
-      {/* Teams */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-base leading-none">{match.homeFlag}</span>
-          <span className="text-xs text-brand-cream truncate">{match.homeTeam}</span>
+      {/* Main row: flag+team | input | × | input | flag+team | action */}
+      <div className="flex items-center gap-2">
+
+        {/* Home team */}
+        <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
+          <span className="text-xs font-semibold truncate" style={{ color: '#1a1625' }}>{match.homeTeam}</span>
+          <span className="text-lg shrink-0">{match.homeFlag ?? '🏳'}</span>
         </div>
-        <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-base leading-none">{match.awayFlag}</span>
-          <span className="text-xs text-brand-cream truncate">{match.awayTeam}</span>
+
+        {/* Score */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {canEdit ? (
+            <>
+              <ScoreInput value={home} onChange={(v) => { setHome(v); setSaved(false) }} disabled={isPending} />
+              <span className="text-sm font-light" style={{ color: '#c4bfba' }}>×</span>
+              <ScoreInput value={away} onChange={(v) => { setAway(v); setSaved(false) }} disabled={isPending} />
+            </>
+          ) : (
+            <>
+              <span className="w-11 h-11 flex items-center justify-center rounded-xl font-bold text-base tabular-nums"
+                style={{ background: isFinished ? '#f5f2ef' : '#fff', border: '1.5px solid #e0dbd5', color: '#1a1625' }}>
+                {isFinished ? (match.homeScore ?? '–') : (hasBet ? prediction!.homeScore : '–')}
+              </span>
+              <span className="text-sm font-light" style={{ color: '#c4bfba' }}>×</span>
+              <span className="w-11 h-11 flex items-center justify-center rounded-xl font-bold text-base tabular-nums"
+                style={{ background: isFinished ? '#f5f2ef' : '#fff', border: '1.5px solid #e0dbd5', color: '#1a1625' }}>
+                {isFinished ? (match.awayScore ?? '–') : (hasBet ? prediction!.awayScore : '–')}
+              </span>
+            </>
+          )}
         </div>
-      </div>
 
-      {/* Score area */}
-      <div className="flex items-center gap-1.5 shrink-0">
-        {canEdit ? (
-          <>
-            <input
-              type="number" min="0" max="99"
-              value={home}
-              onChange={(e) => { setHome(e.target.value); setSaved(false) }}
-              disabled={isPending}
-              className="w-9 h-9 text-center text-sm font-bold rounded-lg bg-white/5 border border-white/15 text-brand-cream focus:outline-none focus:border-brand-purple disabled:opacity-40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-            <span className="text-white/20 text-xs">×</span>
-            <input
-              type="number" min="0" max="99"
-              value={away}
-              onChange={(e) => { setAway(e.target.value); setSaved(false) }}
-              disabled={isPending}
-              className="w-9 h-9 text-center text-sm font-bold rounded-lg bg-white/5 border border-white/15 text-brand-cream focus:outline-none focus:border-brand-purple disabled:opacity-40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </>
-        ) : (
-          /* Read-only */
-          <>
-            <span className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/8 font-bold text-sm text-brand-cream tabular-nums">
-              {hasBet ? prediction!.homeScore : '–'}
-            </span>
-            <span className="text-white/20 text-xs">×</span>
-            <span className="w-9 h-9 flex items-center justify-center rounded-lg bg-white/5 border border-white/8 font-bold text-sm text-brand-cream tabular-nums">
-              {hasBet ? prediction!.awayScore : '–'}
-            </span>
-          </>
-        )}
-      </div>
+        {/* Away team */}
+        <div className="flex items-center gap-1.5 flex-1 min-w-0">
+          <span className="text-lg shrink-0">{match.awayFlag ?? '🏳'}</span>
+          <span className="text-xs font-semibold truncate" style={{ color: '#1a1625' }}>{match.awayTeam}</span>
+        </div>
 
-      {/* Action / status */}
-      <div className="w-16 shrink-0 flex items-center justify-end">
-        {isFinished && prediction?.isScored ? (
-          <PointsPill points={prediction.points} />
-        ) : isFinished && !hasBet ? (
-          <span className="text-[11px] text-white/20">sem palpite</span>
-        ) : isUserLocked ? (
-          <span className="text-[11px] text-white/25">🔒</span>
-        ) : saved ? (
-          <span className="text-[11px] text-brand-neon">✓</span>
-        ) : canEdit && isDirty && isComplete ? (
-          <button
-            onClick={handleSave}
-            disabled={isPending}
-            className="text-[11px] text-brand-purple hover:text-white border border-brand-purple/40 rounded-md px-2 py-1 transition-colors"
-          >
-            {isPending ? '...' : 'Salvar'}
-          </button>
-        ) : hasBet ? (
-          <span className="text-[11px] text-white/25">✓</span>
-        ) : (
-          <span className="text-[11px] text-white/20">—</span>
-        )}
+        {/* Action */}
+        <div className="w-14 shrink-0 flex justify-end">
+          {isFinished && prediction?.isScored ? (
+            <PointsPill points={prediction.points} />
+          ) : isFinished && !hasBet ? (
+            <span className="text-[11px]" style={{ color: '#c4bfba' }}>sem palpite</span>
+          ) : isUserLocked ? (
+            <span className="text-[11px]" style={{ color: '#c4bfba' }}>🔒</span>
+          ) : saved ? (
+            <span className="text-[11px] font-bold" style={{ color: '#01a866' }}>✓ salvo</span>
+          ) : canEdit && isDirty && isComplete ? (
+            <button
+              onClick={handleSave}
+              disabled={isPending}
+              className="text-[11px] font-semibold rounded-lg px-2.5 py-1.5 transition-colors"
+              style={{ background: '#422c76', color: 'white', border: 'none', cursor: 'pointer' }}
+            >
+              {isPending ? '...' : 'Salvar'}
+            </button>
+          ) : hasBet ? (
+            <span className="text-[11px]" style={{ color: '#01a866' }}>✓</span>
+          ) : (
+            <span className="text-[11px]" style={{ color: '#c4bfba' }}>—</span>
+          )}
+        </div>
       </div>
     </div>
   )

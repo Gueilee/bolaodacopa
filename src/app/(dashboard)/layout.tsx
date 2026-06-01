@@ -10,21 +10,23 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session) redirect('/login')
 
   return (
-    <div className="flex h-screen bg-[#0f0d17] overflow-hidden">
+    <div className="flex h-screen overflow-hidden" style={{ background: '#f0ede8' }}>
 
       {/* ── Sidebar ─────────────────────────────────────────────── */}
-      <aside className="hidden md:flex flex-col w-64 shrink-0 bg-sidebar-gradient border-r border-white/8">
+      <aside className="hidden md:flex flex-col w-64 shrink-0"
+        style={{ background: '#ffffff', borderRight: '1px solid #e5e2dd', boxShadow: '2px 0 12px rgba(0,0,0,0.06)' }}>
 
-        {/* Brand */}
-        <div className="px-4 py-4 border-b border-white/8">
+        {/* Logo */}
+        <div className="px-4 py-4" style={{ borderBottom: '1px solid #e5e2dd' }}>
           <Link href="/dashboard">
             <Image
               src="/vendemmia-logo.png"
               alt="Bolão Vendemmia Copa 2026"
-              width={180}
-              height={60}
+              width={220}
+              height={74}
               unoptimized
-              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 60 }}
+              priority
+              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 74 }}
             />
           </Link>
         </div>
@@ -35,7 +37,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </nav>
 
         {/* User info */}
-        <div className="px-4 py-4 border-t border-white/8">
+        <div className="px-4 py-4" style={{ borderTop: '1px solid #e5e2dd' }}>
           <UserMenu user={session} />
         </div>
       </aside>
@@ -44,15 +46,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Top bar (mobile) */}
-        <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-white/8 bg-[#0f0d17]/90 backdrop-blur-sm sticky top-0 z-30">
+        <header className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30"
+          style={{ background: '#ffffff', borderBottom: '1px solid #e5e2dd', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
           <Link href="/dashboard">
             <Image
               src="/vendemmia-logo.png"
               alt="Bolão Vendemmia"
-              width={120}
-              height={40}
+              width={130}
+              height={44}
               unoptimized
-              style={{ objectFit: 'contain', height: 36, width: 'auto' }}
+              style={{ objectFit: 'contain', height: 40, width: 'auto' }}
             />
           </Link>
           <UserMenu user={session} compact />

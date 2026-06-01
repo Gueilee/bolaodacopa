@@ -11,26 +11,26 @@ type Props = {
 export function RankingTable({ entries, currentUserId }: Props) {
   if (entries.length === 0) {
     return (
-      <p className="text-center text-white/30 py-16">
+      <p className="text-center py-16" style={{ color: '#8a8490' }}>
         Nenhum participante ainda.
       </p>
     )
   }
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-white/8">
+    <div className="card overflow-hidden">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-white/8 text-white/40 text-xs uppercase tracking-wider">
-            <th className="text-left px-5 py-3 w-14">#</th>
-            <th className="text-left px-5 py-3">Participante</th>
-            <th className="text-right px-5 py-3">Pontos</th>
-            <th className="text-right px-5 py-3 hidden sm:table-cell">Palpites</th>
-            <th className="text-right px-5 py-3 hidden md:table-cell">Placares Exatos</th>
+          <tr style={{ borderBottom: '1px solid #e8e4df' }}>
+            <th className="text-left px-5 py-3 w-14 text-xs font-semibold uppercase tracking-wider" style={{ color: '#8a8490' }}>#</th>
+            <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider" style={{ color: '#8a8490' }}>Participante</th>
+            <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider" style={{ color: '#8a8490' }}>Pontos</th>
+            <th className="text-right px-5 py-3 hidden sm:table-cell text-xs font-semibold uppercase tracking-wider" style={{ color: '#8a8490' }}>Palpites</th>
+            <th className="text-right px-5 py-3 hidden md:table-cell text-xs font-semibold uppercase tracking-wider" style={{ color: '#8a8490' }}>Exatos</th>
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-white/5">
+        <tbody>
           {entries.map((entry) => {
             const isCurrentUser = entry.id === currentUserId
             const isTop3        = entry.position <= 3
@@ -38,19 +38,19 @@ export function RankingTable({ entries, currentUserId }: Props) {
             return (
               <tr
                 key={entry.id}
-                className={`
-                  transition-colors
-                  ${isCurrentUser
-                    ? 'bg-brand-neon/8 border-l-2 border-brand-neon'
-                    : 'hover:bg-white/3'}
-                `}
+                style={{
+                  borderBottom: '1px solid #f0ede8',
+                  background: isCurrentUser ? 'rgba(66,44,118,0.06)' : 'transparent',
+                  borderLeft: isCurrentUser ? '3px solid #422c76' : '3px solid transparent',
+                  transition: 'background 0.15s',
+                }}
               >
                 {/* Position */}
                 <td className="px-5 py-4 font-bold">
                   {isTop3 ? (
                     <span className="text-lg">{positionBadge(entry.position)}</span>
                   ) : (
-                    <span className="text-white/30 text-xs">{entry.position}º</span>
+                    <span className="text-xs font-semibold" style={{ color: '#aaa8b0' }}>{entry.position}º</span>
                   )}
                 </td>
 
@@ -58,45 +58,39 @@ export function RankingTable({ entries, currentUserId }: Props) {
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <div
-                      className={`
-                        w-8 h-8 rounded-full flex items-center justify-center
-                        text-xs font-bold shrink-0
-                        ${isCurrentUser
-                          ? 'bg-brand-neon/20 border border-brand-neon/40 text-brand-neon'
-                          : 'bg-brand-purple/30 border border-brand-purple/40 text-brand-cream'}
-                      `}
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+                      style={{
+                        background: isCurrentUser ? 'rgba(66,44,118,0.15)' : '#f0ede8',
+                        border: `1px solid ${isCurrentUser ? 'rgba(66,44,118,0.3)' : '#e0dbd5'}`,
+                        color: isCurrentUser ? '#422c76' : '#5a5564',
+                      }}
                     >
                       {initials(entry.name)}
                     </div>
                     <div>
-                      <p className={`font-medium ${isCurrentUser ? 'text-brand-neon' : 'text-brand-cream'}`}>
+                      <p className="font-semibold" style={{ color: isCurrentUser ? '#422c76' : '#1a1625' }}>
                         {entry.name}
                         {isCurrentUser && (
-                          <span className="ml-2 text-[10px] font-normal text-brand-neon/60 uppercase tracking-widest">
+                          <span className="ml-2 text-[10px] font-normal uppercase tracking-widest" style={{ color: '#9a86c4' }}>
                             você
                           </span>
                         )}
                       </p>
-                      <p className="text-white/30 text-xs">{entry.email}</p>
+                      <p className="text-xs" style={{ color: '#aaa8b0' }}>{entry.email}</p>
                     </div>
                   </div>
                 </td>
 
                 {/* Points */}
                 <td className="px-5 py-4 text-right">
-                  <span
-                    className={`
-                      inline-flex items-center justify-end font-bold text-base tabular-nums
-                      ${isCurrentUser ? 'text-brand-neon' : isTop3 ? 'text-white' : 'text-white/70'}
-                    `}
-                  >
+                  <span className="font-bold text-base tabular-nums" style={{ color: isCurrentUser ? '#422c76' : isTop3 ? '#1a1625' : '#5a5564' }}>
                     {entry.totalPoints}
-                    <span className="text-white/25 text-xs ml-1 font-normal">pts</span>
+                    <span className="text-xs ml-1 font-normal" style={{ color: '#aaa8b0' }}>pts</span>
                   </span>
                 </td>
 
                 {/* Prediction count */}
-                <td className="px-5 py-4 text-right hidden sm:table-cell text-white/50">
+                <td className="px-5 py-4 text-right hidden sm:table-cell" style={{ color: '#8a8490' }}>
                   {entry.predictionCount}
                 </td>
 
@@ -105,7 +99,7 @@ export function RankingTable({ entries, currentUserId }: Props) {
                   {entry.exactCount > 0 ? (
                     <span className="points-badge">⚡ {entry.exactCount}</span>
                   ) : (
-                    <span className="text-white/25">—</span>
+                    <span style={{ color: '#c4bfba' }}>—</span>
                   )}
                 </td>
               </tr>

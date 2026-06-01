@@ -36,7 +36,7 @@ export async function getRanking(): Promise<RankingEntry[]> {
         eq(predictions.isScored, true),
       ),
     )
-    .where(eq(users.isActive, true))
+    .where(and(eq(users.isActive, true), eq(users.role, 'user')))
     .groupBy(users.id)
     .orderBy(desc(users.totalPoints), asc(users.name))
 
