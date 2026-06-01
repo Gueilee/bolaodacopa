@@ -26,15 +26,11 @@ interface ApiSportsWidgetHTMLAttributes {
   'data-target-game'?: string
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'api-sports-widget': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & ApiSportsWidgetHTMLAttributes,
-        HTMLElement
-      >
-    }
+declare namespace JSX {
+  interface IntrinsicElements {
+    'api-sports-widget': React.DetailedHTMLProps<
+      React.HTMLAttributes<HTMLElement> & ApiSportsWidgetHTMLAttributes,
+      HTMLElement
+    >
   }
 }
-
-export {}
