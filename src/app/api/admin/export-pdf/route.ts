@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 
   const filename = `bolao-copa-2026-${new Date().toISOString().slice(0, 10)}.pdf`
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     status: 200,
     headers: {
       'Content-Type':        'application/pdf',
