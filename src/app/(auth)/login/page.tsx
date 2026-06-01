@@ -130,12 +130,11 @@ export default function LoginPage() {
 
         {/* Logo */}
         <div style={{ marginBottom: 32 }}>
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/logo.png"
             alt="Bolão Vendemmia Copa 2026"
-            width={260} height={87}
-            style={{ objectFit: 'contain', filter: 'drop-shadow(0 4px 24px rgba(1,225,142,0.2))', maxWidth: '100%' }}
-            priority
+            style={{ width: 260, maxWidth: '100%', height: 'auto', filter: 'drop-shadow(0 4px 24px rgba(1,225,142,0.2))' }}
           />
         </div>
 
