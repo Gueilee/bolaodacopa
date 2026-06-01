@@ -5,97 +5,85 @@ import { useRouter } from 'next/navigation'
 import { loginAction } from '@/app/actions/auth'
 import Image from 'next/image'
 
-// Copa 2026 — primeiro jogo: 11 Jun 2026 20:00 UTC
 const CUP_DATE = new Date('2026-06-11T20:00:00Z')
 
 function useCountdown() {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
+  const [t, setT] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
   useEffect(() => {
     function calc() {
       const diff = CUP_DATE.getTime() - Date.now()
-      if (diff <= 0) return setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-      setTimeLeft({
+      if (diff <= 0) return setT({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+      setT({
         days:    Math.floor(diff / 86400000),
         hours:   Math.floor((diff % 86400000) / 3600000),
-        minutes: Math.floor((diff % 3600000)  / 60000),
-        seconds: Math.floor((diff % 60000)    / 1000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
       })
     }
     calc()
     const id = setInterval(calc, 1000)
     return () => clearInterval(id)
   }, [])
-
-  return timeLeft
+  return t
 }
 
-function CountBlock({ value, label }: { value: number; label: string }) {
+function Block({ value, label }: { value: number; label: string }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
       <div style={{
-        background: 'rgba(1,225,142,0.12)',
-        border: '1px solid rgba(1,225,142,0.3)',
+        background: 'rgba(1,225,142,0.1)',
+        border: '1.5px solid rgba(1,225,142,0.35)',
         borderRadius: 10,
-        padding: '10px 14px',
-        minWidth: 56,
-        textAlign: 'center',
-        fontWeight: 800,
-        fontSize: 26,
-        color: '#01E18E',
+        width: 52, height: 52,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontWeight: 800, fontSize: 22, color: '#01E18E',
         fontVariantNumeric: 'tabular-nums',
-        lineHeight: 1,
-        boxShadow: '0 0 16px rgba(1,225,142,0.15)',
+        boxShadow: '0 0 20px rgba(1,225,142,0.12)',
       }}>
         {String(value).padStart(2, '0')}
       </div>
-      <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase' }}>
         {label}
       </span>
     </div>
   )
 }
 
-function InputField({
-  id, name, type, placeholder, label, autoComplete, disabled,
-  icon, rightSlot,
-}: {
-  id: string; name: string; type: string; placeholder: string; label: string
-  autoComplete?: string; disabled: boolean; icon: string; rightSlot?: React.ReactNode
+function InputRow({ id, name, type, placeholder, label, autoComplete, disabled, icon, right }: {
+  id: string; name: string; type: string; placeholder: string
+  label: string; autoComplete?: string; disabled: boolean
+  icon: string; right?: React.ReactNode
 }) {
   const [focused, setFocused] = useState(false)
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <label htmlFor={id} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+      <label htmlFor={id} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>
         {label}
       </label>
       <div style={{ position: 'relative' }}>
-        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)', fontSize: 15, pointerEvents: 'none', zIndex: 1 }}>
+        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: focused ? 'rgba(1,225,142,0.7)' : 'rgba(255,255,255,0.3)', fontSize: 14, pointerEvents: 'none', transition: 'color 0.2s' }}>
           {icon}
         </span>
         <input
           id={id} name={name} type={type} placeholder={placeholder}
           autoComplete={autoComplete} required disabled={disabled}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           style={{
-            width: '100%',
-            boxSizing: 'border-box',
-            padding: '13px 44px 13px 40px',
+            width: '100%', boxSizing: 'border-box',
+            padding: '13px 44px 13px 42px',
             borderRadius: 12,
-            border: `1.5px solid ${focused ? '#422c76' : 'rgba(255,255,255,0.12)'}`,
-            background: 'rgba(255,255,255,0.05)',
-            color: '#faf9f5',
-            fontSize: 14,
+            border: `1.5px solid ${focused ? 'rgba(1,225,142,0.5)' : 'rgba(255,255,255,0.1)'}`,
+            background: focused ? 'rgba(1,225,142,0.04)' : 'rgba(255,255,255,0.04)',
+            color: '#faf9f5', fontSize: 14,
             outline: 'none',
-            boxShadow: focused ? '0 0 0 3px rgba(66,44,118,0.3)' : 'none',
-            transition: 'border-color 0.2s, box-shadow 0.2s',
+            boxShadow: focused ? '0 0 0 3px rgba(1,225,142,0.1), inset 0 0 0 1px rgba(1,225,142,0.1)' : 'none',
+            transition: 'all 0.2s',
             opacity: disabled ? 0.5 : 1,
           }}
         />
-        {rightSlot && (
+        {right && (
           <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }}>
-            {rightSlot}
+            {right}
           </span>
         )}
       </div>
@@ -105,174 +93,136 @@ function InputField({
 
 export default function LoginPage() {
   const router = useRouter()
-  const [isPending, startTransition] = useTransition()
+  const [isPending, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [showPass, setShowPass] = useState(false)
-  const countdown = useCountdown()
+  const cd = useCountdown()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError(null)
     const fd = new FormData(e.currentTarget)
-    startTransition(async () => {
-      const result = await loginAction(fd.get('email') as string, fd.get('password') as string)
-      if (result?.error) setError(result.error)
+    start(async () => {
+      const r = await loginAction(fd.get('email') as string, fd.get('password') as string)
+      if (r?.error) setError(r.error)
       else router.push('/dashboard')
     })
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#0f0d17' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden', background: '#0a0814' }}>
 
-      {/* Background */}
-      <Image src="/login.png" alt="" fill priority quality={90} style={{ objectFit: 'cover', objectPosition: 'center' }} />
+      {/* ── Background image (full bleed) ── */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <Image src="/login.png" alt="" fill priority quality={95} style={{ objectFit: 'cover', objectPosition: 'center right' }} />
+        {/* light vignette only on left to let right breathe */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(8,5,20,0.96) 0%, rgba(8,5,20,0.82) 38%, rgba(8,5,20,0.35) 65%, rgba(8,5,20,0.0) 100%)' }} />
+        {/* subtle top/bottom darkening */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(8,5,20,0.5) 0%, transparent 30%, transparent 70%, rgba(8,5,20,0.6) 100%)' }} />
+      </div>
 
-      {/* Overlays */}
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)' }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 20%, rgba(0,0,0,0.7) 100%)' }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(15,13,23,0.7) 70%, rgba(15,13,23,0.95) 100%)' }} />
+      {/* ── Left panel ── */}
+      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', maxWidth: 480, padding: '40px 48px', boxSizing: 'border-box', minHeight: '100vh' }}>
 
-      {/* Card */}
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 420, margin: '16px auto', padding: '0 16px', boxSizing: 'border-box' }}>
+        {/* Subtle left-panel glow */}
+        <div style={{ position: 'absolute', top: '30%', left: -60, width: 300, height: 300, borderRadius: '50%', background: 'rgba(66,44,118,0.18)', filter: 'blur(80px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '20%', left: -40, width: 200, height: 200, borderRadius: '50%', background: 'rgba(1,225,142,0.07)', filter: 'blur(60px)', pointerEvents: 'none' }} />
+
+        {/* Logo */}
+        <div style={{ marginBottom: 32 }}>
+          <Image
+            src="/logo.png"
+            alt="Bolão Vendemmia Copa 2026"
+            width={260} height={87}
+            style={{ objectFit: 'contain', filter: 'drop-shadow(0 4px 24px rgba(1,225,142,0.2))', maxWidth: '100%' }}
+            priority
+          />
+        </div>
 
         {/* Countdown */}
-        <div style={{ marginBottom: 20, textAlign: 'center' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>
-            ⚽ Faltam para a Copa do Mundo 2026
+        <div style={{ marginBottom: 32 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', marginBottom: 12 }}>
+            ⚽ Faltam para a Copa 2026
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-            <CountBlock value={countdown.days}    label="Dias" />
-            <span style={{ color: '#01E18E', fontWeight: 800, fontSize: 20, marginBottom: 18 }}>:</span>
-            <CountBlock value={countdown.hours}   label="Horas" />
-            <span style={{ color: '#01E18E', fontWeight: 800, fontSize: 20, marginBottom: 18 }}>:</span>
-            <CountBlock value={countdown.minutes} label="Min" />
-            <span style={{ color: '#01E18E', fontWeight: 800, fontSize: 20, marginBottom: 18 }}>:</span>
-            <CountBlock value={countdown.seconds} label="Seg" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Block value={cd.days}    label="Dias" />
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, paddingBottom: 18 }}>:</span>
+            <Block value={cd.hours}   label="Horas" />
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, paddingBottom: 18 }}>:</span>
+            <Block value={cd.minutes} label="Min" />
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, paddingBottom: 18 }}>:</span>
+            <Block value={cd.seconds} label="Seg" />
           </div>
         </div>
 
-        {/* Login card */}
+        {/* Card */}
         <div style={{
-          borderRadius: 24,
+          borderRadius: 20,
           overflow: 'hidden',
-          boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06) inset',
+          boxShadow: '0 8px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.07) inset, 0 0 60px rgba(66,44,118,0.15)',
         }}>
-          {/* Gradient top border */}
-          <div style={{ height: 2, background: 'linear-gradient(90deg, #422c76, #01E18E, #ff2f69, #422c76)' }} />
+          {/* Top accent */}
+          <div style={{ height: 2, background: 'linear-gradient(90deg, #422c76, #01E18E 50%, #ff2f69)' }} />
 
-          {/* Card body */}
           <div style={{
-            padding: '32px 28px 28px',
-            backdropFilter: 'blur(32px) saturate(1.5)',
-            WebkitBackdropFilter: 'blur(32px) saturate(1.5)',
-            background: 'rgba(8,6,18,0.78)',
+            padding: '28px 28px 24px',
+            backdropFilter: 'blur(40px) saturate(1.6) brightness(1.1)',
+            WebkitBackdropFilter: 'blur(40px) saturate(1.6) brightness(1.1)',
+            background: 'rgba(12,9,28,0.65)',
           }}>
+            <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 700, color: '#faf9f5' }}>
+              Entrar no Bolão
+            </h2>
+            <p style={{ margin: '0 0 20px', fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
+              Use seu e-mail corporativo Vendemmia
+            </p>
 
-            {/* Logo */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-              <Image
-                src="/logo.png"
-                alt="Bolão Vendemmia Copa 2026"
-                width={240}
-                height={80}
-                style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 20px rgba(1,225,142,0.25))' }}
-                priority
-              />
-            </div>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <InputRow id="email" name="email" type="email" placeholder="nome@vendemmia.com.br"
+                label="E-mail" autoComplete="email" disabled={isPending} icon="✉" />
 
-            {/* Divider */}
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', marginBottom: 24 }} />
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-              {/* E-mail */}
-              <InputField
-                id="email" name="email" type="email"
-                placeholder="nome@vendemmia.com.br"
-                label="E-mail" autoComplete="email"
-                disabled={isPending} icon="✉"
-              />
-
-              {/* Senha */}
-              <InputField
-                id="password" name="password" type={showPass ? 'text' : 'password'}
-                placeholder="••••••••"
-                label="Senha" autoComplete="current-password"
+              <InputRow id="password" name="password" type={showPass ? 'text' : 'password'}
+                placeholder="••••••••" label="Senha" autoComplete="current-password"
                 disabled={isPending} icon="🔑"
-                rightSlot={
-                  <button
-                    type="button"
-                    onClick={() => setShowPass(v => !v)}
-                    tabIndex={-1}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', fontSize: 16, padding: 4, lineHeight: 1 }}
-                  >
+                right={
+                  <button type="button" onClick={() => setShowPass(v => !v)} tabIndex={-1}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', fontSize: 16, padding: '4px 2px', lineHeight: 1 }}>
                     {showPass ? '🙈' : '👁'}
                   </button>
                 }
               />
 
-              {/* Error */}
               {error && (
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  borderRadius: 10, padding: '12px 14px',
-                  background: 'rgba(255,47,105,0.1)',
-                  border: '1px solid rgba(255,47,105,0.3)',
-                  color: '#ff2f69', fontSize: 13,
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderRadius: 10, padding: '11px 14px', background: 'rgba(255,47,105,0.1)', border: '1px solid rgba(255,47,105,0.3)', color: '#ff6b8a', fontSize: 13 }}>
                   <span>⚠</span><span>{error}</span>
                 </div>
               )}
 
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={isPending}
+              <button type="submit" disabled={isPending}
                 style={{
-                  marginTop: 4,
-                  width: '100%',
-                  padding: '14px',
-                  borderRadius: 12,
-                  border: 'none',
+                  marginTop: 4, width: '100%', padding: '14px', borderRadius: 12, border: 'none',
                   cursor: isPending ? 'not-allowed' : 'pointer',
                   background: 'linear-gradient(135deg, #422c76 0%, #5a3e94 100%)',
-                  color: '#faf9f5',
-                  fontSize: 15,
-                  fontWeight: 700,
-                  letterSpacing: '0.05em',
-                  boxShadow: '0 4px 24px rgba(66,44,118,0.5)',
+                  color: '#faf9f5', fontSize: 15, fontWeight: 700, letterSpacing: '0.04em',
+                  boxShadow: '0 4px 20px rgba(66,44,118,0.55)',
                   opacity: isPending ? 0.7 : 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  transition: 'opacity 0.2s',
-                }}
-              >
-                {isPending ? (
-                  <>
-                    <svg style={{ animation: 'spin 1s linear infinite', width: 16, height: 16 }} viewBox="0 0 24 24" fill="none">
-                      <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                    </svg>
-                    Entrando...
-                  </>
-                ) : (
-                  <>Entrar <span style={{ color: '#01E18E' }}>→</span></>
-                )}
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  transition: 'opacity 0.2s, transform 0.1s',
+                }}>
+                {isPending
+                  ? <><svg style={{ animation: 'spin 1s linear infinite', width: 16, height: 16 }} viewBox="0 0 24 24" fill="none"><circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" /></svg>Entrando...</>
+                  : <>Entrar <span style={{ color: '#01E18E', fontSize: 18 }}>→</span></>
+                }
               </button>
             </form>
-
-            {/* Footer link */}
-            <p style={{ textAlign: 'center', marginTop: 16, fontSize: 12, color: 'rgba(255,255,255,0.28)' }}>
-              Acesso exclusivo · Vendemmia Comércio Internacional
-            </p>
           </div>
         </div>
+
+        <p style={{ marginTop: 20, fontSize: 11, color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
+          Acesso exclusivo · Vendemmia Comércio Internacional
+        </p>
       </div>
 
-      {/* Spin animation */}
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
