@@ -277,7 +277,7 @@ export default function LoginPage() {
             </form>
 
             <p style={{ textAlign: 'center', marginTop: 18, fontSize: 11, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.04em' }}>
-              🔒 Acesso exclusivo · Vendemmia Comércio Internacional
+              🔒 Acesso exclusivo · Vendemmia Logística Integrada
             </p>
           </div>
         </div>
