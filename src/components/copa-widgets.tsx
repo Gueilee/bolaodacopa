@@ -19,6 +19,17 @@
 
 import Script from 'next/script'
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'api-sports-widget': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement> & { [key: string]: unknown },
+        HTMLElement
+      >
+    }
+  }
+}
+
 const API_KEY   = process.env.NEXT_PUBLIC_API_FOOTBALL_KEY ?? ''
 const LEAGUE    = '1'
 const SEASON    = '2026'
