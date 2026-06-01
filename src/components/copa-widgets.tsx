@@ -18,7 +18,6 @@
 'use client'
 
 import Script from 'next/script'
-import '@/types/api-sports-widgets'
 
 const API_KEY   = process.env.NEXT_PUBLIC_API_FOOTBALL_KEY ?? ''
 const LEAGUE    = '1'
