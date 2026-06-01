@@ -253,9 +253,11 @@ function generateGroupMatches(): MatchRow[] {
 const TBD = '? A Definir'
 const F   = '🏳'
 
+type Phase = NonNullable<MatchRow['phase']>
+
 function ko(
   matchNumber: number,
-  phase: string,
+  phase: Phase,
   homeTeam: string,
   awayTeam: string,
   matchDate: Date,
