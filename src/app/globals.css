@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-gray:   #414042;
+    --brand-purple: #422c76;
+    --brand-pink:   #ff2f69;
+    --brand-cream:  #faf9f5;
+    --brand-neon:   #01E18E;
+  }
+
+  * {
+    @apply border-white/10;
+  }
+
+  body {
+    background-color: #0f0d17;
+    color: #faf9f5;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #422c76;
+    border-radius: 2px;
+  }
+}
+
+@layer components {
+  /* ── Form inputs ── */
+  .input-field {
+    @apply w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3
+           text-brand-cream placeholder-white/30
+           focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple/50
+           transition-all duration-200;
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-card-gradient border border-white/8 rounded-2xl shadow-card;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply bg-brand-purple hover:bg-brand-purple/80 active:scale-95
+           text-white font-semibold py-3 px-6 rounded-xl
+           transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-neon {
+    @apply bg-brand-neon hover:bg-brand-neon/80 active:scale-95
+           text-[#0f0d17] font-bold py-3 px-6 rounded-xl
+           transition-all duration-200 shadow-neon;
+  }
+
+  .btn-ghost {
+    @apply text-white/50 hover:text-brand-cream hover:bg-white/5
+           py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  /* ── Score badge ── */
+  .points-badge {
+    @apply inline-flex items-center gap-1 text-brand-neon font-bold
+           bg-brand-neon/10 border border-brand-neon/20 rounded-lg px-2 py-0.5 text-sm;
+  }
+
+  /* ── Nav link ── */
+  .nav-link {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-white/60
+           hover:bg-white/8 hover:text-white transition-all duration-200 text-sm font-medium;
+  }
+  .nav-link.active {
+    @apply bg-white/12 text-white border border-white/10;
+  }
+}
