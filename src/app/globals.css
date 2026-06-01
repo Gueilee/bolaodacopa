@@ -12,7 +12,7 @@
   }
 
   * {
-    @apply border-white/10;
+    border-color: rgba(255, 255, 255, 0.1);
   }
 
   body {
@@ -21,62 +21,79 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
-  ::-webkit-scrollbar {
-    width: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #422c76;
-    border-radius: 2px;
-  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #422c76; border-radius: 2px; }
 }
 
 @layer components {
-  /* ── Form inputs ── */
   .input-field {
-    @apply w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3
-           text-brand-cream placeholder-white/30
-           focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple/50
-           transition-all duration-200;
+    @apply w-full rounded-xl px-4 py-3 text-sm transition-all duration-200;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #faf9f5;
+  }
+  .input-field::placeholder { color: rgba(255, 255, 255, 0.3); }
+  .input-field:focus {
+    outline: none;
+    border-color: #422c76;
+    box-shadow: 0 0 0 1px #422c76;
   }
 
-  /* ── Cards ── */
   .card {
-    @apply bg-card-gradient border border-white/8 rounded-2xl shadow-card;
+    @apply rounded-2xl;
+    background: linear-gradient(135deg, #1e1a2e 0%, #16131f 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
   }
 
-  /* ── Buttons ── */
   .btn-primary {
-    @apply bg-brand-purple hover:bg-brand-purple/80 active:scale-95
-           text-white font-semibold py-3 px-6 rounded-xl
-           transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed;
+    @apply font-semibold py-3 px-6 rounded-xl transition-all duration-200;
+    background-color: #422c76;
+    color: white;
   }
+  .btn-primary:hover { background-color: rgba(66, 44, 118, 0.8); }
+  .btn-primary:active { transform: scale(0.95); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .btn-neon {
-    @apply bg-brand-neon hover:bg-brand-neon/80 active:scale-95
-           text-[#0f0d17] font-bold py-3 px-6 rounded-xl
-           transition-all duration-200 shadow-neon;
+    @apply font-bold py-3 px-6 rounded-xl transition-all duration-200;
+    background-color: #01E18E;
+    color: #0f0d17;
+    box-shadow: 0 0 20px rgba(1, 225, 142, 0.3);
   }
+  .btn-neon:hover { background-color: rgba(1, 225, 142, 0.8); }
+  .btn-neon:active { transform: scale(0.95); }
 
   .btn-ghost {
-    @apply text-white/50 hover:text-brand-cream hover:bg-white/5
-           py-2 px-4 rounded-lg transition-all duration-200;
+    @apply py-2 px-4 rounded-lg transition-all duration-200;
+    color: rgba(255, 255, 255, 0.5);
+  }
+  .btn-ghost:hover {
+    color: #faf9f5;
+    background-color: rgba(255, 255, 255, 0.05);
   }
 
-  /* ── Score badge ── */
   .points-badge {
-    @apply inline-flex items-center gap-1 text-brand-neon font-bold
-           bg-brand-neon/10 border border-brand-neon/20 rounded-lg px-2 py-0.5 text-sm;
+    @apply inline-flex items-center gap-1 font-bold rounded-lg px-2 text-sm;
+    color: #01E18E;
+    background-color: rgba(1, 225, 142, 0.1);
+    border: 1px solid rgba(1, 225, 142, 0.2);
+    padding-top: 0.125rem;
+    padding-bottom: 0.125rem;
   }
 
-  /* ── Nav link ── */
   .nav-link {
-    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-white/60
-           hover:bg-white/8 hover:text-white transition-all duration-200 text-sm font-medium;
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
   }
   .nav-link.active {
-    @apply bg-white/12 text-white border border-white/10;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }
