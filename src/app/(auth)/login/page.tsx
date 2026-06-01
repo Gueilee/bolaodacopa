@@ -29,27 +29,29 @@ function useCountdown() {
 
 function Block({ value, label }: { value: number; label: string }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
       <div style={{
-        background: 'rgba(1,225,142,0.1)',
-        border: '1.5px solid rgba(1,225,142,0.35)',
-        borderRadius: 10,
-        width: 52, height: 52,
+        position: 'relative',
+        background: 'linear-gradient(145deg, rgba(1,225,142,0.15), rgba(1,225,142,0.05))',
+        border: '1.5px solid rgba(1,225,142,0.4)',
+        borderRadius: 12,
+        width: 58, height: 58,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontWeight: 800, fontSize: 22, color: '#01E18E',
+        fontWeight: 900, fontSize: 24, color: '#01E18E',
         fontVariantNumeric: 'tabular-nums',
-        boxShadow: '0 0 20px rgba(1,225,142,0.12)',
+        boxShadow: '0 0 20px rgba(1,225,142,0.15), inset 0 1px 0 rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(10px)',
       }}>
         {String(value).padStart(2, '0')}
       </div>
-      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase' }}>
+      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
         {label}
       </span>
     </div>
   )
 }
 
-function InputRow({ id, name, type, placeholder, label, autoComplete, disabled, icon, right }: {
+function InputField({ id, name, type, placeholder, label, autoComplete, disabled, icon, right }: {
   id: string; name: string; type: string; placeholder: string
   label: string; autoComplete?: string; disabled: boolean
   icon: string; right?: React.ReactNode
@@ -57,11 +59,19 @@ function InputRow({ id, name, type, placeholder, label, autoComplete, disabled, 
   const [focused, setFocused] = useState(false)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-      <label htmlFor={id} style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>
-        {label}
+      <label htmlFor={id} style={{
+        fontSize: 11, fontWeight: 700, letterSpacing: '0.16em',
+        textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
+        display: 'flex', alignItems: 'center', gap: 6,
+      }}>
+        <span style={{ color: '#01E18E', fontSize: 10 }}>▸</span> {label}
       </label>
       <div style={{ position: 'relative' }}>
-        <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: focused ? 'rgba(1,225,142,0.7)' : 'rgba(255,255,255,0.3)', fontSize: 14, pointerEvents: 'none', transition: 'color 0.2s' }}>
+        <span style={{
+          position: 'absolute', left: 15, top: '50%', transform: 'translateY(-50%)',
+          color: focused ? '#01E18E' : 'rgba(255,255,255,0.25)',
+          fontSize: 14, pointerEvents: 'none', transition: 'color 0.25s',
+        }}>
           {icon}
         </span>
         <input
@@ -70,15 +80,20 @@ function InputRow({ id, name, type, placeholder, label, autoComplete, disabled, 
           onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           style={{
             width: '100%', boxSizing: 'border-box',
-            padding: '13px 44px 13px 42px',
-            borderRadius: 12,
-            border: `1.5px solid ${focused ? 'rgba(1,225,142,0.5)' : 'rgba(255,255,255,0.1)'}`,
-            background: focused ? 'rgba(1,225,142,0.04)' : 'rgba(255,255,255,0.04)',
+            padding: '14px 46px 14px 44px',
+            borderRadius: 14,
+            border: `1.5px solid ${focused ? 'rgba(1,225,142,0.6)' : 'rgba(255,255,255,0.08)'}`,
+            background: focused
+              ? 'rgba(1,225,142,0.04)'
+              : 'rgba(255,255,255,0.03)',
             color: '#faf9f5', fontSize: 14,
             outline: 'none',
-            boxShadow: focused ? '0 0 0 3px rgba(1,225,142,0.1), inset 0 0 0 1px rgba(1,225,142,0.1)' : 'none',
-            transition: 'all 0.2s',
+            boxShadow: focused
+              ? '0 0 0 4px rgba(1,225,142,0.08), inset 0 0 0 1px rgba(1,225,142,0.1)'
+              : 'inset 0 1px 0 rgba(255,255,255,0.03)',
+            transition: 'all 0.25s',
             opacity: disabled ? 0.5 : 1,
+            letterSpacing: type === 'password' ? '0.15em' : 'normal',
           }}
         />
         {right && (
@@ -110,119 +125,179 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden', background: '#0a0814' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden', background: '#070512' }}>
 
-      {/* ── Background image (full bleed) ── */}
+      {/* Background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <Image src="/login2.png" alt="" fill priority quality={95} style={{ objectFit: 'cover', objectPosition: 'center right' }} />
-        {/* light vignette only on left to let right breathe */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(8,5,20,0.96) 0%, rgba(8,5,20,0.82) 38%, rgba(8,5,20,0.35) 65%, rgba(8,5,20,0.0) 100%)' }} />
-        {/* subtle top/bottom darkening */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(8,5,20,0.5) 0%, transparent 30%, transparent 70%, rgba(8,5,20,0.6) 100%)' }} />
+        <Image src="/login2.png" alt="" fill priority quality={95}
+          style={{ objectFit: 'cover', objectPosition: 'center right' }} />
+        {/* Overlay suave só à esquerda — direito fica livre */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(5,3,15,0.88) 0%, rgba(5,3,15,0.6) 30%, rgba(5,3,15,0.15) 55%, transparent 75%)' }} />
       </div>
 
-      {/* ── Left panel ── */}
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '100%', maxWidth: 480, padding: '40px 48px', boxSizing: 'border-box', minHeight: '100vh' }}>
+      {/* ── LEFT PANEL ── */}
+      <div style={{
+        position: 'relative', zIndex: 10,
+        width: '100%', maxWidth: 460,
+        padding: '48px 44px',
+        boxSizing: 'border-box',
+        display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        minHeight: '100vh',
+      }}>
 
-        {/* Subtle left-panel glow */}
-        <div style={{ position: 'absolute', top: '30%', left: -60, width: 300, height: 300, borderRadius: '50%', background: 'rgba(66,44,118,0.18)', filter: 'blur(80px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '20%', left: -40, width: 200, height: 200, borderRadius: '50%', background: 'rgba(1,225,142,0.07)', filter: 'blur(60px)', pointerEvents: 'none' }} />
+        {/* Glow blobs */}
+        <div style={{ position: 'absolute', top: '15%', left: -80, width: 320, height: 320, borderRadius: '50%', background: 'rgba(66,44,118,0.22)', filter: 'blur(90px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '15%', left: 0, width: 200, height: 200, borderRadius: '50%', background: 'rgba(1,225,142,0.08)', filter: 'blur(70px)', pointerEvents: 'none' }} />
 
-        {/* Logo */}
-        <div style={{ marginBottom: 32 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+        {/* LOGO */}
+        <div style={{ marginBottom: 28 }}>
+          <Image
             src="/logo.png"
             alt="Bolão Vendemmia Copa 2026"
-            style={{ width: 260, maxWidth: '100%', height: 'auto', filter: 'drop-shadow(0 4px 24px rgba(1,225,142,0.2))' }}
+            width={280} height={94}
+            unoptimized
+            priority
+            style={{ objectFit: 'contain', maxWidth: '100%', filter: 'drop-shadow(0 4px 20px rgba(1,225,142,0.25))' }}
           />
         </div>
 
-        {/* Countdown */}
+        {/* COUNTDOWN */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.32)', marginBottom: 12 }}>
-            ⚽ Faltam para a Copa 2026
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <div style={{ width: 24, height: 1, background: 'rgba(1,225,142,0.4)' }} />
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>
+              Faltam para a Copa 2026
+            </span>
+            <div style={{ width: 24, height: 1, background: 'rgba(1,225,142,0.4)' }} />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <Block value={cd.days}    label="Dias" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, paddingBottom: 18 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.7 }}>:</span>
             <Block value={cd.hours}   label="Horas" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, paddingBottom: 18 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.7 }}>:</span>
             <Block value={cd.minutes} label="Min" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, paddingBottom: 18 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.7 }}>:</span>
             <Block value={cd.seconds} label="Seg" />
           </div>
         </div>
 
-        {/* Card */}
+        {/* LOGIN CARD */}
         <div style={{
-          borderRadius: 20,
+          borderRadius: 22,
+          background: 'rgba(10,7,25,0.7)',
+          backdropFilter: 'blur(40px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) inset, 0 1px 0 rgba(255,255,255,0.1) inset',
           overflow: 'hidden',
-          boxShadow: '0 8px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.07) inset, 0 0 60px rgba(66,44,118,0.15)',
         }}>
-          {/* Top accent */}
-          <div style={{ height: 2, background: 'linear-gradient(90deg, #422c76, #01E18E 50%, #ff2f69)' }} />
+          {/* Neon top border */}
+          <div style={{ height: 2, background: 'linear-gradient(90deg, #422c76 0%, #01E18E 50%, #ff2f69 100%)' }} />
 
-          <div style={{
-            padding: '28px 28px 24px',
-            backdropFilter: 'blur(40px) saturate(1.6) brightness(1.1)',
-            WebkitBackdropFilter: 'blur(40px) saturate(1.6) brightness(1.1)',
-            background: 'rgba(12,9,28,0.65)',
-          }}>
-            <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 700, color: '#faf9f5' }}>
-              Entrar no Bolão
-            </h2>
-            <p style={{ margin: '0 0 20px', fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>
-              Use seu e-mail corporativo Vendemmia
-            </p>
+          {/* Card header */}
+          <div style={{ padding: '22px 26px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12,
+              background: 'linear-gradient(135deg, #422c76, #2a1a4e)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 18, boxShadow: '0 0 16px rgba(66,44,118,0.5)',
+              flexShrink: 0,
+            }}>
+              ⚽
+            </div>
+            <div>
+              <h2 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: '#faf9f5', lineHeight: 1.2 }}>
+                Entrar no Bolão
+              </h2>
+              <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
+                Use seu acesso corporativo
+              </p>
+            </div>
+          </div>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <InputRow id="email" name="email" type="email" placeholder="nome@vendemmia.com.br"
-                label="E-mail" autoComplete="email" disabled={isPending} icon="✉" />
+          {/* Divider */}
+          <div style={{ margin: '18px 26px 0', height: 1, background: 'linear-gradient(to right, rgba(255,255,255,0.08), transparent)' }} />
 
-              <InputRow id="password" name="password" type={showPass ? 'text' : 'password'}
-                placeholder="••••••••" label="Senha" autoComplete="current-password"
-                disabled={isPending} icon="🔑"
+          {/* Form */}
+          <div style={{ padding: '20px 26px 26px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <InputField
+                id="email" name="email" type="email"
+                placeholder="nome@vendemmia.com.br"
+                label="E-mail" autoComplete="email"
+                disabled={isPending} icon="✉"
+              />
+              <InputField
+                id="password" name="password"
+                type={showPass ? 'text' : 'password'}
+                placeholder="••••••••" label="Senha"
+                autoComplete="current-password" disabled={isPending} icon="🔑"
                 right={
                   <button type="button" onClick={() => setShowPass(v => !v)} tabIndex={-1}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.35)', fontSize: 16, padding: '4px 2px', lineHeight: 1 }}>
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.3)', fontSize: 17, padding: '4px', lineHeight: 1, transition: 'color 0.2s' }}>
                     {showPass ? '🙈' : '👁'}
                   </button>
                 }
               />
 
               {error && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderRadius: 10, padding: '11px 14px', background: 'rgba(255,47,105,0.1)', border: '1px solid rgba(255,47,105,0.3)', color: '#ff6b8a', fontSize: 13 }}>
-                  <span>⚠</span><span>{error}</span>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  borderRadius: 12, padding: '12px 15px',
+                  background: 'rgba(255,47,105,0.08)',
+                  border: '1px solid rgba(255,47,105,0.25)',
+                  color: '#ff6b8a', fontSize: 13,
+                }}>
+                  <span style={{ fontSize: 16 }}>⚠</span><span>{error}</span>
                 </div>
               )}
 
               <button type="submit" disabled={isPending}
                 style={{
-                  marginTop: 4, width: '100%', padding: '14px', borderRadius: 12, border: 'none',
+                  marginTop: 6, width: '100%', padding: '15px',
+                  borderRadius: 14, border: 'none',
                   cursor: isPending ? 'not-allowed' : 'pointer',
-                  background: 'linear-gradient(135deg, #422c76 0%, #5a3e94 100%)',
-                  color: '#faf9f5', fontSize: 15, fontWeight: 700, letterSpacing: '0.04em',
-                  boxShadow: '0 4px 20px rgba(66,44,118,0.55)',
+                  background: isPending
+                    ? 'rgba(66,44,118,0.5)'
+                    : 'linear-gradient(135deg, #3d2870 0%, #5a3e94 50%, #422c76 100%)',
+                  color: '#faf9f5', fontSize: 15, fontWeight: 800,
+                  letterSpacing: '0.06em',
+                  boxShadow: isPending ? 'none' : '0 4px 24px rgba(66,44,118,0.6), 0 0 0 1px rgba(255,255,255,0.06) inset',
                   opacity: isPending ? 0.7 : 1,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                  transition: 'opacity 0.2s, transform 0.1s',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                  transition: 'all 0.2s',
+                  position: 'relative', overflow: 'hidden',
                 }}>
-                {isPending
-                  ? <><svg style={{ animation: 'spin 1s linear infinite', width: 16, height: 16 }} viewBox="0 0 24 24" fill="none"><circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" /></svg>Entrando...</>
-                  : <>Entrar <span style={{ color: '#01E18E', fontSize: 18 }}>→</span></>
-                }
+                {isPending ? (
+                  <>
+                    <svg style={{ animation: 'spin 1s linear infinite', width: 17, height: 17 }} viewBox="0 0 24 24" fill="none">
+                      <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                    </svg>
+                    Entrando...
+                  </>
+                ) : (
+                  <>
+                    <span>Entrar</span>
+                    <span style={{
+                      background: 'rgba(1,225,142,0.2)', border: '1px solid rgba(1,225,142,0.4)',
+                      borderRadius: 8, padding: '2px 10px', color: '#01E18E', fontSize: 16, fontWeight: 900,
+                    }}>→</span>
+                  </>
+                )}
               </button>
             </form>
+
+            <p style={{ textAlign: 'center', marginTop: 18, fontSize: 11, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.04em' }}>
+              🔒 Acesso exclusivo · Vendemmia Comércio Internacional
+            </p>
           </div>
         </div>
-
-        <p style={{ marginTop: 20, fontSize: 11, color: 'rgba(255,255,255,0.2)', textAlign: 'center' }}>
-          Acesso exclusivo · Vendemmia Comércio Internacional
-        </p>
       </div>
 
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        input::placeholder { color: rgba(255,255,255,0.22); }
+      `}</style>
     </div>
   )
 }
