@@ -137,7 +137,7 @@ export function MatchCard({ match, isUserLocked }: Props) {
               <span className="text-white/20 font-light">×</span>
               <ScoreDisplay value={match.awayScore} />
             </>
-          ) : isLocked ? (
+          ) : isUserLocked ? (
             /* Locked: show current prediction or dashes */
             <>
               <ScoreDisplay value={prediction?.homeScore ?? null} />
