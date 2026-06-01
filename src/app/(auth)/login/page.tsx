@@ -114,7 +114,7 @@ export default function LoginPage() {
 
       {/* ── Background image (full bleed) ── */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <Image src="/login.png" alt="" fill priority quality={95} style={{ objectFit: 'cover', objectPosition: 'center right' }} />
+        <Image src="/login2.png" alt="" fill priority quality={95} style={{ objectFit: 'cover', objectPosition: 'center right' }} />
         {/* light vignette only on left to let right breathe */}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(8,5,20,0.96) 0%, rgba(8,5,20,0.82) 38%, rgba(8,5,20,0.35) 65%, rgba(8,5,20,0.0) 100%)' }} />
         {/* subtle top/bottom darkening */}
