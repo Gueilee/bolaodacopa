@@ -5,10 +5,7 @@ import { predictions, tournamentPredictions, users, matches, settings } from '@/
 import { eq, and } from 'drizzle-orm'
 import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
-import { scoreMatchInternal, calculateMatchPoints } from '@/lib/scoring-engine'
-
-export type { MatchScore, MatchPointsResult } from '@/lib/scoring-engine'
-export { calculateMatchPoints }
+import { scoreMatchInternal } from '@/lib/scoring-engine'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PONTUAÇÃO DE BÔNUS FINAL DE TORNEIO
