@@ -5,64 +5,10 @@ import { predictions, tournamentPredictions, users, matches, settings } from '@/
 import { eq, and } from 'drizzle-orm'
 import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
-import { scoreMatchInternal } from '@/lib/scoring-engine'
+import { scoreMatchInternal, calculateMatchPoints } from '@/lib/scoring-engine'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PONTUAÇÃO POR PARTIDA — lógica pura (testável sem banco)
-// ─────────────────────────────────────────────────────────────────────────────
-
-export type MatchScore = { homeScore: number; awayScore: number }
-
-export type MatchPointsResult = {
-  points:    number
-  breakdown: string
-}
-
-type Winner = 'home' | 'away' | 'draw'
-
-function getWinner(home: number, away: number): Winner {
-  if (home > away) return 'home'
-  if (away > home) return 'away'
-  return 'draw'
-}
-
-/**
- * Tabela de pontos:
- *   10 — Placar exato
- *    7 — Vencedor correto + saldo de gols igual (ex: 3×1 vs 2×0)
- *    5 — Vencedor correto (ou empate) sem saldo igual
- *    0 — Vencedor errado
- */
-export function calculateMatchPoints(
-  prediction: MatchScore,
-  result:     MatchScore,
-): MatchPointsResult {
-  const predWinner   = getWinner(prediction.homeScore, prediction.awayScore)
-  const resultWinner = getWinner(result.homeScore, result.awayScore)
-
-  if (
-    prediction.homeScore === result.homeScore &&
-    prediction.awayScore === result.awayScore
-  ) {
-    return { points: 10, breakdown: 'Placar exato (+10)' }
-  }
-
-  if (predWinner !== resultWinner) {
-    return { points: 0, breakdown: 'Resultado incorreto (0)' }
-  }
-
-  const predDiff   = prediction.homeScore - prediction.awayScore
-  const resultDiff = result.homeScore   - result.awayScore
-
-  if (predDiff === resultDiff) {
-    return {
-      points: 7,
-      breakdown: `Vencedor e saldo corretos (+7) — saldo ${resultDiff > 0 ? '+' : ''}${resultDiff}`,
-    }
-  }
-
-  return { points: 5, breakdown: 'Vencedor correto (+5)' }
-}
+export type { MatchScore, MatchPointsResult } from '@/lib/scoring-engine'
+export { calculateMatchPoints }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PONTUAÇÃO DE BÔNUS FINAL DE TORNEIO

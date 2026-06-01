@@ -5,8 +5,48 @@
 import { db } from '@/lib/db'
 import { predictions, users, matches } from '@/db/schema'
 import { eq, and } from 'drizzle-orm'
-import { calculateMatchPoints } from '@/app/actions/scoring'
 import { revalidatePath } from 'next/cache'
+
+export type MatchScore = { homeScore: number; awayScore: number }
+export type MatchPointsResult = { points: number; breakdown: string }
+type Winner = 'home' | 'away' | 'draw'
+
+function getWinner(home: number, away: number): Winner {
+  if (home > away) return 'home'
+  if (away > home) return 'away'
+  return 'draw'
+}
+
+export function calculateMatchPoints(
+  prediction: MatchScore,
+  result:     MatchScore,
+): MatchPointsResult {
+  const predWinner   = getWinner(prediction.homeScore, prediction.awayScore)
+  const resultWinner = getWinner(result.homeScore, result.awayScore)
+
+  if (
+    prediction.homeScore === result.homeScore &&
+    prediction.awayScore === result.awayScore
+  ) {
+    return { points: 10, breakdown: 'Placar exato (+10)' }
+  }
+
+  if (predWinner !== resultWinner) {
+    return { points: 0, breakdown: 'Resultado incorreto (0)' }
+  }
+
+  const predDiff   = prediction.homeScore - prediction.awayScore
+  const resultDiff = result.homeScore   - result.awayScore
+
+  if (predDiff === resultDiff) {
+    return {
+      points: 7,
+      breakdown: `Vencedor e saldo corretos (+7) — saldo ${resultDiff > 0 ? '+' : ''}${resultDiff}`,
+    }
+  }
+
+  return { points: 5, breakdown: 'Vencedor correto (+5)' }
+}
 
 export type ScoredUserResult = {
   userId:   string
