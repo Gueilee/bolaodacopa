@@ -7,6 +7,7 @@ import { config } from 'dotenv'
 config({ path: '.env.local' })
 import { db } from '../lib/db'
 import { matches } from './schema'
+import type { NewMatch } from './schema'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 type Team = { name: string; flag: string }
@@ -170,20 +171,7 @@ function makeDate(dateStr: string, hourUTC: number): Date {
 }
 
 // ─── Gera as 72 partidas da fase de grupos ────────────────────────────────────
-type MatchInsert = Parameters<typeof db.insert>[0] extends { values: infer V } ? never : never
-// usar type explícito
-type MatchRow = {
-  phase:        string
-  groupName?:   string
-  matchNumber:  number
-  homeTeam:     string
-  awayTeam:     string
-  homeFlag:     string
-  awayFlag:     string
-  matchDate:    Date
-  venue:        string
-  status:       'upcoming'
-}
+type MatchRow = Pick<NewMatch, 'phase' | 'groupName' | 'matchNumber' | 'homeTeam' | 'awayTeam' | 'homeFlag' | 'awayFlag' | 'matchDate' | 'venue' | 'status'>
 
 function generateGroupMatches(): MatchRow[] {
   const rows: MatchRow[] = []
