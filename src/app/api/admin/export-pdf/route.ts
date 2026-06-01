@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   const data = await getFullReportData()
 
   const buffer = await renderToBuffer(
-    React.createElement(BolaoReport, { data }),
+    React.createElement(BolaoReport, { data }) as React.ReactElement<any>,
   )
 
   const filename = `bolao-copa-2026-${new Date().toISOString().slice(0, 10)}.pdf`
