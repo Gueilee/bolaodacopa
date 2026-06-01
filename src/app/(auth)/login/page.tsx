@@ -27,7 +27,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center">
+    <div className="relative min-h-screen overflow-hidden flex items-center justify-center" style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
 
       {/* ── Fundo: imagem da Copa ─────────────────────────────────────── */}
       <Image
@@ -62,7 +62,7 @@ export default function LoginPage() {
       {/* ── Card de login ─────────────────────────────────────────────── */}
       <div
         className="relative z-10 w-full max-w-[420px] mx-4 animate-slide-up"
-        style={{ animationDuration: '0.5s' }}
+        style={{ animationDuration: '0.5s', position: 'relative', zIndex: 10, width: '100%', maxWidth: '420px', margin: '0 16px' }}
       >
         {/* Borda superior gradiente (decorativa) */}
         <div
