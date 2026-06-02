@@ -15,7 +15,6 @@ const navItems: NavItem[] = [
   { href: '/dashboard',                   label: 'Ranking',        icon: '🏆' },
   { href: '/dashboard/departamentos',     label: 'Por Departamento',icon: '🏢' },
   { href: '/dashboard/copa-ao-vivo',      label: 'Copa ao Vivo',   icon: '📡' },
-  { href: '/dashboard/jogos',             label: 'Jogos',          icon: '⚽' },
   { href: '/dashboard/palpites',          label: 'Meus Palpites',  icon: '🎯' },
   { href: '/dashboard/mural',             label: 'Central da Torcida', icon: '💬' },
   { href: '/dashboard/finais',            label: 'Palpite Final',  icon: '🌟' },
