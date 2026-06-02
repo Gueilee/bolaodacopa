@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { savePrediction } from '@/app/actions/scoring'
-import { formatMatchTime } from '@/lib/utils'
+import { formatMatchTime, formatMatchDate } from '@/lib/utils'
 import { TeamFlag } from '@/components/team-flag'
 import type { MatchWithPrediction } from '@/lib/queries'
 
@@ -76,8 +76,15 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
       style={{ borderBottom: '1px solid #f0ede8' }}
     >
       {/* Date + group */}
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-[10px]" style={{ color: '#aaa8b0' }}>{formatMatchTime(match.matchDate)}</span>
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
+        <span className="text-[10px]" style={{ color: '#aaa8b0' }}>
+          {formatMatchDate(match.matchDate)} · {formatMatchTime(match.matchDate)}
+        </span>
+        {(match.city || match.venue) && (
+          <span className="text-[10px]" style={{ color: '#aaa8b0' }}>
+            · 📍 {match.city ?? match.venue}
+          </span>
+        )}
         {match.groupName && (
           <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
             style={{ background: '#f0ede8', color: '#8a8490' }}>
