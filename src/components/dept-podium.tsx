@@ -55,17 +55,17 @@ function PodiumCard({ entry }: { entry: DeptRankEntry }) {
       {/* Badge de posição + departamento */}
       <div className="text-center mb-3 px-2">
         <div className="text-2xl mb-1">{cfg.medal}</div>
-        <p className="text-white font-bold text-sm leading-tight max-w-[110px] text-center">
+        <p className="font-bold text-sm leading-tight max-w-[110px] text-center" style={{ color: '#1a1625' }}>
           {entry.department}
         </p>
         {entry.leader && (
-          <p className="text-white/40 text-[10px] mt-0.5 truncate max-w-[110px] text-center">
+          <p className="text-[10px] mt-0.5 truncate max-w-[110px] text-center" style={{ color: '#8a8490' }}>
             Líder: {entry.leader.split(' ')[0]}
           </p>
         )}
       </div>
 
-      {/* Bloco do pódio com pontuação */}
+      {/* Bloco do pódio com pontuação — mantém fundo colorido, texto branco adequado */}
       <div
         className={`
           w-full min-w-[100px] max-w-[130px] rounded-t-2xl border
@@ -76,13 +76,13 @@ function PodiumCard({ entry }: { entry: DeptRankEntry }) {
         <p className={`text-2xl font-black tabular-nums ${cfg.pts}`}>
           {entry.avgPoints.toFixed(1)}
         </p>
-        <p className="text-white/30 text-[10px]">pts médios</p>
+        <p className="text-[10px] text-white/50">pts médios</p>
 
         <div className="mt-2 text-center">
-          <p className="text-white/50 text-[10px]">
+          <p className="text-[10px] text-white/50">
             {entry.lockedMembers}/{entry.totalMembers} membros
           </p>
-          <p className="text-white/30 text-[10px]">{entry.participationRate}% participação</p>
+          <p className="text-[10px] text-white/40">{entry.participationRate}% participação</p>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ function PodiumCard({ entry }: { entry: DeptRankEntry }) {
           flex items-center justify-center
         `}
       >
-        <span className="text-white/30 text-xs font-bold">{entry.position}º</span>
+        <span className="text-xs font-bold text-white/50">{entry.position}º</span>
       </div>
     </div>
   )
@@ -106,10 +106,10 @@ export function DeptPodium({ top3 }: Props) {
   if (top3.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-white/30 text-sm">
+        <p className="text-sm" style={{ color: '#8a8490' }}>
           Nenhum departamento cadastrado ainda.
         </p>
-        <p className="text-white/20 text-xs mt-1">
+        <p className="text-xs mt-1" style={{ color: '#8a8490' }}>
           Atribua departamentos aos colaboradores em Administração → Usuários.
         </p>
       </div>
@@ -127,7 +127,7 @@ export function DeptPodium({ top3 }: Props) {
   return (
     <div className="relative">
       {/* Linha de base */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: '#e8e4df' }} />
 
       {/* Pódio */}
       <div className="flex items-end justify-center gap-2 pb-0">

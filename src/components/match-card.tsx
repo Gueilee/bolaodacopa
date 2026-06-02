@@ -15,13 +15,16 @@ function PointsPill({ points }: { points: number }) {
   if (points === 10) return <span className="points-badge">⚡ {points} pts — Placar exato</span>
   if (points === 7)  return <span className="points-badge text-yellow-400 bg-yellow-400/10 border-yellow-400/20">🎯 {points} pts</span>
   if (points === 5)  return <span className="points-badge text-blue-400 bg-blue-400/10 border-blue-400/20">✓ {points} pts</span>
-  return <span className="text-xs text-white/30">0 pts</span>
+  return <span className="text-xs" style={{ color: '#8a8490' }}>0 pts</span>
 }
 
 // ── Score display (read-only) ─────────────────────────────────────────────────
 function ScoreDisplay({ value }: { value: number | null }) {
   return (
-    <span className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5 border border-white/10 font-bold text-xl text-brand-cream tabular-nums">
+    <span
+      className="w-10 h-10 flex items-center justify-center rounded-lg font-bold text-xl tabular-nums"
+      style={{ background: '#f5f2ef', border: '1px solid #e8e4df', color: '#1a1625' }}
+    >
       {value ?? '–'}
     </span>
   )
@@ -50,13 +53,12 @@ function ScoreInput({
       aria-label={label}
       className="
         w-12 h-12 text-center font-bold text-xl rounded-lg
-        bg-white/5 border border-white/15 text-brand-cream
         focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple/50
-        hover:border-white/30 hover:bg-white/8
         disabled:opacity-40 disabled:cursor-not-allowed
         transition-all duration-150 tabular-nums
         [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
       "
+      style={{ background: '#f5f2ef', border: '1px solid #d8d4cf', color: '#1a1625' }}
     />
   )
 }
@@ -99,22 +101,25 @@ export function MatchCard({ match, isUserLocked }: Props) {
     <div
       className={`
         card p-5 transition-all duration-200
-        ${isFinished ? 'opacity-90' : 'hover:border-white/15'}
+        ${isFinished ? 'opacity-90' : ''}
         ${prediction?.isScored && prediction.points > 0 ? 'border-brand-neon/20' : ''}
       `}
     >
       {/* ── Header ── */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-white/40 bg-white/5 px-2 py-0.5 rounded-md">
+          <span
+            className="text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-md"
+            style={{ color: '#6b6672', background: '#f5f2ef' }}
+          >
             {match.groupName ?? phaseLabels[match.phase] ?? match.phase}
           </span>
           {isFinished && (
-            <span className="text-[10px] text-white/25">Encerrado</span>
+            <span className="text-[10px]" style={{ color: '#8a8490' }}>Encerrado</span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-white/35">
+        <div className="flex items-center gap-2 text-xs" style={{ color: '#8a8490' }}>
           <span>{formatMatchTime(match.matchDate)}</span>
           {match.venue && <span className="hidden sm:inline">· {match.venue}</span>}
         </div>
@@ -125,7 +130,7 @@ export function MatchCard({ match, isUserLocked }: Props) {
         {/* Home team */}
         <div className="flex-1 flex flex-col items-end gap-1 min-w-0">
           <span className="text-2xl">{match.homeFlag ?? '🏳'}</span>
-          <span className="text-sm font-semibold text-brand-cream truncate">{match.homeTeam}</span>
+          <span className="text-sm font-semibold truncate" style={{ color: '#1a1625' }}>{match.homeTeam}</span>
         </div>
 
         {/* Score area */}
@@ -134,14 +139,14 @@ export function MatchCard({ match, isUserLocked }: Props) {
             /* Show actual result */
             <>
               <ScoreDisplay value={match.homeScore} />
-              <span className="text-white/20 font-light">×</span>
+              <span className="font-light" style={{ color: '#c8c4c0' }}>×</span>
               <ScoreDisplay value={match.awayScore} />
             </>
           ) : isUserLocked ? (
             /* Locked: show current prediction or dashes */
             <>
               <ScoreDisplay value={prediction?.homeScore ?? null} />
-              <span className="text-white/20 font-light">×</span>
+              <span className="font-light" style={{ color: '#c8c4c0' }}>×</span>
               <ScoreDisplay value={prediction?.awayScore ?? null} />
             </>
           ) : (
@@ -153,7 +158,7 @@ export function MatchCard({ match, isUserLocked }: Props) {
                 disabled={isPending}
                 label={`Gols ${match.homeTeam}`}
               />
-              <span className="text-white/20 font-light">×</span>
+              <span className="font-light" style={{ color: '#c8c4c0' }}>×</span>
               <ScoreInput
                 value={away}
                 onChange={setAway}
@@ -167,23 +172,23 @@ export function MatchCard({ match, isUserLocked }: Props) {
         {/* Away team */}
         <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
           <span className="text-2xl">{match.awayFlag ?? '🏳'}</span>
-          <span className="text-sm font-semibold text-brand-cream truncate">{match.awayTeam}</span>
+          <span className="text-sm font-semibold truncate" style={{ color: '#1a1625' }}>{match.awayTeam}</span>
         </div>
       </div>
 
       {/* ── User prediction row (when finished) ── */}
       {isFinished && prediction && (
-        <div className="mt-3 pt-3 border-t border-white/8 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-white/40">
+        <div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop: '1px solid #e8e4df' }}>
+          <div className="flex items-center gap-2 text-xs" style={{ color: '#8a8490' }}>
             <span>Seu palpite:</span>
-            <span className="font-semibold text-white/60">
+            <span className="font-semibold" style={{ color: '#6b6672' }}>
               {prediction.homeScore} × {prediction.awayScore}
             </span>
           </div>
           {prediction.isScored ? (
             <PointsPill points={prediction.points} />
           ) : (
-            <span className="text-xs text-white/25">Aguardando pontuação</span>
+            <span className="text-xs" style={{ color: '#8a8490' }}>Aguardando pontuação</span>
           )}
         </div>
       )}
@@ -195,13 +200,13 @@ export function MatchCard({ match, isUserLocked }: Props) {
           {/* Lock status */}
           <div className="text-xs">
             {isUserLocked ? (
-              <span className="flex items-center gap-1 text-white/30">
+              <span className="flex items-center gap-1" style={{ color: '#8a8490' }}>
                 🔒 Palpites bloqueados
               </span>
             ) : hasPrediction ? (
-              <span className="text-white/25">Palpite registrado</span>
+              <span style={{ color: '#8a8490' }}>Palpite registrado</span>
             ) : (
-              <span className="text-white/25">Sem palpite ainda</span>
+              <span style={{ color: '#8a8490' }}>Sem palpite ainda</span>
             )}
           </div>
 

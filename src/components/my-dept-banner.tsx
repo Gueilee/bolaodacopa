@@ -6,14 +6,15 @@ type Props = { status: MyDeptStatus }
 export function MyDeptBanner({ status }: Props) {
   if (!status.department) {
     return (
-      <div className="card p-4 border-dashed border-white/10">
+      <div className="card p-4 border-dashed" style={{ borderColor: '#e8e4df' }}>
         <div className="flex items-center justify-between">
-          <p className="text-white/30 text-sm">
+          <p className="text-sm" style={{ color: '#8a8490' }}>
             Você ainda não está atribuído a nenhum departamento.
           </p>
           <Link
             href="/dashboard/departamentos"
-            className="text-xs text-white/30 hover:text-brand-neon transition-colors shrink-0 ml-3"
+            className="text-xs hover:text-brand-neon transition-colors shrink-0 ml-3"
+            style={{ color: '#8a8490' }}
           >
             Ver ranking →
           </Link>
@@ -28,29 +29,29 @@ export function MyDeptBanner({ status }: Props) {
 
   const posColor =
     pos === 1 ? 'text-[#FFD700]' :
-    pos === 2 ? 'text-white/80' :
+    pos === 2 ? 'text-[#a0a0a0]' :
     pos === 3 ? 'text-[#CD7F32]' :
     'text-brand-purple'
 
-  const bgColor =
-    pos === 1 ? 'border-[#FFD700]/20 bg-[#FFD700]/5' :
-    pos === 2 ? 'border-white/12 bg-white/3' :
-    pos === 3 ? 'border-[#CD7F32]/20 bg-[#CD7F32]/5' :
-    'border-brand-purple/20 bg-brand-purple/5'
+  const bgStyle =
+    pos === 1 ? { borderColor: 'rgba(255,215,0,0.2)', background: 'rgba(255,215,0,0.04)' } :
+    pos === 2 ? { borderColor: '#e8e4df', background: '#faf9f7' } :
+    pos === 3 ? { borderColor: 'rgba(205,127,50,0.2)', background: 'rgba(205,127,50,0.04)' } :
+    { borderColor: 'rgba(111,63,251,0.2)', background: 'rgba(111,63,251,0.03)' }
 
   const medal = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : '🏢'
 
   return (
-    <div className={`card p-4 ${bgColor} transition-colors`}>
+    <div className="card p-4 transition-colors" style={bgStyle}>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="text-2xl shrink-0">{medal}</span>
           <div>
             <div className="flex items-center gap-2">
               <span className={`text-xl font-black tabular-nums ${posColor}`}>{posLabel}</span>
-              <span className="text-white/30 text-xs">{totalLabel} departamentos</span>
+              <span className="text-xs" style={{ color: '#8a8490' }}>{totalLabel} departamentos</span>
             </div>
-            <p className="text-white/70 text-sm font-medium">{status.department}</p>
+            <p className="text-sm font-medium" style={{ color: '#1a1625' }}>{status.department}</p>
           </div>
         </div>
 
@@ -60,20 +61,21 @@ export function MyDeptBanner({ status }: Props) {
             <p className={`text-lg font-bold tabular-nums ${posColor}`}>
               {status.avgPoints.toFixed(1)}
             </p>
-            <p className="text-white/25 text-[10px]">pts médios</p>
+            <p className="text-[10px]" style={{ color: '#8a8490' }}>pts médios</p>
           </div>
 
           {/* Participação */}
           <div className="text-right hidden sm:block">
-            <p className="text-lg font-bold tabular-nums text-white/60">
+            <p className="text-lg font-bold tabular-nums" style={{ color: '#6b6672' }}>
               {status.participationRate}%
             </p>
-            <p className="text-white/25 text-[10px]">participação</p>
+            <p className="text-[10px]" style={{ color: '#8a8490' }}>participação</p>
           </div>
 
           <Link
             href="/dashboard/departamentos"
-            className="text-xs text-white/40 hover:text-brand-neon transition-colors whitespace-nowrap"
+            className="text-xs hover:text-brand-neon transition-colors whitespace-nowrap"
+            style={{ color: '#8a8490' }}
           >
             Ver ranking →
           </Link>
@@ -82,8 +84,8 @@ export function MyDeptBanner({ status }: Props) {
 
       {/* Líder do departamento */}
       {status.leader && (
-        <p className="text-white/25 text-[11px] mt-2.5 pt-2.5 border-t border-white/8">
-          Líder da equipe: <span className="text-white/50 font-medium">{status.leader}</span>
+        <p className="text-[11px] mt-2.5 pt-2.5 border-t" style={{ color: '#8a8490', borderColor: '#e8e4df' }}>
+          Líder da equipe: <span className="font-medium" style={{ color: '#6b6672' }}>{status.leader}</span>
           {' '}· {status.lockedMembers}/{status.totalMembers} com palpites finalizados
         </p>
       )}

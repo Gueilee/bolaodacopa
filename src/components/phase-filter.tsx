@@ -20,8 +20,9 @@ export function PhaseFilter({ phases, active }: Props) {
           text-xs px-3 py-1.5 rounded-lg font-medium transition-all
           ${!active
             ? 'bg-brand-purple text-white'
-            : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'}
+            : 'hover:text-brand-purple'}
         `}
+        style={!active ? undefined : { background: '#f5f2ef', color: '#6b6672' }}
       >
         Todos
       </Link>
@@ -33,8 +34,9 @@ export function PhaseFilter({ phases, active }: Props) {
             text-xs px-3 py-1.5 rounded-lg font-medium transition-all
             ${active === phase
               ? 'bg-brand-purple text-white'
-              : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'}
+              : 'hover:text-brand-purple'}
           `}
+          style={active === phase ? undefined : { background: '#f5f2ef', color: '#6b6672' }}
         >
           {phaseLabels[phase] ?? phase}
         </Link>

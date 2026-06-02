@@ -36,13 +36,13 @@ export default async function PerfilPage() {
   return (
     <div className="max-w-lg mx-auto space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-brand-cream">Meu Perfil</h1>
-        <p className="text-white/40 text-sm mt-1">Configurações da sua conta</p>
+        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Meu Perfil</h1>
+        <p className="text-sm mt-1" style={{ color: '#6b6672' }}>Configurações da sua conta</p>
       </div>
 
       {/* ── Informações básicas ── */}
       <div className="card p-5 space-y-4">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40">
+        <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#8a8490' }}>
           Dados da Conta
         </h2>
         <div className="grid grid-cols-2 gap-4">
@@ -53,8 +53,8 @@ export default async function PerfilPage() {
             { label: 'Pontos',       value: `${user.totalPoints} pts` },
           ].map((f) => (
             <div key={f.label}>
-              <p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">{f.label}</p>
-              <p className="text-white/80 text-sm font-medium truncate">{f.value}</p>
+              <p className="text-[10px] uppercase tracking-wider mb-0.5" style={{ color: '#8a8490' }}>{f.label}</p>
+              <p className="text-sm font-medium truncate" style={{ color: '#1a1625' }}>{f.value}</p>
             </div>
           ))}
         </div>

@@ -37,15 +37,15 @@ export default function FinaisPage() {
   return (
     <div className="max-w-lg mx-auto space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-brand-cream">Palpite Final</h1>
-        <p className="text-white/40 text-sm mt-1">
+        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Palpite Final</h1>
+        <p className="text-sm mt-1" style={{ color: '#6b6672' }}>
           Pode ser alterado até o início da Copa.
         </p>
       </div>
 
       {/* Bonus table */}
       <div className="card p-5 space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-1">
+        <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: '#8a8490' }}>
           Pontuação de bônus
         </p>
         {[
@@ -54,7 +54,7 @@ export default function FinaisPage() {
           { label: 'Vice-campeão correto', points: '+25 pts' },
         ].map((row) => (
           <div key={row.label} className="flex justify-between items-center">
-            <span className="text-sm text-white/60">{row.label}</span>
+            <span className="text-sm" style={{ color: '#6b6672' }}>{row.label}</span>
             <span className="points-badge">{row.points}</span>
           </div>
         ))}
@@ -64,7 +64,7 @@ export default function FinaisPage() {
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Champion */}
         <div className="space-y-1.5">
-          <label className="block text-sm text-white/60 font-medium">
+          <label className="block text-sm font-medium" style={{ color: '#6b6672' }}>
             🏆 Campeão
           </label>
           <select
@@ -83,7 +83,7 @@ export default function FinaisPage() {
 
         {/* Runner-up */}
         <div className="space-y-1.5">
-          <label className="block text-sm text-white/60 font-medium">
+          <label className="block text-sm font-medium" style={{ color: '#6b6672' }}>
             🥈 Vice-campeão
           </label>
           <select
@@ -107,7 +107,7 @@ export default function FinaisPage() {
 
         {/* Top scorer */}
         <div className="space-y-1.5">
-          <label className="block text-sm text-white/60 font-medium">
+          <label className="block text-sm font-medium" style={{ color: '#6b6672' }}>
             ⚽ Artilheiro
           </label>
           <input
@@ -119,7 +119,7 @@ export default function FinaisPage() {
             placeholder="Nome completo do jogador"
             className="input-field"
           />
-          <p className="text-white/25 text-xs">
+          <p className="text-xs" style={{ color: '#8a8490' }}>
             Digite o nome como aparece oficialmente (ex: Vinicius Jr.)
           </p>
         </div>

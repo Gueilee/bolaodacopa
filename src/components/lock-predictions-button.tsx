@@ -25,7 +25,7 @@ export function LockPredictionsButton({ filled, total, isLocked, lockedAt }: Pro
           </div>
           <div>
             <p className="text-brand-neon font-semibold">Palpites finalizados</p>
-            <p className="text-white/40 text-sm">
+            <p className="text-sm" style={{ color: '#6b6672' }}>
               Seus palpites foram registrados e estão bloqueados para toda a Copa.
               {lockedAt && (
                 <> · Finalizado em {new Intl.DateTimeFormat('pt-BR', {
@@ -58,7 +58,7 @@ export function LockPredictionsButton({ filled, total, isLocked, lockedAt }: Pro
     return (
       <div className="card p-5 border-brand-neon/20 bg-brand-neon/5 animate-fade-in">
         <p className="text-brand-neon font-semibold">✓ Palpites finalizados com sucesso!</p>
-        <p className="text-white/40 text-sm mt-1">
+        <p className="text-sm mt-1" style={{ color: '#6b6672' }}>
           Seus {filled} palpites estão bloqueados. Boa sorte na Copa!
         </p>
       </div>
@@ -73,16 +73,16 @@ export function LockPredictionsButton({ filled, total, isLocked, lockedAt }: Pro
       <div className="card p-5 border-brand-pink/20 bg-brand-pink/5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <p className="text-white font-semibold mb-1">
+            <p className="font-semibold mb-1" style={{ color: '#1a1625' }}>
               Finalize seus palpites antes da Copa começar
             </p>
-            <p className="text-white/40 text-sm">
+            <p className="text-sm" style={{ color: '#6b6672' }}>
               {filled}/{total} jogos preenchidos ({percent}%)
               {unfilled > 0 && (
                 <span className="text-brand-pink"> · {unfilled} sem palpite</span>
               )}
             </p>
-            <p className="text-white/30 text-xs mt-2">
+            <p className="text-xs mt-2" style={{ color: '#8a8490' }}>
               ⚠ Após finalizar, nenhum palpite poderá ser alterado até o fim da Copa.
             </p>
           </div>
@@ -113,11 +113,11 @@ export function LockPredictionsButton({ filled, total, isLocked, lockedAt }: Pro
           >
             <div className="text-center mb-6">
               <div className="text-4xl mb-3">🔒</div>
-              <h2 className="text-xl font-bold text-brand-cream mb-2">
+              <h2 className="text-xl font-bold mb-2" style={{ color: '#1a1625' }}>
                 Confirmar Registro
               </h2>
-              <p className="text-white/50 text-sm leading-relaxed">
-                Você está prestes a finalizar <strong className="text-white">{filled}</strong> palpites.
+              <p className="text-sm leading-relaxed" style={{ color: '#6b6672' }}>
+                Você está prestes a finalizar <strong style={{ color: '#1a1625' }}>{filled}</strong> palpites.
                 {unfilled > 0 && (
                   <> Os <strong className="text-brand-pink">{unfilled} jogos restantes</strong> ficarão sem palpite.</>
                 )}

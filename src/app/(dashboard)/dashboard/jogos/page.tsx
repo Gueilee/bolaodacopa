@@ -48,8 +48,8 @@ export default async function JogosPage({
       {/* ── Header ── */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-brand-cream">Jogos</h1>
-          <p className="text-white/40 text-sm mt-1">
+          <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Jogos</h1>
+          <p className="text-sm mt-1" style={{ color: '#6b6672' }}>
             {withBet}/{total} palpites feitos
             {remaining > 0 && (
               <span className="ml-2 text-brand-pink">· {remaining} abertos</span>
@@ -62,12 +62,12 @@ export default async function JogosPage({
           <p className="text-brand-neon font-bold text-lg">
             {total > 0 ? Math.round((withBet / total) * 100) : 0}%
           </p>
-          <p className="text-white/30 text-xs">completo</p>
+          <p className="text-xs" style={{ color: '#8a8490' }}>completo</p>
         </div>
       </div>
 
       {/* Progress */}
-      <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: '#e8e4df' }}>
         <div
           className="h-full bg-brand-neon rounded-full transition-all duration-700"
           style={{ width: `${total > 0 ? (withBet / total) * 100 : 0}%` }}
@@ -79,13 +79,13 @@ export default async function JogosPage({
 
       {/* ── Match groups ── */}
       {grouped.size === 0 ? (
-        <p className="text-center text-white/30 py-16">
+        <p className="text-center py-16" style={{ color: '#8a8490' }}>
           Nenhum jogo encontrado para este filtro.
         </p>
       ) : (
         Array.from(grouped.entries()).map(([dateKey, dayMatches]) => (
           <section key={dateKey} className="space-y-3">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40 px-1">
+            <h2 className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: '#8a8490' }}>
               {formatMatchDate(dayMatches[0].matchDate)}
             </h2>
 

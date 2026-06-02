@@ -10,7 +10,7 @@ export const revalidate = 60
 export const metadata   = { title: 'Ranking por Departamento | Bolão Copa 2026' }
 
 function Skeleton({ h = 'h-32' }: { h?: string }) {
-  return <div className={`${h} rounded-2xl bg-white/4 animate-pulse`} />
+  return <div className={`${h} rounded-2xl animate-pulse`} style={{ background: '#f5f2ef' }} />
 }
 
 export default async function DepartamentosPage() {
@@ -31,14 +31,15 @@ export default async function DepartamentosPage() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-brand-cream">Ranking por Departamento</h1>
-          <p className="text-white/40 text-sm mt-1">
+          <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Ranking por Departamento</h1>
+          <p className="text-sm mt-1" style={{ color: '#6b6672' }}>
             Disputa coletiva · Copa do Mundo 2026 · Vendemmia
           </p>
         </div>
         <Link
           href="/dashboard"
-          className="text-xs text-white/30 hover:text-brand-neon transition-colors self-center"
+          className="text-xs hover:text-brand-neon transition-colors self-center"
+          style={{ color: '#8a8490' }}
         >
           ← Ranking individual
         </Link>
@@ -65,10 +66,10 @@ export default async function DepartamentosPage() {
           },
         ].map((s) => (
           <div key={s.label} className="card p-4 text-center">
-            <p className={`font-bold ${s.isText ? 'text-base' : 'text-2xl'} text-white/90 truncate`}>
+            <p className={`font-bold ${s.isText ? 'text-base' : 'text-2xl'} truncate`} style={{ color: '#1a1625' }}>
               {s.value}
             </p>
-            <p className="text-white/35 text-xs mt-1">{s.label}</p>
+            <p className="text-xs mt-1" style={{ color: '#8a8490' }}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -83,7 +84,7 @@ export default async function DepartamentosPage() {
 
           <div className="relative z-10">
             <div className="text-center mb-8">
-              <p className="text-white/40 text-xs font-semibold uppercase tracking-widest">
+              <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#6b6672' }}>
                 🏆 Top 3 Departamentos
               </p>
             </div>
@@ -99,10 +100,10 @@ export default async function DepartamentosPage() {
           <div className="flex items-center gap-3">
             <span className="text-2xl">⏳</span>
             <div>
-              <p className="text-white/70 font-medium text-sm">
+              <p className="font-medium text-sm" style={{ color: '#1a1625' }}>
                 A Copa ainda não começou — todos os departamentos estão com 0 pts.
               </p>
-              <p className="text-white/35 text-xs mt-0.5">
+              <p className="text-xs mt-0.5" style={{ color: '#8a8490' }}>
                 O ranking será atualizado conforme os jogos forem encerrados e pontuados.
               </p>
             </div>
@@ -113,7 +114,7 @@ export default async function DepartamentosPage() {
       {/* ── Tabela completa ── */}
       {ranking.length > 0 ? (
         <section className="space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40 px-1">
+          <h2 className="text-xs font-semibold uppercase tracking-widest px-1" style={{ color: '#8a8490' }}>
             Classificação Completa ({ranking.length} departamentos)
           </h2>
           <DeptRankingTable
@@ -125,8 +126,8 @@ export default async function DepartamentosPage() {
       ) : (
         <div className="card p-12 text-center space-y-3">
           <span className="text-4xl block">🏢</span>
-          <p className="text-white/50 font-medium">Nenhum departamento configurado ainda</p>
-          <p className="text-white/25 text-sm max-w-xs mx-auto">
+          <p className="font-medium" style={{ color: '#6b6672' }}>Nenhum departamento configurado ainda</p>
+          <p className="text-sm max-w-xs mx-auto" style={{ color: '#8a8490' }}>
             Peça ao administrador para atribuir departamentos aos colaboradores.
             O ranking coletivo ficará disponível automaticamente.
           </p>
@@ -136,27 +137,27 @@ export default async function DepartamentosPage() {
       {/* ── Explicação da mecânica ── */}
       {ranking.length > 0 && (
         <details className="card p-5 group">
-          <summary className="flex items-center justify-between cursor-pointer text-sm text-white/50 hover:text-white/80 transition-colors select-none">
+          <summary className="flex items-center justify-between cursor-pointer text-sm hover:text-brand-neon transition-colors select-none" style={{ color: '#6b6672' }}>
             <span>Como funciona o ranking por departamento?</span>
-            <span className="text-white/25 group-open:rotate-180 transition-transform">▼</span>
+            <span className="group-open:rotate-180 transition-transform" style={{ color: '#8a8490' }}>▼</span>
           </summary>
 
-          <div className="mt-4 space-y-3 text-white/40 text-sm leading-relaxed">
+          <div className="mt-4 space-y-3 text-sm leading-relaxed" style={{ color: '#8a8490' }}>
             <p>
-              <strong className="text-white/60">Métrica:</strong> Média de pontos de todos os membros do departamento.
-              Membros que não finalizaram os palpites contam com <strong className="text-white/60">0 pontos</strong> na média —
+              <strong style={{ color: '#6b6672' }}>Métrica:</strong> Média de pontos de todos os membros do departamento.
+              Membros que não finalizaram os palpites contam com <strong style={{ color: '#6b6672' }}>0 pontos</strong> na média —
               isso incentiva 100% de participação da equipe.
             </p>
             <p>
-              <strong className="text-white/60">Desempate:</strong> Taxa de participação (% que finalizou) e,
+              <strong style={{ color: '#6b6672' }}>Desempate:</strong> Taxa de participação (% que finalizou) e,
               em seguida, pontuação máxima individual do departamento.
             </p>
             <p>
-              <strong className="text-white/60">Atualização:</strong> O ranking é recalculado automaticamente
+              <strong style={{ color: '#6b6672' }}>Atualização:</strong> O ranking é recalculado automaticamente
               a cada jogo pontuado pelo administrador.
             </p>
             <p>
-              <strong className="text-white/60">Estratégia:</strong> Para subir no ranking, sua equipe precisa
+              <strong style={{ color: '#6b6672' }}>Estratégia:</strong> Para subir no ranking, sua equipe precisa
               tanto de alta participação (todo mundo finalizar os palpites) quanto de boas previsões.
             </p>
           </div>

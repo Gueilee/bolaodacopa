@@ -27,10 +27,10 @@ export function DeptRankingTable({ entries, userDept, startFromPos = 0 }: Props)
   const maxAvg = Math.max(...entries.map((e) => e.avgPoints), 1)
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-white/8">
+    <div className="overflow-x-auto rounded-2xl border" style={{ borderColor: '#e8e4df' }}>
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-white/8 text-white/30 text-[10px] uppercase tracking-wider">
+          <tr className="border-b text-[10px] uppercase tracking-wider" style={{ borderColor: '#e8e4df', color: '#8a8490' }}>
             <th className="text-left px-5 py-3 w-10">#</th>
             <th className="text-left px-5 py-3">Departamento</th>
             <th className="text-right px-3 py-3 hidden sm:table-cell">Membros</th>
@@ -41,7 +41,7 @@ export function DeptRankingTable({ entries, userDept, startFromPos = 0 }: Props)
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-white/5">
+        <tbody>
           {visible.map((dept) => {
             const isMyDept = dept.department === (userDept ?? 'Sem Departamento') && !userDept
               ? dept.department === 'Sem Departamento'
@@ -53,21 +53,25 @@ export function DeptRankingTable({ entries, userDept, startFromPos = 0 }: Props)
               <tr
                 key={dept.department}
                 className={`
-                  group transition-colors
+                  group transition-colors border-t
                   ${isMyDept
-                    ? 'bg-brand-purple/10 border-l-2 border-brand-purple'
-                    : 'hover:bg-white/3'}
+                    ? 'border-l-2 border-brand-purple'
+                    : ''}
                 `}
+                style={{
+                  borderTopColor: '#f0ede8',
+                  background: isMyDept ? 'rgba(var(--brand-purple-rgb, 111,63,251),0.05)' : undefined,
+                }}
               >
                 {/* Posição */}
-                <td className="px-5 py-4 text-white/30 text-xs font-bold">
+                <td className="px-5 py-4 text-xs font-bold" style={{ color: '#8a8490' }}>
                   {dept.position}º
                 </td>
 
                 {/* Departamento + barra */}
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className={`font-semibold ${isMyDept ? 'text-brand-cream' : 'text-white/80'}`}>
+                    <span className="font-semibold" style={{ color: isMyDept ? '#1a1625' : '#3d3847' }}>
                       {dept.department}
                     </span>
                     {isMyDept && (
@@ -78,18 +82,18 @@ export function DeptRankingTable({ entries, userDept, startFromPos = 0 }: Props)
                   </div>
 
                   {/* Barra de média relativa */}
-                  <div className="h-1 rounded-full bg-white/8 overflow-hidden w-full max-w-[200px]">
+                  <div className="h-1 rounded-full overflow-hidden w-full max-w-[200px]" style={{ background: '#e8e4df' }}>
                     <div
-                      className={`h-full rounded-full transition-all duration-700 ${isMyDept ? 'bg-brand-purple' : 'bg-white/25'}`}
-                      style={{ width: `${barWidth}%` }}
+                      className={`h-full rounded-full transition-all duration-700 ${isMyDept ? 'bg-brand-purple' : ''}`}
+                      style={{ width: `${barWidth}%`, background: isMyDept ? undefined : '#c8c4c0' }}
                     />
                   </div>
                 </td>
 
                 {/* Membros */}
-                <td className="px-3 py-4 text-right text-white/40 tabular-nums hidden sm:table-cell">
-                  <span className="text-white/70">{dept.lockedMembers}</span>
-                  <span className="text-white/25">/{dept.totalMembers}</span>
+                <td className="px-3 py-4 text-right tabular-nums hidden sm:table-cell">
+                  <span style={{ color: '#3d3847' }}>{dept.lockedMembers}</span>
+                  <span style={{ color: '#8a8490' }}>/{dept.totalMembers}</span>
                 </td>
 
                 {/* Participação */}
@@ -99,23 +103,23 @@ export function DeptRankingTable({ entries, userDept, startFromPos = 0 }: Props)
 
                 {/* Média de Pontos — métrica principal */}
                 <td className="px-5 py-4 text-right">
-                  <span className={`text-lg font-black tabular-nums ${isMyDept ? 'text-brand-cream' : 'text-white/70'}`}>
+                  <span className="text-lg font-black tabular-nums" style={{ color: isMyDept ? '#1a1625' : '#3d3847' }}>
                     {dept.avgPoints.toFixed(1)}
                   </span>
-                  <span className="text-white/25 text-xs ml-1">pts</span>
+                  <span className="text-xs ml-1" style={{ color: '#8a8490' }}>pts</span>
                 </td>
 
                 {/* Máximo */}
-                <td className="px-5 py-4 text-right text-white/40 tabular-nums hidden lg:table-cell">
+                <td className="px-5 py-4 text-right tabular-nums hidden lg:table-cell" style={{ color: '#6b6672' }}>
                   {dept.maxPoints > 0 ? dept.maxPoints : '—'}
                 </td>
 
                 {/* Líder */}
-                <td className="px-5 py-4 text-white/40 text-xs hidden md:table-cell">
+                <td className="px-5 py-4 text-xs hidden md:table-cell" style={{ color: '#6b6672' }}>
                   {dept.leader ? (
                     <div>
-                      <p className="text-white/60">{dept.leader.split(' ')[0]}</p>
-                      <p className="text-white/25">{dept.leaderPoints} pts</p>
+                      <p style={{ color: '#3d3847' }}>{dept.leader.split(' ')[0]}</p>
+                      <p style={{ color: '#8a8490' }}>{dept.leaderPoints} pts</p>
                     </div>
                   ) : '—'}
                 </td>
@@ -126,9 +130,9 @@ export function DeptRankingTable({ entries, userDept, startFromPos = 0 }: Props)
       </table>
 
       {/* Nota da métrica */}
-      <div className="px-5 py-3 border-t border-white/5">
-        <p className="text-white/20 text-[10px]">
-          Classificação por <strong className="text-white/35">média de pontos de todos os membros</strong>
+      <div className="px-5 py-3 border-t" style={{ borderColor: '#f0ede8' }}>
+        <p className="text-[10px]" style={{ color: '#8a8490' }}>
+          Classificação por <strong style={{ color: '#6b6672' }}>média de pontos de todos os membros</strong>
           {' '}— inclui colaboradores com 0 pts para estimular 100% de participação.
           Desempate: taxa de participação, depois maior pontuação individual.
         </p>

@@ -45,8 +45,8 @@ export default async function MeusPalpitesPage() {
 
       {/* ── Header ── */}
       <div>
-        <h1 className="text-2xl font-bold text-brand-cream">Meus Palpites</h1>
-        <p className="text-white/40 text-sm mt-1">Registro único · Copa do Mundo 2026</p>
+        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Meus Palpites</h1>
+        <p className="text-sm mt-1" style={{ color: '#6b6672' }}>Registro único · Copa do Mundo 2026</p>
       </div>
 
       {/* ── Lock status / CTA ── */}
@@ -66,17 +66,17 @@ export default async function MeusPalpitesPage() {
           { label: 'Acertos simples', value: stats.correctWinner,  highlight: false },
         ].map((s) => (
           <div key={s.label} className="card p-4 text-center">
-            <p className={`text-2xl font-bold tabular-nums ${s.highlight ? 'text-brand-neon' : 'text-brand-cream'}`}>
+            <p className={`text-2xl font-bold tabular-nums ${s.highlight ? 'text-brand-neon' : ''}`} style={!s.highlight ? { color: '#1a1625' } : undefined}>
               {s.value}
             </p>
-            <p className="text-white/35 text-xs mt-1">{s.label}</p>
+            <p className="text-xs mt-1" style={{ color: '#8a8490' }}>{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* ── Palpite final do torneio ── */}
       <div className="card p-5">
-        <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest mb-4">
+        <h2 className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: '#6b6672' }}>
           🌟 Palpite Final do Torneio
         </h2>
 
@@ -87,9 +87,13 @@ export default async function MeusPalpitesPage() {
               { label: '🥈 Vice',          value: tournamentBet.runnerUp  },
               { label: '⚽ Artilheiro',   value: tournamentBet.topScorer },
             ].map((item) => (
-              <div key={item.label} className={`rounded-xl p-3 ${isLocked ? 'bg-brand-neon/5 border border-brand-neon/15' : 'bg-white/5 border border-white/10'}`}>
-                <p className="text-white/40 text-[10px] uppercase tracking-wider mb-1">{item.label}</p>
-                <p className="text-white font-semibold text-sm">{item.value}</p>
+              <div
+                key={item.label}
+                className={`rounded-xl p-3 ${isLocked ? 'border border-brand-neon/15' : 'border'}`}
+                style={isLocked ? { background: 'rgba(var(--brand-neon-rgb),0.05)' } : { background: '#f5f2ef', borderColor: '#e8e4df' }}
+              >
+                <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: '#8a8490' }}>{item.label}</p>
+                <p className="font-semibold text-sm" style={{ color: '#1a1625' }}>{item.value}</p>
                 {tournamentBet.isScored && tournamentBet.bonusPoints > 0 && (
                   <p className="text-brand-neon text-xs mt-1">+{tournamentBet.bonusPoints} pts</p>
                 )}
@@ -98,7 +102,7 @@ export default async function MeusPalpitesPage() {
           </div>
         ) : (
           <div className="text-center py-6">
-            <p className="text-white/30 text-sm mb-3">Você ainda não fez o palpite final do torneio.</p>
+            <p className="text-sm mb-3" style={{ color: '#8a8490' }}>Você ainda não fez o palpite final do torneio.</p>
             {!isLocked && (
               <a
                 href="/dashboard/finais"
@@ -119,15 +123,15 @@ export default async function MeusPalpitesPage() {
         return (
           <section key={phase} className="space-y-2">
             <div className="flex items-center justify-between px-1">
-              <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest">
+              <h2 className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#6b6672' }}>
                 {phaseLabels[phase] ?? phase}
               </h2>
-              <span className="text-xs text-white/30 tabular-nums">
+              <span className="text-xs tabular-nums" style={{ color: '#8a8490' }}>
                 {phaseFilled}/{phaseMatches.length}
               </span>
             </div>
 
-            <div className="card overflow-hidden divide-y divide-white/5">
+            <div className="card overflow-hidden divide-y" style={{ borderColor: '#f0ede8' }}>
               {phaseMatches.map((match, i) => (
                 <PredictionRow
                   key={match.id}
