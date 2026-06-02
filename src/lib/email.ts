@@ -1,9 +1,71 @@
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const MAILER_DSN  = process.env.MAILER_DSN  || ''
+const MAILER_FROM = process.env.MAILER_FROM || ''
 
-const FROM = process.env.EMAIL_FROM ?? 'Bolão Copa 2026 <onboarding@resend.dev>'
+let smtpHost   = ''
+let smtpPort   = 587
+let smtpUser   = ''
+let smtpPass   = ''
+let smtpSecure = false
+
+if (MAILER_DSN) {
+  try {
+    const parsed         = new URL(MAILER_DSN)
+    const userParam      = parsed.searchParams.get('username')
+    const passParam      = parsed.searchParams.get('password')
+    const encryptionParam = parsed.searchParams.get('encryption')
+
+    smtpUser = userParam || decodeURIComponent(parsed.username || '')
+    smtpPass = passParam || decodeURIComponent(parsed.password || '')
+    smtpHost = parsed.hostname || ''
+    smtpPort = parsed.port
+      ? parseInt(parsed.port, 10)
+      : parsed.protocol === 'smtps:' ? 465 : 587
+
+    const encryption = (encryptionParam || (smtpPort === 465 ? 'ssl' : 'tls')).toLowerCase()
+    smtpSecure = encryption === 'ssl'
+  } catch (e) {
+    console.error('[email] Erro ao parsear MAILER_DSN:', e)
+  }
+}
+
+if (!smtpHost) {
+  smtpHost   = process.env.EMAIL_HOST  || ''
+  smtpPort   = parseInt(process.env.EMAIL_PORT  || '587', 10)
+  smtpUser   = process.env.EMAIL_USER  || ''
+  smtpPass   = process.env.EMAIL_PASS  || ''
+  smtpSecure = process.env.EMAIL_SECURE === 'true' || smtpPort === 465
+}
+
+const FROM = MAILER_FROM || process.env.EMAIL_FROM || 'Bolão Copa 2026 <onboarding@resend.dev>'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://bolaodacopa.vendemmia.com.br'
+const DEV_MODE = !smtpHost
+
+function makeTransport() {
+  if (DEV_MODE) return null
+  return nodemailer.createTransport({
+    host: smtpHost,
+    port: smtpPort,
+    secure: smtpSecure,
+    auth: smtpUser ? {
+      user: smtpUser,
+      pass: smtpPass,
+    } : undefined,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  })
+}
+
+async function sendMail(to: string, subject: string, html: string) {
+  const transport = makeTransport()
+  if (!transport) {
+    console.log(`\n📧 [DEV] E-mail para ${to}\n   Assunto: ${subject}\n`)
+    return
+  }
+  await transport.sendMail({ from: FROM, to, subject, html })
+}
 
 // ─── Template HTML do e-mail de convite ───────────────────────────────────────
 
@@ -115,35 +177,25 @@ function inviteTemplate(name: string, link: string): string {
 </html>`
 }
 
-// ─── Envio em lote (Resend batch — até 100 por chamada) ──────────────────────
+// ─── Envio em lote ────────────────────────────────────────────────────────────
 
 export async function sendBulkInviteEmails(
   users: { email: string; name: string; token: string }[],
 ): Promise<{ sent: number; failed: number; errors: string[] }> {
-  const BATCH = 100
   let sent = 0, failed = 0
   const errors: string[] = []
 
-  for (let i = 0; i < users.length; i += BATCH) {
-    const chunk = users.slice(i, i + BATCH)
-    const payload = chunk.map(u => ({
-      from:    FROM,
-      to:      u.email,
-      subject: '⚽ Seu acesso ao Bolão Copa 2026 — Vendemmia',
-      html:    inviteTemplate(u.name, `${BASE_URL}/primeiro-acesso/${u.token}`),
-    }))
-
+  for (const u of users) {
     try {
-      const { error } = await resend.batch.send(payload)
-      if (error) {
-        failed += chunk.length
-        errors.push(`Lote ${Math.floor(i / BATCH) + 1}: ${error.message}`)
-      } else {
-        sent += chunk.length
-      }
+      await sendMail(
+        u.email,
+        '⚽ Seu acesso ao Bolão Copa 2026 — Vendemmia',
+        inviteTemplate(u.name, `${BASE_URL}/primeiro-acesso/${u.token}`)
+      )
+      sent++
     } catch (e) {
-      failed += chunk.length
-      errors.push(`Lote ${Math.floor(i / BATCH) + 1}: ${e instanceof Error ? e.message : String(e)}`)
+      failed++
+      errors.push(`Erro para ${u.email}: ${e instanceof Error ? e.message : String(e)}`)
     }
   }
 
@@ -160,14 +212,11 @@ export async function sendInviteEmail(
   const link = `${BASE_URL}/primeiro-acesso/${token}`
 
   try {
-    const { error } = await resend.emails.send({
-      from:    FROM,
+    await sendMail(
       to,
-      subject: '⚽ Seu acesso ao Bolão Copa 2026 — Vendemmia',
-      html:    inviteTemplate(name, link),
-    })
-
-    if (error) return { success: false, error: error.message }
+      '⚽ Seu acesso ao Bolão Copa 2026 — Vendemmia',
+      inviteTemplate(name, link)
+    )
     return { success: true }
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e)

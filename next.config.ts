@@ -7,6 +7,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   : undefined  // undefined = Next.js usa o host da requisição (comportamento padrão seguro)
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   experimental: {
     serverActions: allowedOrigins ? { allowedOrigins } : {},
   },

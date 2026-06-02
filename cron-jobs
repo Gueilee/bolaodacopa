@@ -1,0 +1,7 @@
+# /etc/cron.d/bolao-cron
+# Executa a cada 15 minutos para sincronizar os resultados da Copa
+*/15 * * * * root curl -s -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/sync-fixtures > /proc/1/fd/1 2>&1
+
+# Executa diariamente às 09h00 BRT para enviar lembretes pendentes
+0 9 * * * root curl -s -H "Authorization: Bearer $CRON_SECRET" http://localhost:3000/api/cron/daily-reminders > /proc/1/fd/1 2>&1
+

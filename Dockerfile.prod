@@ -1,0 +1,26 @@
+FROM node:20-slim
+WORKDIR /app
+
+RUN apt-get update -y && apt-get install -y openssl tzdata cron curl
+
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+COPY . .
+
+COPY .env.docker.prod .env
+
+RUN npm install
+RUN npm run build
+# public/ e static/ precisam estar dentro do standalone para o servidor Next.js encontrá-los
+RUN cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static
+RUN npm prune --production
+
+# Configura o cron interno no container
+COPY cron-jobs /etc/cron.d/bolao-cron
+RUN chmod 0644 /etc/cron.d/bolao-cron
+
+EXPOSE 3000
+
+# Exporta variáveis do .env para o cron, inicia o cron daemon e sobe o servidor Next.js
+CMD node scripts/export-env.js && cron && node --env-file=.env .next/standalone/server.js
