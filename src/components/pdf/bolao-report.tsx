@@ -11,7 +11,7 @@
  */
 
 import {
-  Document, Page, Text, View,
+  Document, Page, Text, View, Image,
   StyleSheet, Font,
 } from '@react-pdf/renderer'
 import type { FullReportData } from '@/lib/report-data'
@@ -243,11 +243,47 @@ function PageFooter({ pageNum, generatedAt }: { pageNum: string; generatedAt: Da
 
 // ─── Página de capa ───────────────────────────────────────────────────────────
 
-function CoverPage({ data }: { data: FullReportData }) {
+function CoverPage({ data, logoBase64 }: { data: FullReportData; logoBase64?: string | null }) {
   const { overview, tournament, generatedAt } = data
+
+  const kpiRow1 = [
+    { value: String(overview.totalUsers),          label: 'Participantes' },
+    { value: `${overview.participationRate}%`,      label: 'Taxa de Adesão' },
+  ]
+  const kpiRow2 = [
+    { value: overview.avgPoints.toFixed(1),         label: 'Pontuação Média' },
+    { value: String(overview.maxPoints),            label: 'Pontuação Máxima' },
+  ]
 
   return (
     <Page size="A4" style={[S.page, S.coverPage]}>
+
+      {/* Faixa roxa superior decorativa */}
+      <View style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 6,
+        backgroundColor: C.purple,
+      }} />
+
+      {/* Faixa neon inferior decorativa */}
+      <View style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 4,
+        backgroundColor: C.neon,
+      }} />
+
+      {/* Logo */}
+      {logoBase64 ? (
+        <Image
+          src={logoBase64}
+          style={{ width: 220, marginBottom: 28, objectFit: 'contain' }}
+        />
+      ) : (
+        <View style={{ marginBottom: 28 }}>
+          <Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold', color: C.purple }}>
+            VENDEMMIA
+          </Text>
+        </View>
+      )}
+
       {/* Badge */}
       <View style={S.coverBadge}>
         <Text style={S.coverBadgeText}>RELATÓRIO OFICIAL</Text>
@@ -260,17 +296,16 @@ function CoverPage({ data }: { data: FullReportData }) {
       {/* Divisor neon */}
       <View style={S.coverDivider} />
 
-      {/* KPIs */}
-      <View style={S.coverKpiGrid}>
-        {[
-          { value: overview.totalUsers,                    label: 'Participantes' },
-          { value: `${overview.participationRate}%`,       label: 'Taxa de Adesão' },
-          { value: overview.avgPoints.toFixed(1),          label: 'Pts Médio' },
-          { value: overview.maxPoints,                     label: 'Pts Máximo' },
-        ].map((kpi) => (
-          <View key={kpi.label} style={S.coverKpiCard}>
-            <Text style={S.coverKpiValue}>{kpi.value}</Text>
-            <Text style={S.coverKpiLabel}>{kpi.label}</Text>
+      {/* KPIs em 2×2 — evita truncamento por largura insuficiente */}
+      <View style={{ width: '75%', marginBottom: 32, gap: 10 }}>
+        {[kpiRow1, kpiRow2].map((row, ri) => (
+          <View key={ri} style={{ flexDirection: 'row', gap: 10 }}>
+            {row.map(kpi => (
+              <View key={kpi.label} style={[S.coverKpiCard, { flex: 1 }]}>
+                <Text style={S.coverKpiValue}>{kpi.value}</Text>
+                <Text style={S.coverKpiLabel}>{kpi.label}</Text>
+              </View>
+            ))}
           </View>
         ))}
       </View>
@@ -278,15 +313,28 @@ function CoverPage({ data }: { data: FullReportData }) {
       {/* Resultado do torneio (se disponível) */}
       {(tournament.champion || tournament.topScorer) && (
         <View style={{
-          backgroundColor: C.white, borderRadius: 6, padding: 16, width: '80%',
-          borderLeftWidth: 4, borderLeftColor: C.neon, marginBottom: 30,
+          backgroundColor: C.white, borderRadius: 6, padding: 16, width: '75%',
+          borderLeftWidth: 4, borderLeftColor: C.neon, marginBottom: 28,
         }}>
-          <Text style={{ fontSize: 8, color: C.muted, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+          <Text style={{ fontSize: 8, color: C.muted, marginBottom: 8,
+            textTransform: 'uppercase', letterSpacing: 0.8, fontFamily: 'Helvetica-Bold' }}>
             Resultado Final do Torneio
           </Text>
-          {tournament.champion  && <Text style={{ fontSize: 9 }}>🏆 Campeão: <Text style={S.neonText}>{tournament.champion}</Text></Text>}
-          {tournament.runnerUp  && <Text style={{ fontSize: 9, marginTop: 3 }}>🥈 Vice-campeão: <Text style={S.tdBold}>{tournament.runnerUp}</Text></Text>}
-          {tournament.topScorer && <Text style={{ fontSize: 9, marginTop: 3 }}>⚽ Artilheiro: <Text style={S.tdBold}>{tournament.topScorer}</Text></Text>}
+          {tournament.champion  && (
+            <Text style={{ fontSize: 10, marginBottom: 3 }}>
+              Campeao: <Text style={S.neonText}>{tournament.champion}</Text>
+            </Text>
+          )}
+          {tournament.runnerUp  && (
+            <Text style={{ fontSize: 10, marginBottom: 3 }}>
+              Vice-campeao: <Text style={S.tdBold}>{tournament.runnerUp}</Text>
+            </Text>
+          )}
+          {tournament.topScorer && (
+            <Text style={{ fontSize: 10 }}>
+              Artilheiro: <Text style={S.tdBold}>{tournament.topScorer}</Text>
+            </Text>
+          )}
         </View>
       )}
 
@@ -444,7 +492,7 @@ function DeptRankingPage({ data }: { data: FullReportData }) {
 
 // ─── Documento principal ──────────────────────────────────────────────────────
 
-export function BolaoReport({ data }: { data: FullReportData }) {
+export function BolaoReport({ data, logoBase64 }: { data: FullReportData; logoBase64?: string | null }) {
   return (
     <Document
       title="Bolão Copa 2026 — Vendemmia"
@@ -452,7 +500,7 @@ export function BolaoReport({ data }: { data: FullReportData }) {
       subject="Relatório do Bolão Corporativo Copa do Mundo 2026"
       creator="Bolão Copa 2026 System"
     >
-      <CoverPage data={data} />
+      <CoverPage data={data} logoBase64={logoBase64} />
       <RankingPages data={data} />
       <DeptRankingPage data={data} />
     </Document>
