@@ -56,8 +56,8 @@ export default async function AdminPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-2xl font-bold text-brand-cream">Painel Admin</h1>
-        <p className="text-white/40 text-sm mt-1">Gerencie partidas, sync automático e pontuação</p>
+        <h1 className="text-2xl font-bold" style={{color:'#1a1625'}}>Painel Admin</h1>
+        <p className="text-sm mt-1" style={{color:'#8a8490'}}>Gerencie partidas, sync automático e pontuação</p>
       </div>
 
       {/* ── Stats ── */}
@@ -70,10 +70,11 @@ export default async function AdminPage() {
           { label: 'Aguard. pontuação',value: stats.pendingScoring,   accent: stats.pendingScoring > 0 },
         ].map((s) => (
           <div key={s.label} className="card p-4 text-center">
-            <p className={`text-2xl font-bold tabular-nums ${s.accent ? 'text-brand-pink' : 'text-brand-cream'}`}>
+            <p className={`text-2xl font-bold tabular-nums ${s.accent ? 'text-brand-pink' : ''}`}
+               style={s.accent ? undefined : {color:'#1a1625'}}>
               {s.value}
             </p>
-            <p className="text-white/35 text-xs mt-1">{s.label}</p>
+            <p className="text-xs mt-1" style={{color:'#8a8490'}}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -102,15 +103,15 @@ export default async function AdminPage() {
             className="flex items-center justify-between card p-5 hover:border-white/20 hover:bg-white/3 transition-all group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/8 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform" style={{background:'#f5f2ef'}}>
                 {link.icon}
               </div>
               <div>
-                <p className="font-semibold text-brand-cream">{link.label}</p>
-                <p className="text-white/35 text-sm mt-0.5">{link.sub}</p>
+                <p className="font-semibold" style={{color:'#1a1625'}}>{link.label}</p>
+                <p className="text-sm mt-0.5" style={{color:'#8a8490'}}>{link.sub}</p>
               </div>
             </div>
-            <span className="text-white/20 group-hover:text-white/60 transition-colors text-xl">→</span>
+            <span className="group-hover:text-white/60 transition-colors text-xl" style={{color:'#8a8490'}}>→</span>
           </a>
         ))}
       </div>
@@ -125,13 +126,13 @@ export default async function AdminPage() {
             📊
           </div>
           <div>
-            <p className="font-semibold text-brand-cream">Dashboard de Engajamento RH</p>
-            <p className="text-white/35 text-sm mt-0.5">
+            <p className="font-semibold" style={{color:'#1a1625'}}>Dashboard de Engajamento RH</p>
+            <p className="text-sm mt-0.5" style={{color:'#8a8490'}}>
               Taxa de participação por departamento, timeline de adesão, top performers e exportação CSV
             </p>
           </div>
         </div>
-        <span className="text-white/30 group-hover:text-brand-neon transition-colors text-xl">→</span>
+        <span className="group-hover:text-brand-neon transition-colors text-xl" style={{color:'#8a8490'}}>→</span>
       </a>
 
       {/* ── Sync automático ── */}
@@ -140,16 +141,16 @@ export default async function AdminPage() {
       {/* ── Partidas em aberto (manual override) ── */}
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-widest">
+          <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#8a8490'}}>
             Partidas em aberto ({pending.length})
           </h2>
-          <p className="text-white/25 text-xs">
+          <p className="text-xs" style={{color:'#8a8490'}}>
             Use o sync automático ou registre manualmente abaixo
           </p>
         </div>
 
         {pending.length === 0 ? (
-          <p className="text-white/25 text-sm py-6 text-center">
+          <p className="text-sm py-6 text-center" style={{color:'#8a8490'}}>
             Todas as partidas foram pontuadas.
           </p>
         ) : (
@@ -164,7 +165,7 @@ export default async function AdminPage() {
       {/* ── Partidas encerradas ── */}
       {finished.length > 0 && (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-white/60 uppercase tracking-widest">
+          <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#8a8490'}}>
             Partidas encerradas ({finished.length})
           </h2>
           <div className="space-y-2">

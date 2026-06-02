@@ -29,7 +29,7 @@ export function HrPendingUsers({ users }: Props) {
       <div className="flex flex-col items-center justify-center py-10 gap-2">
         <span className="text-3xl">🎉</span>
         <p className="text-brand-neon font-semibold">100% de participação!</p>
-        <p className="text-white/30 text-sm">Todos os colaboradores finalizaram seus palpites.</p>
+        <p className="text-sm" style={{color:'#8a8490'}}>Todos os colaboradores finalizaram seus palpites.</p>
       </div>
     )
   }
@@ -50,8 +50,9 @@ export function HrPendingUsers({ users }: Props) {
               className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all ${
                 filter === f.key
                   ? 'bg-brand-purple text-white'
-                  : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
+                  : ''
               }`}
+              style={filter !== f.key ? {background:'#f5f2ef', color:'#8a8490'} : undefined}
             >
               {f.label}
             </button>
@@ -61,7 +62,8 @@ export function HrPendingUsers({ users }: Props) {
         <button
           onClick={copyEmails}
           disabled={filtered.length === 0}
-          className="flex items-center gap-2 text-xs bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white px-3 py-1.5 rounded-lg transition-all disabled:opacity-40"
+          className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg transition-all disabled:opacity-40"
+          style={{background:'#f5f2ef', border:'1px solid #e8e4df', color:'#8a8490'}}
         >
           {copied ? (
             <><span className="text-brand-neon">✓</span> Copiado!</>
@@ -73,13 +75,14 @@ export function HrPendingUsers({ users }: Props) {
 
       {/* Lista */}
       {filtered.length === 0 ? (
-        <p className="text-white/25 text-sm text-center py-6">Nenhum resultado para este filtro.</p>
+        <p className="text-sm text-center py-6" style={{color:'#8a8490'}}>Nenhum resultado para este filtro.</p>
       ) : (
-        <div className="divide-y divide-white/5 rounded-2xl border border-white/8 overflow-hidden">
+        <div className="rounded-2xl overflow-hidden" style={{border:'1px solid #e8e4df'}}>
           {filtered.map((user) => (
             <div
               key={user.id}
-              className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition-colors"
+              className="flex items-center gap-3 px-4 py-3 transition-colors"
+              style={{borderBottom:'1px solid #e8e4df'}}
             >
               {/* Status dot */}
               <div
@@ -91,13 +94,16 @@ export function HrPendingUsers({ users }: Props) {
 
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-brand-cream truncate">{user.name}</p>
-                <p className="text-xs text-white/35 truncate">{user.email}</p>
+                <p className="text-sm font-medium truncate" style={{color:'#1a1625'}}>{user.name}</p>
+                <p className="text-xs truncate" style={{color:'#8a8490'}}>{user.email}</p>
               </div>
 
               {/* Departamento */}
               {user.department && (
-                <span className="text-[10px] text-white/30 bg-white/5 px-2 py-0.5 rounded-md shrink-0 hidden sm:inline">
+                <span
+                  className="text-[10px] px-2 py-0.5 rounded-md shrink-0 hidden sm:inline"
+                  style={{color:'#8a8490', background:'#f5f2ef'}}
+                >
                   {user.department}
                 </span>
               )}
@@ -109,7 +115,7 @@ export function HrPendingUsers({ users }: Props) {
                     {user.betCount} palpites
                   </span>
                 ) : (
-                  <span className="text-[11px] text-white/25">sem palpites</span>
+                  <span className="text-[11px]" style={{color:'#8a8490'}}>sem palpites</span>
                 )}
               </div>
             </div>
@@ -119,9 +125,9 @@ export function HrPendingUsers({ users }: Props) {
 
       {/* Dica de lembrete */}
       <div className="bg-brand-purple/10 border border-brand-purple/20 rounded-xl px-4 py-3">
-        <p className="text-white/50 text-xs leading-relaxed">
-          <strong className="text-white/70">Dica:</strong> Copie os e-mails acima e envie um lembrete via e-mail corporativo ou WhatsApp.
-          A mensagem sugerida: <em className="text-white/60">"Faltam X dias para a Copa! Acesse o bolão e finalize seus palpites antes da abertura em 11/Jun."</em>
+        <p className="text-xs leading-relaxed" style={{color:'#8a8490'}}>
+          <strong style={{color:'#1a1625'}}>Dica:</strong> Copie os e-mails acima e envie um lembrete via e-mail corporativo ou WhatsApp.
+          A mensagem sugerida: <em style={{color:'#8a8490'}}>"Faltam X dias para a Copa! Acesse o bolão e finalize seus palpites antes da abertura em 11/Jun."</em>
         </p>
       </div>
     </div>

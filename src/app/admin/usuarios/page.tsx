@@ -26,20 +26,20 @@ export default async function UsuariosPage() {
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-brand-cream">Gestão de Usuários</h1>
-          <p className="text-white/40 text-sm mt-1">
+          <h1 className="text-2xl font-bold" style={{color:'#1a1625'}}>Gestão de Usuários</h1>
+          <p className="text-sm mt-1" style={{color:'#8a8490'}}>
             Adicione colaboradores e atribua departamentos
           </p>
         </div>
         <div className="text-right shrink-0">
-          <p className="text-2xl font-black text-white">{allUsers.filter((u) => u.isActive).length}</p>
-          <p className="text-white/30 text-xs">ativos</p>
+          <p className="text-2xl font-black" style={{color:'#1a1625'}}>{allUsers.filter((u) => u.isActive).length}</p>
+          <p className="text-xs" style={{color:'#8a8490'}}>ativos</p>
         </div>
       </div>
 
       {/* ── Criar usuário ── */}
       <section className="card p-6 space-y-4">
-        <h2 className="text-sm font-semibold text-white/60 uppercase tracking-widest">
+        <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#8a8490'}}>
           Adicionar Colaborador
         </h2>
         <CreateUserForm existingDepartments={departments} />
@@ -47,13 +47,13 @@ export default async function UsuariosPage() {
 
       {/* ── Lista ── */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-white/60 uppercase tracking-widest">
+        <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#8a8490'}}>
           Colaboradores ({allUsers.length})
         </h2>
 
-        <div className="card overflow-hidden divide-y divide-white/5">
+        <div className="card overflow-hidden" style={{borderBottom:'none'}}>
           {allUsers.length === 0 ? (
-            <p className="text-white/25 text-sm text-center py-10">Nenhum colaborador cadastrado.</p>
+            <p className="text-sm text-center py-10" style={{color:'#8a8490'}}>Nenhum colaborador cadastrado.</p>
           ) : (
             allUsers.map((u) => (
               <UserAdminRow

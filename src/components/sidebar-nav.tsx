@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
   { href: '/admin',                       label: 'Administração',  icon: '⚙️', adminOnly: true },
   { href: '/admin/usuarios',              label: 'Colaboradores',  icon: '👥', adminOnly: true },
   { href: '/admin/rh',                    label: 'Dashboard RH',   icon: '📊', adminOnly: true },
-  { href: '/admin/notificacoes',          label: 'WhatsApp',       icon: '💬', adminOnly: true },
+
   { href: '/admin/exportar',              label: 'Exportar',       icon: '⬇️', adminOnly: true },
 ]
 

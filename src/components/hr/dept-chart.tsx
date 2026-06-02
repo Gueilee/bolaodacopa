@@ -17,7 +17,7 @@ function rateBadge(pct: number): string {
 export function HrDeptChart({ data }: Props) {
   if (data.length === 0) {
     return (
-      <p className="text-white/25 text-sm text-center py-8">
+      <p className="text-sm text-center py-8" style={{color:'#8a8490'}}>
         Nenhum departamento cadastrado ainda. Atribua departamentos aos colaboradores no painel de usuários.
       </p>
     )
@@ -28,7 +28,7 @@ export function HrDeptChart({ data }: Props) {
   return (
     <div className="space-y-1">
       {/* Header */}
-      <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-white/30">
+      <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[10px] font-semibold uppercase tracking-wider" style={{color:'#8a8490'}}>
         <span>Departamento</span>
         <span className="text-right w-16">Colabs</span>
         <span className="text-right w-20 hidden sm:block">Finalizaram</span>
@@ -39,24 +39,24 @@ export function HrDeptChart({ data }: Props) {
       {data.map((dept) => (
         <div
           key={dept.department}
-          className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 items-center px-4 py-3 rounded-xl hover:bg-white/3 transition-colors"
+          className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 items-center px-4 py-3 rounded-xl transition-colors hover:bg-white/3"
         >
           {/* Nome + barra */}
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-sm font-medium text-brand-cream truncate">
+              <span className="text-sm font-medium truncate" style={{color:'#1a1625'}}>
                 {dept.department}
               </span>
               {dept.leader && (
-                <span className="text-[10px] text-white/30 hidden sm:inline truncate">
+                <span className="text-[10px] hidden sm:inline truncate" style={{color:'#8a8490'}}>
                   líder: {dept.leader.split(' ')[0]}
                 </span>
               )}
             </div>
             {/* Barra proporcional ao total + barra interna de finalizados */}
             <div
-              className="h-1.5 rounded-full bg-white/8 overflow-hidden"
-              style={{ width: `${Math.max(20, (dept.total / maxTotal) * 100)}%` }}
+              className="h-1.5 rounded-full overflow-hidden"
+              style={{ width: `${Math.max(20, (dept.total / maxTotal) * 100)}%`, background:'#e8e4df' }}
             >
               <div
                 className={`h-full rounded-full transition-all duration-700 ${rateColor(dept.participationRate)}`}
@@ -66,12 +66,12 @@ export function HrDeptChart({ data }: Props) {
           </div>
 
           {/* Total */}
-          <span className="text-sm text-white/50 tabular-nums text-right w-16">
+          <span className="text-sm tabular-nums text-right w-16" style={{color:'#8a8490'}}>
             {dept.total}
           </span>
 
           {/* Finalizados */}
-          <span className="text-sm text-white/50 tabular-nums text-right w-20 hidden sm:block">
+          <span className="text-sm tabular-nums text-right w-20 hidden sm:block" style={{color:'#8a8490'}}>
             {dept.locked}
           </span>
 
@@ -83,14 +83,14 @@ export function HrDeptChart({ data }: Props) {
           </span>
 
           {/* Média de pontos */}
-          <span className="text-sm text-white/50 tabular-nums text-right w-16 hidden md:block">
+          <span className="text-sm tabular-nums text-right w-16 hidden md:block" style={{color:'#8a8490'}}>
             {dept.avgPoints > 0 ? dept.avgPoints.toFixed(0) : '—'}
           </span>
         </div>
       ))}
 
       {/* Legenda */}
-      <div className="flex items-center gap-4 pt-3 px-4 text-[10px] text-white/25">
+      <div className="flex items-center gap-4 pt-3 px-4 text-[10px]" style={{color:'#8a8490'}}>
         <span className="flex items-center gap-1.5">
           <span className="w-3 h-1.5 rounded-full bg-brand-neon inline-block" />
           ≥ 80% (ótimo)

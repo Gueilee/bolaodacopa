@@ -38,8 +38,8 @@ function Section({
     <section className="card p-6 space-y-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-sm font-semibold text-white uppercase tracking-widest">{title}</h2>
-          {subtitle && <p className="text-white/35 text-xs mt-0.5">{subtitle}</p>}
+          <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#1a1625'}}>{title}</h2>
+          {subtitle && <p className="text-xs mt-0.5" style={{color:'#8a8490'}}>{subtitle}</p>}
         </div>
         {action}
       </div>
@@ -51,7 +51,7 @@ function Section({
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 function Skeleton({ h = 'h-32' }: { h?: string }) {
-  return <div className={`${h} rounded-xl bg-white/4 animate-pulse`} />
+  return <div className={`${h} rounded-xl animate-pulse`} style={{background:'#f5f2ef'}} />
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -76,8 +76,8 @@ export default async function HrDashboardPage() {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-brand-cream">Dashboard RH</h1>
-          <p className="text-white/40 text-sm mt-1">
+          <h1 className="text-2xl font-bold" style={{color:'#1a1625'}}>Dashboard RH</h1>
+          <p className="text-sm mt-1" style={{color:'#8a8490'}}>
             Engajamento corporativo · Copa do Mundo 2026 · Vendemmia
           </p>
         </div>
@@ -146,7 +146,7 @@ export default async function HrDashboardPage() {
       </Section>
 
       {/* ── Nota de rodapé ── */}
-      <p className="text-white/20 text-xs text-center pb-4">
+      <p className="text-xs text-center pb-4" style={{color:'#8a8490'}}>
         Dados atualizados em tempo real · Acesso restrito a administradores · Vendemmia Comércio Internacional
       </p>
     </div>

@@ -16,23 +16,29 @@ export function UserMenu({ user, compact = false }: Props) {
   return (
     <div className={`flex items-center gap-3 ${compact ? '' : 'w-full'}`}>
       {/* Avatar */}
-      <div className="w-8 h-8 rounded-full bg-brand-purple/50 border border-brand-purple/60 flex items-center justify-center shrink-0">
-        <span className="text-xs font-bold text-brand-cream">{initials}</span>
+      <div
+        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
+        style={{ background: '#422c76', color: '#ffffff' }}
+      >
+        {initials}
       </div>
 
       {!compact && (
         <>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-medium truncate">{user.name}</p>
-            <p className="text-white/40 text-xs truncate">{user.email}</p>
+            <p className="text-sm font-semibold truncate" style={{ color: '#1a1625' }}>{user.name}</p>
+            <p className="text-xs truncate" style={{ color: '#8a8490' }}>{user.email}</p>
           </div>
           <form action={logoutAction}>
             <button
               type="submit"
               title="Sair"
-              className="text-white/30 hover:text-brand-pink transition-colors text-xs"
+              className="transition-colors text-sm px-2 py-1 rounded-lg"
+              style={{ color: '#8a8490', background: 'transparent', border: 'none', cursor: 'pointer' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#ff2f69'; e.currentTarget.style.background = '#fce8ee' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#8a8490'; e.currentTarget.style.background = 'transparent' }}
             >
-              ⏻
+              ⏻ Sair
             </button>
           </form>
         </>

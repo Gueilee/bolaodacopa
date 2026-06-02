@@ -5,7 +5,7 @@ type Props = { data: TimelineEntry[]; totalUsers: number }
 export function HrLockTimeline({ data, totalUsers }: Props) {
   if (data.length === 0) {
     return (
-      <p className="text-white/25 text-sm text-center py-8">
+      <p className="text-sm text-center py-8" style={{color:'#8a8490'}}>
         Nenhum colaborador finalizou os palpites ainda.
       </p>
     )
@@ -32,7 +32,10 @@ export function HrLockTimeline({ data, totalUsers }: Props) {
               className="flex-1 flex flex-col items-center gap-1 group relative"
             >
               {/* Tooltip */}
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#1a1a2e] border border-white/15 rounded-lg px-2 py-1 text-[10px] text-white/70 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+              <div
+                className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-lg px-2 py-1 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+                style={{background:'#e8e4df', border:'1px solid #d4cfc9', color:'#1a1625'}}
+              >
                 {formatDay(entry.date)}: +{entry.newLocks} ({entry.cumulative} total)
               </div>
 
@@ -43,7 +46,7 @@ export function HrLockTimeline({ data, totalUsers }: Props) {
               />
 
               {/* Label do dia */}
-              <span className="text-[9px] text-white/30 truncate w-full text-center">
+              <span className="text-[9px] truncate w-full text-center" style={{color:'#8a8490'}}>
                 {formatDay(entry.date)}
               </span>
             </div>
@@ -53,11 +56,11 @@ export function HrLockTimeline({ data, totalUsers }: Props) {
 
       {/* Linha de progresso acumulado */}
       <div className="space-y-1">
-        <div className="flex justify-between text-[10px] text-white/30">
+        <div className="flex justify-between text-[10px]" style={{color:'#8a8490'}}>
           <span>Adesão acumulada</span>
           <span>{maxCumulative} de {totalUsers} ({totalUsers > 0 ? Math.round((maxCumulative / totalUsers) * 100) : 0}%)</span>
         </div>
-        <div className="h-1.5 bg-white/8 rounded-full overflow-hidden">
+        <div className="h-1.5 rounded-full overflow-hidden" style={{background:'#e8e4df'}}>
           <div
             className="h-full bg-brand-neon rounded-full transition-all duration-700"
             style={{ width: `${totalUsers > 0 ? (maxCumulative / totalUsers) * 100 : 0}%` }}
@@ -83,9 +86,9 @@ export function HrLockTimeline({ data, totalUsers }: Props) {
               : '—',
           },
         ].map((s) => (
-          <div key={s.label} className="bg-white/4 rounded-xl p-3 text-center">
-            <p className="text-white font-semibold text-sm">{s.value}</p>
-            <p className="text-white/30 text-[10px] mt-0.5">{s.label}</p>
+          <div key={s.label} className="rounded-xl p-3 text-center" style={{background:'#f5f2ef'}}>
+            <p className="font-semibold text-sm" style={{color:'#1a1625'}}>{s.value}</p>
+            <p className="text-[10px] mt-0.5" style={{color:'#8a8490'}}>{s.label}</p>
           </div>
         ))}
       </div>

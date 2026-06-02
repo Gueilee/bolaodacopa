@@ -44,10 +44,10 @@ export function AdminSyncPanel({ meta }: Props) {
       {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-sm font-semibold text-white uppercase tracking-widest">
+          <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#1a1625'}}>
             Sincronização API-Football
           </h2>
-          <p className="text-white/35 text-xs mt-0.5">
+          <p className="text-xs mt-0.5" style={{color:'#8a8490'}}>
             Vercel Cron · a cada 15 min · league=1 · season=2026
           </p>
         </div>
@@ -77,8 +77,8 @@ export function AdminSyncPanel({ meta }: Props) {
               Plano Free não acessa Copa 2026
             </p>
           </div>
-          <p className="text-white/50 text-xs leading-relaxed">
-            A temporada 2026 requer o plano <strong className="text-white">Starter</strong> (≈ $9/mês)
+          <p className="text-xs leading-relaxed" style={{color:'#8a8490'}}>
+            A temporada 2026 requer o plano <strong style={{color:'#1a1625'}}>Starter</strong> (≈ $9/mês)
             ou superior. A Copa dura 11/Jun–19/Jul — 2 meses de assinatura resolvem.
           </p>
           <div className="flex gap-3 pt-1">
@@ -90,7 +90,7 @@ export function AdminSyncPanel({ meta }: Props) {
             >
               Fazer Upgrade →
             </a>
-            <span className="text-white/25 text-xs self-center">
+            <span className="text-xs self-center" style={{color:'#8a8490'}}>
               Após upgrade, o sync funciona automaticamente — sem alterar código.
             </span>
           </div>
@@ -105,13 +105,13 @@ export function AdminSyncPanel({ meta }: Props) {
           { label: 'Palpites pontuados',  value: lastResult ? lastResult.predictionsScored: meta.lastSyncScored, highlight: true },
           { label: 'Req. restantes/dia',  value: rateRemaining ?? '—', warn: rateWarning },
         ].map((s) => (
-          <div key={s.label} className="bg-white/4 rounded-xl p-3 text-center">
+          <div key={s.label} className="rounded-xl p-3 text-center" style={{background:'#f5f2ef'}}>
             <p className={`text-xl font-bold tabular-nums ${
               s.warn      ? 'text-brand-pink' :
               s.highlight ? 'text-brand-neon' :
-              'text-white'
-            }`}>{s.value}</p>
-            <p className="text-white/30 text-[10px] mt-0.5">{s.label}</p>
+              ''
+            }`} style={s.warn || s.highlight ? undefined : {color:'#1a1625'}}>{s.value}</p>
+            <p className="text-[10px] mt-0.5" style={{color:'#8a8490'}}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -123,13 +123,13 @@ export function AdminSyncPanel({ meta }: Props) {
             isPlanError ? 'bg-brand-pink animate-pulse' :
             isOk        ? 'bg-brand-neon'               : 'bg-brand-pink'
           }`}/>
-          <span className="text-white/40">
+          <span style={{color:'#8a8490'}}>
             {isPlanError  ? 'Aguardando upgrade do plano' :
              isOk         ? 'Último sync OK'              : 'Último sync com erros'}
           </span>
         </div>
         {meta.lastSyncAt && (
-          <span className="text-white/25">
+          <span style={{color:'#8a8490'}}>
             {new Intl.DateTimeFormat('pt-BR', {
               day: '2-digit', month: 'short',
               hour: '2-digit', minute: '2-digit',
@@ -149,7 +149,7 @@ export function AdminSyncPanel({ meta }: Props) {
           <p className={`font-semibold mb-2 ${lastResult.ok ? 'text-brand-neon' : 'text-brand-pink'}`}>
             {lastResult.ok ? '✓ Sync completo' : '⚠ Sync com erros'}
           </p>
-          <ul className="space-y-1 text-white/50 text-xs">
+          <ul className="space-y-1 text-xs" style={{color:'#8a8490'}}>
             <li>{lastResult.fixturesFetched} fixtures retornados pela API</li>
             <li>{lastResult.matchesUpdated} partidas com status atualizado</li>
             <li>{lastResult.predictionsScored} palpites pontuados automaticamente</li>
@@ -163,7 +163,7 @@ export function AdminSyncPanel({ meta }: Props) {
             )}
           </ul>
           {lastResult.errors.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-white/10">
+            <div className="mt-3 pt-3" style={{borderTop:'1px solid #e8e4df'}}>
               <p className="text-brand-pink text-xs font-medium mb-1">Erros:</p>
               {lastResult.errors.map((e, i) => (
                 <p key={i} className="text-brand-pink/70 text-xs font-mono truncate">{e}</p>

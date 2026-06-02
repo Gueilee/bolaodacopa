@@ -45,10 +45,10 @@ export function AdminMatchRow({ match }: Props) {
       <div className="flex items-center gap-4">
         {/* Phase + date */}
         <div className="hidden sm:block shrink-0 w-28">
-          <p className="text-[10px] text-white/35 uppercase tracking-wider">
+          <p className="text-[10px] uppercase tracking-wider" style={{color:'#8a8490'}}>
             {match.groupName ?? phaseLabels[match.phase]}
           </p>
-          <p className="text-xs text-white/50 mt-0.5">
+          <p className="text-xs mt-0.5" style={{color:'#8a8490'}}>
             {formatMatchDate(match.matchDate)} {formatMatchTime(match.matchDate)}
           </p>
         </div>
@@ -56,23 +56,23 @@ export function AdminMatchRow({ match }: Props) {
         {/* Match */}
         <div className="flex-1 flex items-center gap-3">
           <span className="text-lg">{match.homeFlag ?? '🏳'}</span>
-          <span className="text-sm font-semibold text-brand-cream">{match.homeTeam}</span>
+          <span className="text-sm font-semibold" style={{color:'#1a1625'}}>{match.homeTeam}</span>
 
           {isFinished ? (
-            <span className="text-white/60 font-bold tabular-nums">
+            <span className="font-bold tabular-nums" style={{color:'#8a8490'}}>
               {match.homeScore} × {match.awayScore}
             </span>
           ) : (
-            <span className="text-white/20 text-sm">vs</span>
+            <span className="text-sm" style={{color:'#8a8490'}}>vs</span>
           )}
 
-          <span className="text-sm font-semibold text-brand-cream">{match.awayTeam}</span>
+          <span className="text-sm font-semibold" style={{color:'#1a1625'}}>{match.awayTeam}</span>
           <span className="text-lg">{match.awayFlag ?? '🏳'}</span>
         </div>
 
         {/* Prediction count */}
         <div className="shrink-0 text-right">
-          <p className="text-xs text-white/40 tabular-nums">
+          <p className="text-xs tabular-nums" style={{color:'#8a8490'}}>
             {predScored}/{predTotal} pontuados
           </p>
         </div>
@@ -98,11 +98,12 @@ export function AdminMatchRow({ match }: Props) {
       {open && (
         <form
           onSubmit={handleSubmit}
-          className="mt-4 pt-4 border-t border-white/8 flex flex-col sm:flex-row items-start sm:items-end gap-4 animate-slide-up"
+          className="mt-4 pt-4 flex flex-col sm:flex-row items-start sm:items-end gap-4 animate-slide-up"
+          style={{borderTop:'1px solid #e8e4df'}}
         >
           <div className="flex items-center gap-3">
             <div className="text-center">
-              <p className="text-xs text-white/40 mb-1">{match.homeTeam}</p>
+              <p className="text-xs mb-1" style={{color:'#8a8490'}}>{match.homeTeam}</p>
               <input
                 type="number"
                 min="0"
@@ -111,12 +112,13 @@ export function AdminMatchRow({ match }: Props) {
                 onChange={(e) => setHomeGoals(e.target.value)}
                 required
                 disabled={isPending}
-                className="w-16 h-12 text-center text-xl font-bold rounded-lg bg-white/5 border border-white/15 text-brand-cream focus:outline-none focus:border-brand-purple disabled:opacity-40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-16 h-12 text-center text-xl font-bold rounded-lg focus:outline-none focus:border-brand-purple disabled:opacity-40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                style={{background:'#f5f2ef', border:'1px solid #e8e4df', color:'#1a1625'}}
               />
             </div>
-            <span className="text-white/30 mt-5">×</span>
+            <span className="mt-5" style={{color:'#8a8490'}}>×</span>
             <div className="text-center">
-              <p className="text-xs text-white/40 mb-1">{match.awayTeam}</p>
+              <p className="text-xs mb-1" style={{color:'#8a8490'}}>{match.awayTeam}</p>
               <input
                 type="number"
                 min="0"
@@ -125,7 +127,8 @@ export function AdminMatchRow({ match }: Props) {
                 onChange={(e) => setAwayGoals(e.target.value)}
                 required
                 disabled={isPending}
-                className="w-16 h-12 text-center text-xl font-bold rounded-lg bg-white/5 border border-white/15 text-brand-cream focus:outline-none focus:border-brand-purple disabled:opacity-40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                className="w-16 h-12 text-center text-xl font-bold rounded-lg focus:outline-none focus:border-brand-purple disabled:opacity-40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                style={{background:'#f5f2ef', border:'1px solid #e8e4df', color:'#1a1625'}}
               />
             </div>
           </div>

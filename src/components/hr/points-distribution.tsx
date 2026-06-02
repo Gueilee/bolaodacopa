@@ -19,31 +19,31 @@ export function HrPointsDistribution({ data }: Props) {
       {data.map((bucket) => (
         <div key={bucket.label} className="flex items-center gap-3">
           {/* Label */}
-          <span className="text-xs text-white/50 w-16 shrink-0 text-right font-mono">
+          <span className="text-xs w-16 shrink-0 text-right font-mono" style={{color:'#8a8490'}}>
             {bucket.label}
           </span>
 
           {/* Barra */}
-          <div className="flex-1 h-7 bg-white/5 rounded-lg overflow-hidden relative">
+          <div className="flex-1 h-7 rounded-lg overflow-hidden relative" style={{background:'#f5f2ef'}}>
             <div
               className={`h-full rounded-lg transition-all duration-700 ${bucketColor(bucket.label)}`}
               style={{ width: `${maxPct > 0 ? (bucket.pct / maxPct) * 100 : 0}%` }}
             />
             {bucket.count > 0 && (
-              <span className="absolute inset-0 flex items-center px-2 text-xs font-semibold text-white/80">
+              <span className="absolute inset-0 flex items-center px-2 text-xs font-semibold" style={{color:'#1a1625'}}>
                 {bucket.count} {bucket.count === 1 ? 'colaborador' : 'colaboradores'}
               </span>
             )}
           </div>
 
           {/* Pct */}
-          <span className="text-xs text-white/40 w-10 shrink-0 tabular-nums">
+          <span className="text-xs w-10 shrink-0 tabular-nums" style={{color:'#8a8490'}}>
             {bucket.pct}%
           </span>
         </div>
       ))}
 
-      <p className="text-white/20 text-[10px] pt-2">
+      <p className="text-[10px] pt-2" style={{color:'#8a8490'}}>
         A pontuação aumenta conforme os jogos são encerrados e os palpites pontuados pelo admin.
       </p>
     </div>

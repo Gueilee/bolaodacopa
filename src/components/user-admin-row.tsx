@@ -39,18 +39,22 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
   }
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3.5 transition-colors ${!user.isActive ? 'opacity-40' : 'hover:bg-white/3'}`}>
+    <div
+      className={`flex items-center gap-3 px-4 py-3.5 transition-colors ${!user.isActive ? 'opacity-40' : ''}`}
+      style={{borderBottom:'1px solid #e8e4df'}}
+    >
 
       {/* Avatar */}
       <div className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-xs font-bold
-        ${user.role === 'admin' ? 'bg-brand-pink/20 border border-brand-pink/30 text-brand-pink' : 'bg-brand-purple/30 border border-brand-purple/40 text-brand-cream'}`}>
+        ${user.role === 'admin' ? 'bg-brand-pink/20 border border-brand-pink/30 text-brand-pink' : 'bg-brand-purple/30 border border-brand-purple/40'}`}
+        style={user.role !== 'admin' ? {color:'#1a1625'} : undefined}>
         {initials(user.name)}
       </div>
 
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-medium text-brand-cream truncate">{user.name}</p>
+          <p className="text-sm font-medium truncate" style={{color:'#1a1625'}}>{user.name}</p>
           {user.role === 'admin' && (
             <span className="text-[9px] text-brand-pink bg-brand-pink/10 border border-brand-pink/20 rounded px-1.5 py-0.5 font-semibold shrink-0">
               ADMIN
@@ -62,7 +66,7 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
             </span>
           )}
         </div>
-        <p className="text-xs text-white/35 truncate">{user.email}</p>
+        <p className="text-xs truncate" style={{color:'#8a8490'}}>{user.email}</p>
       </div>
 
       {/* Departamento (editável) */}
@@ -74,7 +78,8 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
               value={dept}
               onChange={(e) => setDept(e.target.value)}
               placeholder="Departamento"
-              className="text-xs bg-white/5 border border-white/15 rounded-lg px-2 py-1.5 text-brand-cream w-32 focus:outline-none focus:border-brand-purple"
+              className="text-xs rounded-lg px-2 py-1.5 w-32 focus:outline-none focus:border-brand-purple"
+              style={{background:'#f5f2ef', border:'1px solid #e8e4df', color:'#1a1625'}}
               onKeyDown={(e) => e.key === 'Enter' && saveDept()}
             />
             <datalist id={`dept-list-${user.id}`}>
@@ -83,13 +88,14 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
             <button
               onClick={saveDept}
               disabled={isPending}
-              className="text-[11px] text-brand-neon hover:text-white transition-colors"
+              className="text-[11px] text-brand-neon hover:text-brand-neon/80 transition-colors"
             >
               {isPending ? '...' : '✓'}
             </button>
             <button
               onClick={() => { setEditingDept(false); setDept(user.department ?? '') }}
-              className="text-[11px] text-white/30 hover:text-white transition-colors"
+              className="text-[11px] transition-colors"
+              style={{color:'#8a8490'}}
             >
               ✕
             </button>
@@ -97,14 +103,15 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
         ) : (
           <button
             onClick={() => setEditingDept(true)}
-            className="text-xs text-white/40 hover:text-white border border-white/10 hover:border-white/25 rounded-lg px-3 py-1.5 transition-all group flex items-center gap-1.5"
+            className="text-xs rounded-lg px-3 py-1.5 transition-all group flex items-center gap-1.5"
+            style={{color:'#8a8490', border:'1px solid #e8e4df'}}
           >
             {saved ? (
               <span className="text-brand-neon">✓ salvo</span>
             ) : (
               <>
                 <span className="truncate max-w-[100px]">{user.department ?? 'sem dept.'}</span>
-                <span className="text-white/20 group-hover:text-white/50 transition-colors text-[10px]">✏</span>
+                <span className="transition-colors text-[10px]" style={{color:'#8a8490'}}>✏</span>
               </>
             )}
           </button>
@@ -114,8 +121,8 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
 
       {/* Pontos */}
       <div className="text-right shrink-0 w-16 hidden md:block">
-        <p className="text-sm font-bold tabular-nums text-white/60">{user.totalPoints}</p>
-        <p className="text-white/25 text-[10px]">pts</p>
+        <p className="text-sm font-bold tabular-nums" style={{color:'#8a8490'}}>{user.totalPoints}</p>
+        <p className="text-[10px]" style={{color:'#8a8490'}}>pts</p>
       </div>
 
       {/* Ativar/desativar */}
@@ -125,9 +132,10 @@ export function UserAdminRow({ user, existingDepartments }: Props) {
         title={user.isActive ? 'Desativar' : 'Reativar'}
         className={`shrink-0 text-xs px-2 py-1 rounded-lg border transition-colors ${
           user.isActive
-            ? 'text-white/25 border-white/10 hover:text-brand-pink hover:border-brand-pink/30'
+            ? 'hover:text-brand-pink hover:border-brand-pink/30'
             : 'text-brand-neon/60 border-brand-neon/20 hover:text-brand-neon'
         }`}
+        style={user.isActive ? {color:'#8a8490', border:'1px solid #e8e4df'} : undefined}
       >
         {user.isActive ? 'Ativo' : 'Inativo'}
       </button>
