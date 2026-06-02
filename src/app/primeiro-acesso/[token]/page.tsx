@@ -48,11 +48,11 @@ export default async function PrimeiroAcessoPage({ params }: Props) {
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <Image
-            src="/vendemmia-logo.png"
+            src="/logo2.png"
             alt="Vendemmia"
-            width={160} height={54}
+            width={240} height={88}
             unoptimized
-            style={{ objectFit: 'contain', height: 44, width: 'auto', margin: '0 auto' }}
+            style={{ objectFit: 'contain', height: 72, width: 'auto', margin: '0 auto' }}
           />
         </div>
 

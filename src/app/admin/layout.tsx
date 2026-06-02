@@ -13,11 +13,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="flex items-center justify-between">
         <Link href="/dashboard">
           <Image
-            src="/vendemmia-logo.png"
+            src="/logo2.png"
             alt="Bolão Vendemmia Copa 2026"
-            width={160} height={54}
+            width={220} height={80}
             unoptimized
-            style={{ objectFit: 'contain', height: 48, width: 'auto' }}
+            style={{ objectFit: 'contain', height: 64, width: 'auto' }}
           />
         </Link>
       </div>

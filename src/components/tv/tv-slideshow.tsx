@@ -160,7 +160,7 @@ export function TvSlideshow({ data }: { data: TvData }) {
           }}>
             {/* Logo */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/vendemmia-logo.png" alt="Logo" style={{ height: 48, objectFit: 'contain' }} />
+            <img src="/logo2.png" alt="Logo" style={{ height: 64, objectFit: 'contain' }} />
 
             {/* Current slide name */}
             <span style={{

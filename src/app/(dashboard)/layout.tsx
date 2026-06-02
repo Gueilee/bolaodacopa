@@ -20,13 +20,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="px-4 py-4" style={{ borderBottom: '1px solid #e5e2dd' }}>
           <Link href="/dashboard">
             <Image
-              src="/vendemmia-logo.png"
+              src="/logo2.png"
               alt="Bolão Vendemmia Copa 2026"
-              width={220}
-              height={74}
+              width={260}
+              height={96}
               unoptimized
               priority
-              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 74 }}
+              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 96 }}
             />
           </Link>
         </div>
@@ -50,12 +50,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
           style={{ background: '#ffffff', borderBottom: '1px solid #e5e2dd', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
           <Link href="/dashboard">
             <Image
-              src="/vendemmia-logo.png"
+              src="/logo2.png"
               alt="Bolão Vendemmia"
-              width={130}
-              height={44}
+              width={180}
+              height={64}
               unoptimized
-              style={{ objectFit: 'contain', height: 40, width: 'auto' }}
+              style={{ objectFit: 'contain', height: 52, width: 'auto' }}
             />
           </Link>
           <UserMenu user={session} compact />
