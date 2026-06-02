@@ -16,6 +16,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard/copa-ao-vivo',      label: 'Copa ao Vivo',   icon: '📡' },
   { href: '/dashboard/jogos',             label: 'Jogos',          icon: '⚽' },
   { href: '/dashboard/palpites',          label: 'Meus Palpites',  icon: '🎯' },
+  { href: '/dashboard/mural',             label: 'Mural Social',   icon: '💬' },
   { href: '/dashboard/finais',            label: 'Palpite Final',  icon: '🌟' },
   { href: '/dashboard/perfil',            label: 'Meu Perfil',     icon: '👤' },
   { href: '/admin',                       label: 'Administração',  icon: '⚙️', adminOnly: true },

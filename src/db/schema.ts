@@ -206,6 +206,38 @@ export const notificationsLog = sqliteTable(
   }),
 )
 
+// ─────────────────────────────────────────────
+// MURAL SOCIAL — postagens e curtidas
+// ─────────────────────────────────────────────
+export const socialPosts = sqliteTable(
+  'social_posts',
+  {
+    id:        text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId:    text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    content:   text('content'),
+    mediaUrl:  text('media_url'),
+    mediaType: text('media_type', { enum: ['image', 'video', 'text'] }).notNull().default('text'),
+    likesCount: integer('likes_count').notNull().default(0),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    userIdx:    index('social_posts_user_idx').on(t.userId),
+    createdIdx: index('social_posts_created_idx').on(t.createdAt),
+  }),
+)
+
+export const socialLikes = sqliteTable(
+  'social_likes',
+  {
+    userId:    text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    postId:    text('post_id').notNull().references(() => socialPosts.id, { onDelete: 'cascade' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    pk: uniqueIndex('social_likes_pk').on(t.userId, t.postId),
+  }),
+)
+
 // ─── Relations ─────────────────────────────────────────────────────────────────
 export const usersRelations = relations(users, ({ many, one }) => ({
   predictions: many(predictions),
@@ -213,6 +245,18 @@ export const usersRelations = relations(users, ({ many, one }) => ({
     fields: [users.id],
     references: [tournamentPredictions.userId],
   }),
+  socialPosts: many(socialPosts),
+  socialLikes: many(socialLikes),
+}))
+
+export const socialPostsRelations = relations(socialPosts, ({ one, many }) => ({
+  user:  one(users, { fields: [socialPosts.userId], references: [users.id] }),
+  likes: many(socialLikes),
+}))
+
+export const socialLikesRelations = relations(socialLikes, ({ one }) => ({
+  user: one(users, { fields: [socialLikes.userId], references: [users.id] }),
+  post: one(socialPosts, { fields: [socialLikes.postId], references: [socialPosts.id] }),
 }))
 
 export const matchesRelations = relations(matches, ({ many }) => ({
@@ -240,3 +284,5 @@ export type NewPrediction = typeof predictions.$inferInsert
 export type TournamentPrediction = typeof tournamentPredictions.$inferSelect
 export type NewTournamentPrediction = typeof tournamentPredictions.$inferInsert
 export type Setting = typeof settings.$inferSelect
+export type SocialPost = typeof socialPosts.$inferSelect
+export type SocialLike = typeof socialLikes.$inferSelect
