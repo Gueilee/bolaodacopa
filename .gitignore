@@ -28,8 +28,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# sensitive data files
+# sensitive data files — dados pessoais de colaboradores (LGPD)
 pessoas.xlsx
+colaboradores.xlsx
+*.xlsx
 sql/03-users-lote*.sql
 
 # typescript
