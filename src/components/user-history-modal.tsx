@@ -5,6 +5,7 @@ import { getUserHistory } from '@/app/actions/user-history'
 import type { UserHistory, HistoryEntry } from '@/app/actions/user-history'
 import { getFlagUrl } from '@/lib/flags'
 import { phaseOrder } from '@/lib/utils'
+import { UserAvatar } from '@/components/user-avatar'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -183,9 +184,7 @@ export function UserHistoryModal({ userId, name, position, onClose }: Props) {
         <div style={{ background: 'linear-gradient(135deg,#422c76,#2a1a4e)', padding: '20px 24px', borderRadius: '24px 24px 0 0', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 18, color: 'white' }}>
-                {initials}
-              </div>
+              <UserAvatar name={name} avatarUrl={history?.avatarUrl ?? null} size={48} bgColor="rgba(255,255,255,0.15)" textColor="white" />
               <div>
                 <p style={{ fontSize: 18, fontWeight: 900, color: 'white', margin: 0 }}>{name}</p>
                 <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', margin: '2px 0 0' }}>

@@ -3,8 +3,9 @@
 import { useState, useRef, useTransition } from 'react'
 import { createPost } from '@/app/actions/social'
 import { useRouter } from 'next/navigation'
+import { UserAvatar } from '@/components/user-avatar'
 
-export function MuralCreatePost({ userName }: { userName: string }) {
+export function MuralCreatePost({ userName, userAvatar }: { userName: string; userAvatar?: string | null }) {
   const [content, setContent]     = useState('')
   const [preview, setPreview]     = useState<{ url: string; type: 'image' | 'video' } | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -71,10 +72,7 @@ export function MuralCreatePost({ userName }: { userName: string }) {
     <div className="card p-5" style={{ border: '2px solid #e8e4df' }}>
       <div className="flex gap-3">
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm text-white"
-          style={{ background: '#422c76' }}>
-          {initials}
-        </div>
+        <UserAvatar name={userName} avatarUrl={userAvatar} size={40} bgColor="#422c76" textColor="white" />
 
         <form onSubmit={handleSubmit} className="flex-1 space-y-3">
           {/* Text area */}

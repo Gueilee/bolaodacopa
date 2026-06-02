@@ -1,9 +1,10 @@
-import { getSession } from '@/lib/session'
-import { db }         from '@/lib/db'
-import { users }      from '@/db/schema'
-import { eq }         from 'drizzle-orm'
-import { redirect }   from 'next/navigation'
+import { getSession }        from '@/lib/session'
+import { db }                from '@/lib/db'
+import { users }             from '@/db/schema'
+import { eq }                from 'drizzle-orm'
+import { redirect }          from 'next/navigation'
 import { WhatsAppOptInForm } from '@/components/whatsapp-optin-form'
+import { AvatarUpload }      from '@/components/avatar-upload'
 
 export const revalidate = 0
 export const metadata   = { title: 'Meu Perfil | Bolão Copa 2026' }
@@ -15,14 +16,15 @@ export default async function PerfilPage() {
   const user = await db.query.users.findFirst({
     where: eq(users.id, session.userId),
     columns: {
-      id:               true,
-      name:             true,
-      email:            true,
-      department:       true,
-      phone:            true,
-      whatsappOptIn:    true,
-      totalPoints:      true,
+      id:                 true,
+      name:               true,
+      email:              true,
+      department:         true,
+      phone:              true,
+      whatsappOptIn:      true,
+      totalPoints:        true,
       isPredictionLocked: true,
+      avatarUrl:          true,
     },
   })
 
@@ -40,7 +42,12 @@ export default async function PerfilPage() {
         <p className="text-sm mt-1" style={{ color: '#6b6672' }}>Configurações da sua conta</p>
       </div>
 
-      {/* ── Informações básicas ── */}
+      {/* ── Foto de perfil ── */}
+      <div className="card p-6 flex flex-col items-center">
+        <AvatarUpload name={user.name} avatarUrl={user.avatarUrl ?? null} />
+      </div>
+
+      {/* ── Dados da conta ── */}
       <div className="card p-5 space-y-4">
         <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#8a8490' }}>
           Dados da Conta

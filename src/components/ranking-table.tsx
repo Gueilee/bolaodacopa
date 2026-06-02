@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from 'react'
 import { initials, positionBadge } from '@/lib/utils'
 import type { RankingEntry } from '@/lib/queries'
 import { UserHistoryModal } from '@/components/user-history-modal'
+import { UserAvatar } from '@/components/user-avatar'
 
 // ─── Comparação ───────────────────────────────────────────────────────────────
 
@@ -452,16 +453,13 @@ export function RankingTable({ entries, currentUserId }: Props) {
                   {/* Name */}
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-                        style={{
-                          background: isSelected ? '#422c76' : isMe ? 'rgba(66,44,118,0.15)' : '#f0ede8',
-                          border: `1px solid ${isSelected || isMe ? 'rgba(66,44,118,0.3)' : '#e0dbd5'}`,
-                          color: isSelected ? 'white' : isMe ? '#422c76' : '#5a5564',
-                        }}
-                      >
-                        {initials(entry.name)}
-                      </div>
+                      <UserAvatar
+                        name={entry.name}
+                        avatarUrl={entry.avatarUrl}
+                        size={32}
+                        bgColor={isSelected ? '#422c76' : isMe ? 'rgba(66,44,118,0.15)' : '#f0ede8'}
+                        textColor={isSelected ? 'white' : isMe ? '#422c76' : '#5a5564'}
+                      />
                       <div>
                         {/* Nome clicável para abrir auditoria (só fora do modo comparação) */}
                         <button

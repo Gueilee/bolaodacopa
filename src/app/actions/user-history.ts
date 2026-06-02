@@ -28,6 +28,7 @@ export type UserHistory = {
   userId:       string
   name:         string
   department:   string | null
+  avatarUrl:    string | null
   position:     number
   totalPoints:  number
   filledCount:  number
@@ -43,7 +44,7 @@ export async function getUserHistory(
 ): Promise<UserHistory | null> {
   const user = await db.query.users.findFirst({
     where: eq(users.id, targetUserId),
-    columns: { id: true, name: true, department: true, totalPoints: true },
+    columns: { id: true, name: true, department: true, totalPoints: true, avatarUrl: true },
   })
   if (!user) return null
 
@@ -99,6 +100,7 @@ export async function getUserHistory(
     userId:      user.id,
     name:        user.name,
     department:  user.department,
+    avatarUrl:   user.avatarUrl ?? null,
     position,
     totalPoints: user.totalPoints,
     filledCount,

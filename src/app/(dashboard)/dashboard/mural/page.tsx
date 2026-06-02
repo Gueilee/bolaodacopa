@@ -3,6 +3,9 @@ import { redirect }           from 'next/navigation'
 import { getSocialPosts }     from '@/app/actions/social'
 import { MuralCreatePost }    from '@/components/mural-create-post'
 import { MuralPostCard }      from '@/components/mural-post-card'
+import { db }                 from '@/lib/db'
+import { users }              from '@/db/schema'
+import { eq }                 from 'drizzle-orm'
 
 export const revalidate = 0
 
@@ -10,7 +13,10 @@ export default async function MuralPage() {
   const session = await getSession()
   if (!session) redirect('/login')
 
-  const posts = await getSocialPosts()
+  const [posts, me] = await Promise.all([
+    getSocialPosts(),
+    db.query.users.findFirst({ where: eq(users.id, session.userId), columns: { avatarUrl: true } }),
+  ])
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
@@ -26,7 +32,7 @@ export default async function MuralPage() {
       </div>
 
       {/* Create post */}
-      <MuralCreatePost userName={session.name} />
+      <MuralCreatePost userName={session.name} userAvatar={me?.avatarUrl ?? null} />
 
       {/* Posts feed */}
       {posts.length === 0 ? (

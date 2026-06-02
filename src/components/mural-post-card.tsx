@@ -4,6 +4,7 @@ import { useState, useTransition, useRef } from 'react'
 import { toggleLike, deletePost, getPostComments, createComment, deleteComment } from '@/app/actions/social'
 import { useRouter } from 'next/navigation'
 import type { PostWithUser, CommentItem } from '@/app/actions/social'
+import { UserAvatar } from '@/components/user-avatar'
 
 function timeAgo(date: Date): string {
   const diff = Date.now() - new Date(date).getTime()
@@ -16,17 +17,15 @@ function timeAgo(date: Date): string {
   return `${d}d atrás`
 }
 
-function Avatar({ name, role }: { name: string; role: string }) {
-  const initials = name.split(' ').slice(0, 2).map((n: string) => n[0]).join('').toUpperCase()
+function Avatar({ name, role, avatarUrl }: { name: string; role: string; avatarUrl?: string | null }) {
   return (
-    <div style={{
-      width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontWeight: 700, fontSize: 11, color: 'white',
-      background: role === 'admin' ? '#422c76' : '#5a3e94',
-    }}>
-      {initials}
-    </div>
+    <UserAvatar
+      name={name}
+      avatarUrl={avatarUrl}
+      size={32}
+      bgColor={role === 'admin' ? '#422c76' : '#5a3e94'}
+      textColor="white"
+    />
   )
 }
 
@@ -110,10 +109,7 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
       {/* ── Header ── */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm text-white"
-            style={{ background: post.userRole === 'admin' ? '#422c76' : '#5a3e94' }}>
-            {initials}
-          </div>
+          <UserAvatar name={post.userName} avatarUrl={post.userAvatar} size={40} bgColor={post.userRole === 'admin' ? '#422c76' : '#5a3e94'} textColor="white" />
           <div>
             <div className="flex items-center gap-2">
               <p className="font-semibold text-sm" style={{ color: '#1a1625' }}>{post.userName}</p>
@@ -203,7 +199,7 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
 
           {comments.map((c) => (
             <div key={c.id} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <Avatar name={c.userName} role={c.isAdmin ? 'admin' : 'user'} />
+              <Avatar name={c.userName} role={c.isAdmin ? 'admin' : 'user'} avatarUrl={c.userAvatar} />
               <div style={{
                 flex: 1, background: '#f9f7f5', borderRadius: 12,
                 padding: '8px 12px', position: 'relative',
@@ -233,13 +229,7 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
 
           {/* Campo novo comentário */}
           <form onSubmit={handleComment} style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: '50%', flexShrink: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 700, fontSize: 11, color: 'white', background: '#5a3e94',
-            }}>
-              {initials.slice(0, 1)}
-            </div>
+            <UserAvatar name={post.userName} avatarUrl={post.userAvatar} size={32} bgColor="#5a3e94" textColor="white" />
             <input
               ref={inputRef}
               type="text"

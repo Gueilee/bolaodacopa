@@ -9,6 +9,7 @@ export type RankingEntry = {
   name:            string
   email:           string
   department:      string | null
+  avatarUrl:       string | null
   totalPoints:     number
   predictionCount: number
   exactCount:      number
@@ -23,6 +24,7 @@ export async function getRanking(): Promise<RankingEntry[]> {
       name:        users.name,
       email:       users.email,
       department:  users.department,
+      avatarUrl:   users.avatarUrl,
       totalPoints: users.totalPoints,
       isPredictionLocked: users.isPredictionLocked,
       predictionCount: count(predictions.id),

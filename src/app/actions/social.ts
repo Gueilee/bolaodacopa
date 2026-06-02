@@ -16,17 +16,19 @@ export type PostWithUser = {
   createdAt:     Date
   userName:      string
   userRole:      string
+  userAvatar:    string | null
   likedByMe:     boolean
 }
 
 export type CommentItem = {
-  id:        string
-  content:   string
-  createdAt: Date
-  userName:  string
-  userId:    string
-  isMe:      boolean
-  isAdmin:   boolean
+  id:         string
+  content:    string
+  createdAt:  Date
+  userName:   string
+  userId:     string
+  userAvatar: string | null
+  isMe:       boolean
+  isAdmin:    boolean
 }
 
 const REVALIDATE = '/dashboard/mural'
@@ -40,7 +42,7 @@ export async function getSocialPosts(): Promise<PostWithUser[]> {
   const posts = await db.query.socialPosts.findMany({
     orderBy: [desc(socialPosts.createdAt)],
     with: {
-      user:  { columns: { name: true, role: true } },
+      user:  { columns: { name: true, role: true, avatarUrl: true } },
       likes: { columns: { userId: true } },
     },
     limit: 50,
@@ -56,6 +58,7 @@ export async function getSocialPosts(): Promise<PostWithUser[]> {
     createdAt:     p.createdAt,
     userName:      p.user.name,
     userRole:      p.user.role,
+    userAvatar:    p.user.avatarUrl ?? null,
     likedByMe:     p.likes.some((l) => l.userId === session.userId),
   }))
 }
@@ -134,7 +137,7 @@ export async function getPostComments(postId: string): Promise<CommentItem[]> {
     where:   eq(socialComments.postId, postId),
     orderBy: [asc(socialComments.createdAt)],
     with: {
-      user: { columns: { name: true, role: true } },
+      user: { columns: { name: true, role: true, avatarUrl: true } },
     },
   })
 
@@ -143,9 +146,10 @@ export async function getPostComments(postId: string): Promise<CommentItem[]> {
     content:   c.content,
     createdAt: c.createdAt,
     userName:  c.user.name,
-    userId:    c.userId,
-    isMe:      c.userId === session.userId,
-    isAdmin:   c.user.role === 'admin',
+    userId:     c.userId,
+    userAvatar: c.user.avatarUrl ?? null,
+    isMe:       c.userId === session.userId,
+    isAdmin:    c.user.role === 'admin',
   }))
 }
 
@@ -177,19 +181,20 @@ export async function createComment(
 
   const me = await db.query.users.findFirst({
     where: eq(users.id, session.userId),
-    columns: { name: true, role: true },
+    columns: { name: true, role: true, avatarUrl: true },
   })
 
   return {
     success: true,
     comment: {
-      id:        inserted.id,
-      content:   inserted.content,
-      createdAt: inserted.createdAt,
-      userName:  me?.name ?? session.name,
-      userId:    session.userId,
-      isMe:      true,
-      isAdmin:   me?.role === 'admin',
+      id:         inserted.id,
+      content:    inserted.content,
+      createdAt:  inserted.createdAt,
+      userName:   me?.name ?? session.name,
+      userId:     session.userId,
+      userAvatar: me?.avatarUrl ?? null,
+      isMe:       true,
+      isAdmin:    me?.role === 'admin',
     },
   }
 }
