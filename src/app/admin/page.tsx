@@ -4,6 +4,8 @@ import { AdminSyncPanel, SyncMeta }  from '@/components/admin-sync-panel'
 import { db }                        from '@/lib/db'
 import { settings }                  from '@/db/schema'
 import { inArray }                   from 'drizzle-orm'
+import { getSession }                from '@/lib/session'
+import { redirect }                  from 'next/navigation'
 
 export const revalidate = 0
 
@@ -44,6 +46,9 @@ async function getSyncMeta() {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function AdminPage() {
+  const session = await getSession()
+  if (!session || session.role !== 'admin') redirect('/admin/rh')
+
   const [stats, allMatches, syncMeta] = await Promise.all([
     getAdminStats(),
     getAllMatchesForAdmin(),

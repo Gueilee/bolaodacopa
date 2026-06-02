@@ -12,7 +12,8 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx --env-file=.env.local src/db/seed.ts",
     "db:seed-matches": "tsx --env-file=.env.local src/db/seed-matches.ts",
-    "db:seed-users": "tsx --env-file=.env.local src/db/seed-users.ts"
+    "db:seed-users": "tsx --env-file=.env.local src/db/seed-users.ts",
+    "db:set-roles": "tsx --env-file=.env.local src/db/set-roles.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",

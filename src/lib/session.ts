@@ -7,7 +7,7 @@ export type SessionPayload = {
   userId: string
   name:   string
   email:  string
-  role:   'admin' | 'user'
+  role:   'admin' | 'rh' | 'user'
 }
 
 export async function getSession(): Promise<SessionPayload | null> {

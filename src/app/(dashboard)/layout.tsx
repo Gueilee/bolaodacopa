@@ -33,7 +33,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-          <SidebarNav isAdmin={session.role === 'admin'} />
+          <SidebarNav role={session.role as 'admin' | 'rh' | 'user'} />
         </nav>
 
         {/* User info */}
