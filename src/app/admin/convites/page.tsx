@@ -6,8 +6,9 @@ import { eq, and, isNull, isNotNull } from 'drizzle-orm'
 import { BulkInviteButton }   from './bulk-invite-button'
 import { SingleInviteButton } from './single-invite-button'
 
-export const revalidate = 0
-export const metadata   = { title: 'Convites | Admin Bolão Copa 2026' }
+export const revalidate  = 0
+export const maxDuration = 60   // Vercel: até 60s para envio em massa
+export const metadata    = { title: 'Convites | Admin Bolão Copa 2026' }
 
 export default async function ConvitesPage() {
   const session = await getSession()

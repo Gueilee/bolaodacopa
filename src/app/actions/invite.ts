@@ -4,7 +4,7 @@ import { db } from '@/lib/db'
 import { users, userTokens } from '@/db/schema'
 import { eq, isNull, and, gt } from 'drizzle-orm'
 import { getSession } from '@/lib/session'
-import { sendInviteEmail } from '@/lib/email'
+import { sendInviteEmail, sendBulkInviteEmails } from '@/lib/email'
 import * as bcrypt from 'bcryptjs'
 import { revalidatePath } from 'next/cache'
 
@@ -57,48 +57,49 @@ export async function sendBulkInvites(): Promise<{
 }> {
   await assertAdmin()
 
-  // Todos os usuários ativos que ainda não fizeram primeiro acesso
+  // 1. Usuários ativos sem primeiro acesso
   const pending = await db
     .select({ id: users.id, email: users.email, name: users.name })
     .from(users)
     .where(and(eq(users.isActive, true), eq(users.role, 'user'), isNull(users.firstAccessAt)))
 
-  let sent = 0, failed = 0, skipped = 0
-  const errors: string[] = []
-
-  for (const user of pending) {
-    // Verificar se já tem token válido não expirado não usado
-    const existing = await db.query.userTokens.findFirst({
-      where: and(
-        eq(userTokens.userId, user.id),
-        eq(userTokens.type, 'invite'),
-        isNull(userTokens.usedAt),
-        gt(userTokens.expiresAt, new Date()),
-      ),
-    })
-
-    // Se já tem token válido enviado há menos de 1h, pula
-    if (existing) {
-      const oneHourAgo = new Date(Date.now() - 3600 * 1000)
-      if (existing.createdAt > oneHourAgo) { skipped++; continue }
-    }
-
-    const token  = await createToken(user.id, 'invite')
-    const result = await sendInviteEmail(user.email, user.name, token)
-
-    if (result.success) {
-      sent++
-    } else {
-      failed++
-      errors.push(`${user.email}: ${result.error}`)
-    }
-
-    // Pequena pausa para não sobrecarregar a API do Resend
-    await new Promise(r => setTimeout(r, 50))
+  if (pending.length === 0) {
+    return { success: true, sent: 0, failed: 0, skipped: 0, errors: [] }
   }
 
+  // 2. Uma única query para todos os tokens enviados há menos de 1h (sem round-trip por usuário)
+  const oneHourAgo = new Date(Date.now() - 3600 * 1000)
+  const recentTokens = await db
+    .select({ userId: userTokens.userId })
+    .from(userTokens)
+    .where(and(
+      eq(userTokens.type, 'invite'),
+      isNull(userTokens.usedAt),
+      gt(userTokens.expiresAt, new Date()),
+      gt(userTokens.createdAt, oneHourAgo),
+    ))
+
+  const recentlySent = new Set(recentTokens.map(t => t.userId))
+  const toSend  = pending.filter(u => !recentlySent.has(u.id))
+  const skipped = pending.length - toSend.length
+
+  if (toSend.length === 0) {
+    revalidatePath('/admin/convites')
+    return { success: true, sent: 0, failed: 0, skipped, errors: [] }
+  }
+
+  // 3. Criar tokens para todos de uma vez
+  const withToken: { email: string; name: string; token: string }[] = []
+  for (const user of toSend) {
+    const token = await createToken(user.id, 'invite')
+    withToken.push({ email: user.email, name: user.name, token })
+  }
+
+  // 4. Enviar em lotes de 100 via Resend batch API
+  const result = await sendBulkInviteEmails(withToken)
+
   revalidatePath('/admin/convites')
-  return { success: true, sent, failed, skipped, errors }
+  return { success: true, skipped, ...result }
 }
 
 // ─── Validar token e definir senha (chamado na página de primeiro acesso) ──────

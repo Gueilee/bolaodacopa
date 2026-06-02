@@ -115,7 +115,42 @@ function inviteTemplate(name: string, link: string): string {
 </html>`
 }
 
-// ─── Envio de convite ─────────────────────────────────────────────────────────
+// ─── Envio em lote (Resend batch — até 100 por chamada) ──────────────────────
+
+export async function sendBulkInviteEmails(
+  users: { email: string; name: string; token: string }[],
+): Promise<{ sent: number; failed: number; errors: string[] }> {
+  const BATCH = 100
+  let sent = 0, failed = 0
+  const errors: string[] = []
+
+  for (let i = 0; i < users.length; i += BATCH) {
+    const chunk = users.slice(i, i + BATCH)
+    const payload = chunk.map(u => ({
+      from:    FROM,
+      to:      u.email,
+      subject: '⚽ Seu acesso ao Bolão Copa 2026 — Vendemmia',
+      html:    inviteTemplate(u.name, `${BASE_URL}/primeiro-acesso/${u.token}`),
+    }))
+
+    try {
+      const { error } = await resend.batch.send(payload)
+      if (error) {
+        failed += chunk.length
+        errors.push(`Lote ${Math.floor(i / BATCH) + 1}: ${error.message}`)
+      } else {
+        sent += chunk.length
+      }
+    } catch (e) {
+      failed += chunk.length
+      errors.push(`Lote ${Math.floor(i / BATCH) + 1}: ${e instanceof Error ? e.message : String(e)}`)
+    }
+  }
+
+  return { sent, failed, errors }
+}
+
+// ─── Envio de convite individual ──────────────────────────────────────────────
 
 export async function sendInviteEmail(
   to:    string,
