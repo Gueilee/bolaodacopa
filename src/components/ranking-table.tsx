@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { initials, positionBadge } from '@/lib/utils'
 import type { RankingEntry } from '@/lib/queries'
+import { UserHistoryModal } from '@/components/user-history-modal'
 
 // ─── Comparação ───────────────────────────────────────────────────────────────
 
@@ -241,6 +242,7 @@ export function RankingTable({ entries, currentUserId }: Props) {
   const [selected, setSelected]     = useState<RankingEntry[]>([])
   const [showCompare, setShowCompare] = useState(false)
   const [flashId, setFlashId]       = useState<string | null>(null)
+  const [historyUser, setHistoryUser] = useState<{ id: string; name: string; position: number } | null>(null)
   const myRowRef                    = useRef<HTMLTableRowElement>(null)
 
   const filtered = entries.filter((e) =>
@@ -461,15 +463,35 @@ export function RankingTable({ entries, currentUserId }: Props) {
                         {initials(entry.name)}
                       </div>
                       <div>
-                        <p className="font-semibold" style={{ color: isSelected || isMe ? '#422c76' : '#1a1625' }}>
-                          {entry.name}
+                        {/* Nome clicável para abrir auditoria (só fora do modo comparação) */}
+                        <button
+                          onClick={(e) => {
+                            if (compareMode) return
+                            e.stopPropagation()
+                            setHistoryUser({ id: entry.id, name: entry.name, position: entry.position })
+                          }}
+                          style={{
+                            background: 'none', border: 'none', padding: 0, cursor: compareMode ? 'default' : 'pointer',
+                            display: 'flex', alignItems: 'center', gap: 6, textAlign: 'left',
+                          }}
+                          title={compareMode ? '' : `Ver histórico de ${entry.name}`}
+                        >
+                          <span className="font-semibold" style={{
+                            color: isSelected || isMe ? '#422c76' : '#1a1625',
+                            textDecoration: compareMode ? 'none' : undefined,
+                          }}>
+                            {entry.name}
+                          </span>
+                          {!compareMode && (
+                            <span style={{ fontSize: 10, color: '#c4bfba', opacity: 0 }} className="group-hover:opacity-100 transition-opacity">📋</span>
+                          )}
                           {isMe && (
-                            <span className="ml-2 text-[10px] font-normal uppercase tracking-widest" style={{ color: '#9a86c4' }}>você</span>
+                            <span className="text-[10px] font-normal uppercase tracking-widest" style={{ color: '#9a86c4' }}>você</span>
                           )}
                           {isSelected && !isMe && (
-                            <span className="ml-2 text-[10px] font-bold uppercase tracking-widest" style={{ color: '#422c76' }}>✓</span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#422c76' }}>✓</span>
                           )}
-                        </p>
+                        </button>
                         <p className="text-xs" style={{ color: '#aaa8b0' }}>{entry.department ?? entry.email}</p>
                       </div>
                     </div>
@@ -523,6 +545,16 @@ export function RankingTable({ entries, currentUserId }: Props) {
           a={selected[0]}
           b={selected[1]}
           onClose={() => setShowCompare(false)}
+        />
+      )}
+
+      {/* ── Modal de histórico / auditoria ── */}
+      {historyUser && (
+        <UserHistoryModal
+          userId={historyUser.id}
+          name={historyUser.name}
+          position={historyUser.position}
+          onClose={() => setHistoryUser(null)}
         />
       )}
     </>
