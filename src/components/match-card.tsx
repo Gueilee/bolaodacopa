@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { savePrediction } from '@/app/actions/scoring'
 import { formatMatchTime, phaseLabels } from '@/lib/utils'
+import { TeamFlag } from '@/components/team-flag'
 import type { MatchWithPrediction } from '@/lib/queries'
 
 type Props = {
@@ -128,8 +129,8 @@ export function MatchCard({ match, isUserLocked }: Props) {
       {/* ── Teams + Scores ── */}
       <div className="flex items-center justify-center gap-4 my-2">
         {/* Home team */}
-        <div className="flex-1 flex flex-col items-end gap-1 min-w-0">
-          <span className="text-2xl">{match.homeFlag ?? '🏳'}</span>
+        <div className="flex-1 flex flex-col items-end gap-2 min-w-0">
+          <TeamFlag teamName={match.homeTeam} size={40} />
           <span className="text-sm font-semibold truncate" style={{ color: '#1a1625' }}>{match.homeTeam}</span>
         </div>
 
@@ -170,8 +171,8 @@ export function MatchCard({ match, isUserLocked }: Props) {
         </div>
 
         {/* Away team */}
-        <div className="flex-1 flex flex-col items-start gap-1 min-w-0">
-          <span className="text-2xl">{match.awayFlag ?? '🏳'}</span>
+        <div className="flex-1 flex flex-col items-start gap-2 min-w-0">
+          <TeamFlag teamName={match.awayTeam} size={40} />
           <span className="text-sm font-semibold truncate" style={{ color: '#1a1625' }}>{match.awayTeam}</span>
         </div>
       </div>

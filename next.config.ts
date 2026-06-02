@@ -7,7 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     // Permite imagens locais do public/ sem restrição de domínio
     unoptimized: false,
-    remotePatterns: [],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'flagcdn.com' },
+    ],
   },
 }
 
