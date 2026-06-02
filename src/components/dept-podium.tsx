@@ -195,21 +195,6 @@ export function DeptPodium({ top3 }: Props) {
 
   return (
     <div>
-      {/* Título */}
-      <p
-        style={{
-          textAlign: 'center',
-          fontSize: 11,
-          fontWeight: 800,
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          color: '#8a8490',
-          marginBottom: 28,
-        }}
-      >
-        🏆 Top 3 Departamentos
-      </p>
-
       {/* Cards em flex — alinhados pela base do degrau */}
       <div
         style={{
