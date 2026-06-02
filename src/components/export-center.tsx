@@ -123,9 +123,9 @@ export function ExportCenter({ stats }: Props) {
       btn:    'bg-brand-pink/10 hover:bg-brand-pink/20 border border-brand-pink/30 text-brand-pink font-semibold py-2 px-4 rounded-xl text-sm transition-all',
     },
     white: {
-      border: 'border-white/10 hover:border-white/25',
-      badge:  'bg-white/10 text-white/60 border border-white/15',
-      btn:    'btn-ghost border border-white/15 hover:border-white/30 text-sm py-2 px-4',
+      border: 'border-[#e8e4df] hover:border-[#c4bfba]',
+      badge:  'bg-[#f5f2ef] text-[#6b6672] border border-[#e0dbd5]',
+      btn:    'border border-[#d0cbc5] hover:border-[#b0aba5] text-[#4a4555] font-semibold py-2 px-4 rounded-xl text-sm transition-all bg-[#f5f2ef] hover:bg-[#ede9e4]',
     },
   }
 
@@ -149,12 +149,12 @@ export function ExportCenter({ stats }: Props) {
                 <span className="text-2xl">{item.icon}</span>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold text-brand-cream">{item.title}</p>
+                    <p className="font-semibold" style={{ color: '#1a1625' }}>{item.title}</p>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${acc.badge}`}>
                       {item.badge}
                     </span>
                   </div>
-                  <p className="text-white/40 text-xs mt-0.5 leading-relaxed">
+                  <p className="text-xs mt-0.5 leading-relaxed" style={{ color: '#8a8490' }}>
                     {item.description}
                   </p>
                 </div>
@@ -163,7 +163,7 @@ export function ExportCenter({ stats }: Props) {
 
             {/* Preview conteúdo (PDF apenas) */}
             {item.isPdf && (
-              <div className="grid grid-cols-4 gap-2 py-2 border-y border-white/8">
+              <div className="grid grid-cols-4 gap-2 py-2 border-y" style={{ borderColor: '#e8e4df' }}>
                 {[
                   { label: 'Capa',                  icon: '📋' },
                   { label: 'Ranking individual',    icon: '🏆' },
@@ -172,7 +172,7 @@ export function ExportCenter({ stats }: Props) {
                 ].map((f) => (
                   <div key={f.label} className="text-center">
                     <p className="text-base mb-1">{f.icon}</p>
-                    <p className="text-white/30 text-[10px]">{f.label}</p>
+                    <p className="text-[10px]" style={{ color: '#aaa8b0' }}>{f.label}</p>
                   </div>
                 ))}
               </div>

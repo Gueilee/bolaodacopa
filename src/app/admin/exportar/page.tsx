@@ -24,8 +24,8 @@ export default async function ExportarPage() {
 
       {/* ── Header ── */}
       <div>
-        <h1 className="text-2xl font-bold text-brand-cream">Exportar Relatórios</h1>
-        <p className="text-white/40 text-sm mt-1">
+        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Exportar Relatórios</h1>
+        <p className="text-sm mt-1" style={{ color: '#8a8490' }}>
           PDF com branding Vendemmia ou CSV para Excel · dados em tempo real
         </p>
       </div>
@@ -39,8 +39,8 @@ export default async function ExportarPage() {
           { label: 'Pendentes',      value: stats.pendingCount },
         ].map((s) => (
           <div key={s.label} className="card p-4 text-center">
-            <p className="text-2xl font-black text-brand-cream tabular-nums">{s.value}</p>
-            <p className="text-white/35 text-xs mt-1">{s.label}</p>
+            <p className="text-2xl font-black tabular-nums" style={{ color: '#1a1625' }}>{s.value}</p>
+            <p className="text-xs mt-1" style={{ color: '#8a8490' }}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -49,11 +49,11 @@ export default async function ExportarPage() {
       <ExportCenter stats={stats} />
 
       {/* ── Notas ── */}
-      <div className="card p-5 space-y-2 border-white/8">
-        <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">
+      <div className="card p-5 space-y-2" style={{ borderColor: '#e8e4df' }}>
+        <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#6b6672' }}>
           Notas sobre os arquivos
         </p>
-        <ul className="text-white/35 text-xs space-y-1.5 leading-relaxed">
+        <ul className="text-xs space-y-1.5 leading-relaxed" style={{ color: '#8a8490' }}>
           <li>📄 O PDF é gerado no servidor e reflete os dados no momento do clique.</li>
           <li>📊 Os CSVs usam ponto-e-vírgula <code className="text-brand-neon/60">;</code> como separador — compatível com Excel pt-BR.</li>
           <li>🔤 Encoding UTF-8 com BOM — acentos abrem corretamente no Excel sem conversão.</li>
