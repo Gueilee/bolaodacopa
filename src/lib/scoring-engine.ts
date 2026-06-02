@@ -24,6 +24,7 @@ export function calculateMatchPoints(
   const predWinner   = getWinner(prediction.homeScore, prediction.awayScore)
   const resultWinner = getWinner(result.homeScore, result.awayScore)
 
+  // 1. Placar exato (vale tanto para vitórias quanto para empates)
   if (
     prediction.homeScore === result.homeScore &&
     prediction.awayScore === result.awayScore
@@ -31,12 +32,20 @@ export function calculateMatchPoints(
     return { points: 10, breakdown: 'Placar exato (+10)' }
   }
 
+  // 2. Resultado errado (errou quem vence / se houve empate ou não)
   if (predWinner !== resultWinner) {
     return { points: 0, breakdown: 'Resultado incorreto (0)' }
   }
 
+  // 3. Acertou o empate mas errou o placar exato
+  //    (saldo é sempre 0 em empates, então "saldo correto" não se aplica aqui)
+  if (resultWinner === 'draw') {
+    return { points: 5, breakdown: 'Empate correto (+5)' }
+  }
+
+  // 4. Acertou o vencedor E o saldo de gols (ex: palpitou 2×0, resultado 3×1)
   const predDiff   = prediction.homeScore - prediction.awayScore
-  const resultDiff = result.homeScore   - result.awayScore
+  const resultDiff = result.homeScore     - result.awayScore
 
   if (predDiff === resultDiff) {
     return {
@@ -45,6 +54,7 @@ export function calculateMatchPoints(
     }
   }
 
+  // 5. Acertou apenas o vencedor
   return { points: 5, breakdown: 'Vencedor correto (+5)' }
 }
 

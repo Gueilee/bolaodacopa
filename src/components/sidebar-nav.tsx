@@ -19,6 +19,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard/palpites',          label: 'Meus Palpites',  icon: '🎯' },
   { href: '/dashboard/mural',             label: 'Central da Torcida', icon: '💬' },
   { href: '/dashboard/finais',            label: 'Palpite Final',  icon: '🌟' },
+  { href: '/dashboard/regras',            label: 'Regras',         icon: '📋' },
   { href: '/tv',                          label: 'TV Corporativa', icon: '📺', newTab: true },
   { href: '/dashboard/perfil',            label: 'Meu Perfil',     icon: '👤' },
   { href: '/admin',                       label: 'Administração',  icon: '⚙️', adminOnly: true },
