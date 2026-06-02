@@ -8,7 +8,7 @@ type User = {
   id:                 string
   name:               string
   email:              string
-  role:               'admin' | 'user'
+  role:               'admin' | 'rh' | 'user'
   department:         string | null
   isActive:           boolean
   totalPoints:        number

@@ -21,7 +21,7 @@ export function CreateUserForm({ existingDepartments }: Props) {
         name:       fd.get('name') as string,
         email:      fd.get('email') as string,
         password:   fd.get('password') as string,
-        role:       fd.get('role') as 'admin' | 'user',
+        role:       fd.get('role') as 'admin' | 'rh' | 'user',
         department: (fd.get('department') as string) || null,
       })
 

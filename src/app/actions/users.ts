@@ -33,7 +33,7 @@ export async function createUser(data: {
   name:       string
   email:      string
   password:   string
-  role:       'admin' | 'user'
+  role:       'admin' | 'rh' | 'user'
   department: string | null
 }): Promise<{ success: boolean; error?: string }> {
   const session = await getSession()
