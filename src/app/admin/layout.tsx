@@ -30,7 +30,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
         <Link
           href="/dashboard"
-          className="text-xs text-white/40 hover:text-white transition-colors"
+          className="text-xs text-brand-pink/70 hover:text-brand-pink transition-colors font-medium"
         >
           ← Voltar ao Bolão
         </Link>
