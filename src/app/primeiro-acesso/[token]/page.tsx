@@ -1,4 +1,4 @@
-import { getUserByToken } from '@/app/actions/invite'
+import { getUserByToken } from '@/lib/token-queries'
 import { FirstAccessForm } from './first-access-form'
 import Image from 'next/image'
 import Link from 'next/link'

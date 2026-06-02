@@ -141,22 +141,4 @@ export async function redeemInviteToken(
   return { success: true }
 }
 
-// ─── Buscar usuário pelo token (para exibir nome na página) ───────────────────
-
-export async function getUserByToken(token: string) {
-  const record = await db.query.userTokens.findFirst({
-    where: eq(userTokens.token, token),
-  })
-  if (!record) return null
-
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, record.userId),
-    columns: { id: true, name: true, email: true, firstAccessAt: true },
-  })
-
-  return {
-    user,
-    expired: record.expiresAt < new Date(),
-    used:    !!record.usedAt,
-  }
-}
+// getUserByToken movido para src/lib/token-queries.ts (sem 'use server')
