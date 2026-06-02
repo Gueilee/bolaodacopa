@@ -83,6 +83,13 @@ export default async function AdminPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {[
           {
+            href:  '/admin/convites',
+            icon:  '✉️',
+            label: 'Convites de Acesso',
+            sub:   'Envie links de primeiro acesso para os colaboradores',
+            color: 'brand-neon',
+          },
+          {
             href:  '/admin/rh',
             icon:  '📊',
             label: 'Dashboard de Engajamento RH',

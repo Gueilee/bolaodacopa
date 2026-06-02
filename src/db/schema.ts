@@ -21,7 +21,8 @@ export const users = sqliteTable(
     // WhatsApp: número no formato 5511999999999 (sem + ou espaços)
     phone:             text('phone'),
     whatsappOptIn:     integer('whatsapp_opt_in', { mode: 'boolean' }).notNull().default(false),
-    manager:  text('manager'),   // nome do gestor direto
+    manager:       text('manager'),
+    firstAccessAt: integer('first_access_at', { mode: 'timestamp' }),
     isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
     totalPoints: integer('total_points').notNull().default(0),
     // Registro único: ao finalizar, todos os palpites ficam imutáveis
@@ -238,6 +239,29 @@ export const socialLikes = sqliteTable(
     pk: uniqueIndex('social_likes_pk').on(t.userId, t.postId),
   }),
 )
+
+// ─────────────────────────────────────────────
+// USER TOKENS — convites e reset de senha
+// ─────────────────────────────────────────────
+export const userTokens = sqliteTable(
+  'user_tokens',
+  {
+    id:        text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    userId:    text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    token:     text('token').notNull(),
+    type:      text('type', { enum: ['invite', 'password_reset'] }).notNull(),
+    expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+    usedAt:    integer('used_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    tokenIdx:  uniqueIndex('user_tokens_token_idx').on(t.token),
+    userIdx:   index('user_tokens_user_idx').on(t.userId),
+  }),
+)
+
+export type UserToken    = typeof userTokens.$inferSelect
+export type NewUserToken = typeof userTokens.$inferInsert
 
 // ─── Relations ─────────────────────────────────────────────────────────────────
 export const usersRelations = relations(users, ({ many, one }) => ({
