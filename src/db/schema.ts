@@ -219,7 +219,8 @@ export const socialPosts = sqliteTable(
     content:   text('content'),
     mediaUrl:  text('media_url'),
     mediaType: text('media_type', { enum: ['image', 'video', 'text'] }).notNull().default('text'),
-    likesCount: integer('likes_count').notNull().default(0),
+    likesCount:    integer('likes_count').notNull().default(0),
+    commentsCount: integer('comments_count').notNull().default(0),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   },
   (t) => ({
@@ -263,6 +264,27 @@ export const userTokens = sqliteTable(
 export type UserToken    = typeof userTokens.$inferSelect
 export type NewUserToken = typeof userTokens.$inferInsert
 
+// ─────────────────────────────────────────────
+// SOCIAL COMMENTS
+// ─────────────────────────────────────────────
+export const socialComments = sqliteTable(
+  'social_comments',
+  {
+    id:        text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    postId:    text('post_id').notNull().references(() => socialPosts.id, { onDelete: 'cascade' }),
+    userId:    text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    content:   text('content').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    postIdx: index('social_comments_post_idx').on(t.postId),
+    userIdx: index('social_comments_user_idx').on(t.userId),
+  }),
+)
+
+export type SocialComment    = typeof socialComments.$inferSelect
+export type NewSocialComment = typeof socialComments.$inferInsert
+
 // ─── Relations ─────────────────────────────────────────────────────────────────
 export const usersRelations = relations(users, ({ many, one }) => ({
   predictions: many(predictions),
@@ -275,8 +297,14 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 }))
 
 export const socialPostsRelations = relations(socialPosts, ({ one, many }) => ({
-  user:  one(users, { fields: [socialPosts.userId], references: [users.id] }),
-  likes: many(socialLikes),
+  user:     one(users, { fields: [socialPosts.userId], references: [users.id] }),
+  likes:    many(socialLikes),
+  comments: many(socialComments),
+}))
+
+export const socialCommentsRelations = relations(socialComments, ({ one }) => ({
+  post: one(socialPosts, { fields: [socialComments.postId], references: [socialPosts.id] }),
+  user: one(users,       { fields: [socialComments.userId], references: [users.id] }),
 }))
 
 export const socialLikesRelations = relations(socialLikes, ({ one }) => ({

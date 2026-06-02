@@ -18,10 +18,10 @@ export default async function MuralPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>
-          💬 Mural Social
+          💬 Central da Torcida
         </h1>
         <p className="text-sm mt-1" style={{ color: '#8a8490' }}>
-          Fotos, curtidas e comunicados · Sua voz na tela de todos
+          Fotos, comentários, curtidas · Sua voz na tela de todos
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export default async function MuralPage() {
         <div className="card p-12 text-center">
           <p style={{ fontSize: 48 }}>🏆</p>
           <p className="font-semibold mt-3" style={{ color: '#1a1625' }}>
-            O mural está vazio!
+            A Central da Torcida está vazia!
           </p>
           <p className="text-sm mt-1" style={{ color: '#8a8490' }}>
             Seja o primeiro a compartilhar um momento da Copa.
