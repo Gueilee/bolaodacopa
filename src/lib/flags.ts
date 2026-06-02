@@ -60,9 +60,31 @@ export const TEAM_ISO: Record<string, string> = {
   'Colômbia':        'co',
   'Irlanda':         'ie',
   'Tanzânia':        'tz',
+  // Países adicionais (sorteio atualizado)
+  'Curaçao':          'cw',
+  'Costa do Marfim':  'ci',
+  'Países Baixos':    'nl',
+  'Egito':            'eg',
+  'Suécia':           'se',
+  'Irã':              'ir',
+  'Cabo Verde':       'cv',
+  'Uruguai':          'uy',
+  'Iraque':           'iq',
+  'Noruega':          'no',
+  'Rep. D. do Congo': 'cd',
+  'Áustria':          'at',
+  'Jordânia':         'jo',
+  'Uzbequistão':      'uz',
+  'Croácia':          'hr',
+  'Gana':             'gh',
+  // Variações de nome que podem existir no banco
+  'Congo DR':         'cd',
+  'Holanda':          'nl',
+  'Costa Marfim':     'ci',
+
   // Placeholder mata-mata
-  'A Definir':       '',
-  'TBD':             '',
+  'A Definir':        '',
+  'TBD':              '',
 }
 
 export function getFlagUrl(teamName: string, size: number = 40): string {
