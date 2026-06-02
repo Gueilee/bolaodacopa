@@ -62,7 +62,7 @@ export async function getTvData(): Promise<TvData> {
   const recentResults: TvMatch[] = allMatches
     .filter((m) => m.status === 'finished')
     .sort((a, b) => new Date(b.matchDate).getTime() - new Date(a.matchDate).getTime())
-    .slice(0, 8)
+    .slice(0, 10)
     .map(toTvMatch)
 
   // Build department ranking
