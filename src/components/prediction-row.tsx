@@ -75,27 +75,31 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
       className="px-4 py-3 transition-colors"
       style={{ borderBottom: '1px solid #f0ede8' }}
     >
-      {/* Date + group */}
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <span className="text-[10px]" style={{ color: '#aaa8b0' }}>
-          {formatMatchDate(match.matchDate)} · {formatMatchTime(match.matchDate)}
-        </span>
-        {(match.city || match.venue) && (
+      {/* Meta: linha 1 = data+hora (esq) + badges (dir) | linha 2 = estádio */}
+      <div className="mb-2">
+        <div className="flex items-center justify-between gap-2">
           <span className="text-[10px]" style={{ color: '#aaa8b0' }}>
-            · 📍 {match.city ?? match.venue}
+            {formatMatchDate(match.matchDate)} · {formatMatchTime(match.matchDate)}
           </span>
-        )}
-        {match.groupName && (
-          <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-            style={{ background: '#f0ede8', color: '#8a8490' }}>
-            {match.groupName}
-          </span>
-        )}
-        {isFinished && (
-          <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-            style={{ background: '#fce8ee', color: '#ff2f69' }}>
-            Encerrado
-          </span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {match.groupName && (
+              <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                style={{ background: '#f0ede8', color: '#8a8490' }}>
+                {match.groupName}
+              </span>
+            )}
+            {isFinished && (
+              <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                style={{ background: '#fce8ee', color: '#ff2f69' }}>
+                Encerrado
+              </span>
+            )}
+          </div>
+        </div>
+        {match.venue && (
+          <p className="text-[10px] mt-0.5" style={{ color: '#aaa8b0' }}>
+            📍 {match.venue}
+          </p>
         )}
       </div>
 
