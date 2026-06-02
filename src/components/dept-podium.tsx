@@ -1,100 +1,177 @@
 import type { DeptRankEntry } from '@/lib/dept-ranking'
-import { initials } from '@/lib/utils'
 
 type Props = { top3: DeptRankEntry[] }
 
-// ─── Configurações visuais por posição ───────────────────────────────────────
+// ─── Paleta por posição ───────────────────────────────────────────────────────
 
-const PODIUM_CONFIG = {
+const CFG = {
   1: {
-    medal:       '🥇',
-    height:      'h-40',
-    labelHeight: 'h-10',
-    bg:          'bg-gradient-to-b from-[#FFD700]/20 to-[#FFD700]/5',
-    border:      'border-[#FFD700]/40',
-    glow:        'shadow-[0_0_40px_rgba(255,215,0,0.2)]',
-    pts:         'text-[#FFD700]',
-    order:       'order-2',             // centro
-    translate:   '',
-    zIndex:      'z-10',
+    emoji:      '🥇',
+    pos:        '1º',
+    cardBg:     '#FFFBEB',
+    cardBorder: '#FCD34D',
+    stepBg:     'linear-gradient(160deg, #F59E0B 0%, #D97706 100%)',
+    stepH:      120,
+    nameColor:  '#92400E',
+    ptsColor:   '#B45309',
+    mutedColor: '#D97706',
+    badgeBg:    '#F59E0B',
+    badgeText:  '#fff',
+    order:      2,
+    offsetTop:  0,
+    shadow:     '0 8px 32px rgba(245,158,11,0.25), 0 2px 8px rgba(0,0,0,0.08)',
   },
   2: {
-    medal:       '🥈',
-    height:      'h-28',
-    labelHeight: 'h-8',
-    bg:          'bg-gradient-to-b from-white/10 to-white/3',
-    border:      'border-white/20',
-    glow:        '',
-    pts:         'text-white/80',
-    order:       'order-1',             // esquerda
-    translate:   'translate-y-6',
-    zIndex:      'z-0',
+    emoji:      '🥈',
+    pos:        '2º',
+    cardBg:     '#F8FAFC',
+    cardBorder: '#CBD5E1',
+    stepBg:     'linear-gradient(160deg, #94A3B8 0%, #64748B 100%)',
+    stepH:      80,
+    nameColor:  '#1e293b',
+    ptsColor:   '#475569',
+    mutedColor: '#64748B',
+    badgeBg:    '#94A3B8',
+    badgeText:  '#fff',
+    order:      1,
+    offsetTop:  32,
+    shadow:     '0 4px 16px rgba(0,0,0,0.08)',
   },
   3: {
-    medal:       '🥉',
-    height:      'h-20',
-    labelHeight: 'h-8',
-    bg:          'bg-gradient-to-b from-[#CD7F32]/15 to-[#CD7F32]/5',
-    border:      'border-[#CD7F32]/30',
-    glow:        '',
-    pts:         'text-[#CD7F32]',
-    order:       'order-3',             // direita
-    translate:   'translate-y-10',
-    zIndex:      'z-0',
+    emoji:      '🥉',
+    pos:        '3º',
+    cardBg:     '#FFFAF5',
+    cardBorder: '#FED7AA',
+    stepBg:     'linear-gradient(160deg, #CD7F32 0%, #A0522D 100%)',
+    stepH:      48,
+    nameColor:  '#7c2d12',
+    ptsColor:   '#9a3412',
+    mutedColor: '#C2410C',
+    badgeBg:    '#CD7F32',
+    badgeText:  '#fff',
+    order:      3,
+    offsetTop:  56,
+    shadow:     '0 4px 16px rgba(0,0,0,0.08)',
   },
 } as const
 
-// ─── Card de cada posição ─────────────────────────────────────────────────────
+// ─── Card individual ──────────────────────────────────────────────────────────
 
 function PodiumCard({ entry }: { entry: DeptRankEntry }) {
-  const cfg = PODIUM_CONFIG[entry.position as 1 | 2 | 3]
+  const cfg = CFG[entry.position as 1 | 2 | 3]
+  const firstName = entry.leader?.split(' ')[0] ?? null
 
   return (
-    <div className={`flex flex-col items-center gap-0 ${cfg.order} ${cfg.translate} ${cfg.zIndex}`}>
+    <div
+      style={{
+        order: cfg.order,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: 150,
+        flexShrink: 0,
+        marginTop: cfg.offsetTop,
+      }}
+    >
+      {/* ── Info card ── */}
+      <div
+        style={{
+          width: '100%',
+          background: cfg.cardBg,
+          border: `2px solid ${cfg.cardBorder}`,
+          borderRadius: 16,
+          padding: '14px 12px 16px',
+          textAlign: 'center',
+          boxShadow: cfg.shadow,
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {/* Medalha */}
+        <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 6 }}>{cfg.emoji}</div>
 
-      {/* Badge de posição + departamento */}
-      <div className="text-center mb-3 px-2">
-        <div className="text-2xl mb-1">{cfg.medal}</div>
-        <p className="font-bold text-sm leading-tight max-w-[110px] text-center" style={{ color: '#1a1625' }}>
+        {/* Nome do departamento */}
+        <p
+          style={{
+            margin: '0 0 4px',
+            fontSize: 13,
+            fontWeight: 800,
+            color: cfg.nameColor,
+            lineHeight: 1.3,
+            wordBreak: 'break-word',
+          }}
+        >
           {entry.department}
         </p>
-        {entry.leader && (
-          <p className="text-[10px] mt-0.5 truncate max-w-[110px] text-center" style={{ color: '#8a8490' }}>
-            Líder: {entry.leader.split(' ')[0]}
+
+        {/* Líder */}
+        {firstName && (
+          <p style={{ margin: '0 0 10px', fontSize: 11, color: cfg.mutedColor, fontWeight: 500 }}>
+            Líder: {firstName}
           </p>
         )}
-      </div>
 
-      {/* Bloco do pódio com pontuação — mantém fundo colorido, texto branco adequado */}
-      <div
-        className={`
-          w-full min-w-[100px] max-w-[130px] rounded-t-2xl border
-          flex flex-col items-center justify-start pt-4 px-3
-          ${cfg.height} ${cfg.bg} ${cfg.border} ${cfg.glow}
-        `}
-      >
-        <p className={`text-2xl font-black tabular-nums ${cfg.pts}`}>
+        {/* Divider */}
+        <div style={{ height: 1, background: cfg.cardBorder, margin: '10px 0' }} />
+
+        {/* Pontuação */}
+        <p
+          style={{
+            margin: 0,
+            fontSize: 26,
+            fontWeight: 900,
+            color: cfg.ptsColor,
+            lineHeight: 1,
+            fontVariantNumeric: 'tabular-nums',
+          }}
+        >
           {entry.avgPoints.toFixed(1)}
         </p>
-        <p className="text-[10px] text-white/50">pts médios</p>
+        <p style={{ margin: '3px 0 8px', fontSize: 10, color: cfg.mutedColor, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          pts médios
+        </p>
 
-        <div className="mt-2 text-center">
-          <p className="text-[10px] text-white/50">
+        {/* Participação */}
+        <div
+          style={{
+            background: `${cfg.cardBorder}80`,
+            borderRadius: 8,
+            padding: '5px 8px',
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: cfg.ptsColor }}>
             {entry.lockedMembers}/{entry.totalMembers} membros
           </p>
-          <p className="text-[10px] text-white/40">{entry.participationRate}% participação</p>
+          <p style={{ margin: '1px 0 0', fontSize: 10, color: cfg.mutedColor }}>
+            {entry.participationRate}% participação
+          </p>
         </div>
       </div>
 
-      {/* Base do pódio */}
+      {/* ── Degrau do pódio ── */}
       <div
-        className={`
-          w-full min-w-[100px] max-w-[130px] ${cfg.labelHeight} rounded-b-lg
-          ${cfg.bg} ${cfg.border} border-t-0
-          flex items-center justify-center
-        `}
+        style={{
+          width: '100%',
+          height: cfg.stepH,
+          background: cfg.stepBg,
+          borderRadius: '0 0 12px 12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: -1,
+          boxShadow: `0 8px 20px ${cfg.badgeBg}55`,
+        }}
       >
-        <span className="text-xs font-bold text-white/50">{entry.position}º</span>
+        <span
+          style={{
+            fontSize: 13,
+            fontWeight: 900,
+            color: 'rgba(255,255,255,0.9)',
+            letterSpacing: '0.06em',
+          }}
+        >
+          {cfg.pos}
+        </span>
       </div>
     </div>
   )
@@ -109,28 +186,40 @@ export function DeptPodium({ top3 }: Props) {
         <p className="text-sm" style={{ color: '#8a8490' }}>
           Nenhum departamento cadastrado ainda.
         </p>
-        <p className="text-xs mt-1" style={{ color: '#8a8490' }}>
+        <p className="text-xs mt-1" style={{ color: '#aaa8b0' }}>
           Atribua departamentos aos colaboradores em Administração → Usuários.
         </p>
       </div>
     )
   }
 
-  if (top3.length === 1) {
-    return (
-      <div className="flex justify-center">
-        <PodiumCard entry={top3[0]} />
-      </div>
-    )
-  }
-
   return (
-    <div className="relative">
-      {/* Linha de base */}
-      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: '#e8e4df' }} />
+    <div>
+      {/* Título */}
+      <p
+        style={{
+          textAlign: 'center',
+          fontSize: 11,
+          fontWeight: 800,
+          letterSpacing: '0.18em',
+          textTransform: 'uppercase',
+          color: '#8a8490',
+          marginBottom: 28,
+        }}
+      >
+        🏆 Top 3 Departamentos
+      </p>
 
-      {/* Pódio */}
-      <div className="flex items-end justify-center gap-2 pb-0">
+      {/* Cards em flex — alinhados pela base do degrau */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-end',
+          gap: 12,
+          padding: '0 8px',
+        }}
+      >
         {top3.map((entry) => (
           <PodiumCard key={entry.department} entry={entry} />
         ))}
