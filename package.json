@@ -11,7 +11,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx --env-file=.env.local src/db/seed.ts",
-    "db:seed-matches": "tsx --env-file=.env.local src/db/seed-matches.ts"
+    "db:seed-matches": "tsx --env-file=.env.local src/db/seed-matches.ts",
+    "db:seed-users": "tsx --env-file=.env.local src/db/seed-users.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.14.0",
@@ -36,6 +37,7 @@
     "eslint-config-next": "^15.5.19",
     "tailwindcss": "^3.4.0",
     "tsx": "^4.19.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "xlsx": "^0.18.5"
   }
 }

@@ -5,6 +5,7 @@ import type { TvData } from '@/lib/tv-data'
 import { SlideWelcome }     from './slide-welcome'
 import { SlideRanking }     from './slide-ranking'
 import { SlideDepartments } from './slide-departments'
+import { SlideManagers }    from './slide-managers'
 import { SlideMatches }     from './slide-matches'
 import { SlideResults }     from './slide-results'
 
@@ -15,6 +16,7 @@ const SLIDES: SlideConfig[] = [
   { id: 'welcome',     duration: 10000, label: '🏆 Bolão Copa 2026' },
   { id: 'ranking',     duration: 14000, label: '🥇 Ranking Individual' },
   { id: 'departments', duration: 12000, label: '🏢 Por Departamento' },
+  { id: 'managers',    duration: 12000, label: '👔 Por Gestor' },
   { id: 'matches',     duration: 12000, label: '⚽ Jogos do Dia' },
   { id: 'results',     duration: 12000, label: '📊 Últimos Resultados' },
 ]
@@ -177,6 +179,7 @@ export function TvSlideshow({ data }: { data: TvData }) {
             {slide.id === 'welcome'     && <SlideWelcome data={data} />}
             {slide.id === 'ranking'     && <SlideRanking entries={data.ranking} />}
             {slide.id === 'departments' && <SlideDepartments departments={data.departments} />}
+            {slide.id === 'managers'    && <SlideManagers managers={data.managers} />}
             {slide.id === 'matches'     && <SlideMatches matches={data.todayMatches} />}
             {slide.id === 'results'     && <SlideResults matches={data.recentResults} />}
           </div>

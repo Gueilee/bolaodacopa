@@ -21,6 +21,7 @@ export const users = sqliteTable(
     // WhatsApp: número no formato 5511999999999 (sem + ou espaços)
     phone:             text('phone'),
     whatsappOptIn:     integer('whatsapp_opt_in', { mode: 'boolean' }).notNull().default(false),
+    manager:  text('manager'),   // nome do gestor direto
     isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
     totalPoints: integer('total_points').notNull().default(0),
     // Registro único: ao finalizar, todos os palpites ficam imutáveis

@@ -89,13 +89,14 @@ export default async function DashboardPage() {
           <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#8a8490' }}>
             Classificação Individual
           </h2>
-          <Link
-            href="/dashboard/departamentos"
-            className="text-xs transition-colors"
-            style={{ color: '#422c76' }}
-          >
-            Ver ranking por equipe →
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/dashboard/departamentos" className="text-xs transition-colors" style={{ color: '#422c76' }}>
+              Por departamento →
+            </Link>
+            <Link href="/dashboard/gestores" className="text-xs transition-colors" style={{ color: '#422c76' }}>
+              Por gestor →
+            </Link>
+          </div>
         </div>
 
         <Suspense fallback={<TableSkeleton />}>

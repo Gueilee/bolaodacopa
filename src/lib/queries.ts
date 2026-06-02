@@ -107,6 +107,40 @@ export async function getMyPredictionStats(userId: string): Promise<MyPrediction
   }
 }
 
+// ─── Ranking por gestor ──────────────────────────────────────────────────────
+
+export type ManagerRankingEntry = {
+  manager:      string
+  totalPoints:  number
+  participants: number
+  leader:       string
+}
+
+export async function getManagerRanking(): Promise<ManagerRankingEntry[]> {
+  const rows = await db
+    .select({ name: users.name, manager: users.manager, totalPoints: users.totalPoints })
+    .from(users)
+    .where(and(eq(users.isActive, true), eq(users.role, 'user')))
+
+  const map = new Map<string, { pts: number; count: number; leader: string; leaderPts: number }>()
+
+  for (const u of rows) {
+    const key = u.manager?.trim() || 'Sem gestor'
+    const e   = map.get(key)
+    if (!e) {
+      map.set(key, { pts: u.totalPoints, count: 1, leader: u.name, leaderPts: u.totalPoints })
+    } else {
+      e.pts   += u.totalPoints
+      e.count += 1
+      if (u.totalPoints > e.leaderPts) { e.leaderPts = u.totalPoints; e.leader = u.name }
+    }
+  }
+
+  return [...map.entries()]
+    .map(([manager, v]) => ({ manager, totalPoints: v.pts, participants: v.count, leader: v.leader }))
+    .sort((a, b) => b.totalPoints - a.totalPoints)
+}
+
 // ─── Admin: todas as partidas com contagem de palpites ───────────────────────
 
 export type AdminMatch = Awaited<

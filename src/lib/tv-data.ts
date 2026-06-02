@@ -1,7 +1,7 @@
 import { db } from '@/lib/db'
 import { users, matches, predictions } from '@/db/schema'
 import { desc, asc, eq, and, count, sql, gte, lte } from 'drizzle-orm'
-import { getRanking } from '@/lib/queries'
+import { getRanking, getManagerRanking } from '@/lib/queries'
 
 export type TvRankingEntry = {
   position:    number
@@ -31,21 +31,28 @@ export type TvDept = {
   leader:       string
 }
 
+export type TvManager = {
+  manager:      string
+  totalPoints:  number
+  participants: number
+  leader:       string
+}
+
 export type TvData = {
   ranking:         TvRankingEntry[]
   todayMatches:    TvMatch[]
   recentResults:   TvMatch[]
   departments:     TvDept[]
+  managers:        TvManager[]
   totalUsers:      number
   updatedAt:       string
 }
 
 export async function getTvData(): Promise<TvData> {
-  const [rankingRaw, allMatches] = await Promise.all([
+  const [rankingRaw, allMatches, managersRaw] = await Promise.all([
     getRanking(),
-    db.query.matches.findMany({
-      orderBy: [asc(matches.matchDate)],
-    }),
+    db.query.matches.findMany({ orderBy: [asc(matches.matchDate)] }),
+    getManagerRanking(),
   ])
 
   const now   = new Date()
@@ -94,11 +101,19 @@ export async function getTvData(): Promise<TvData> {
     exactCount:  e.exactCount,
   }))
 
+  const managers: TvManager[] = managersRaw.slice(0, 15).map(m => ({
+    manager:      m.manager,
+    totalPoints:  m.totalPoints,
+    participants: m.participants,
+    leader:       m.leader,
+  }))
+
   return {
     ranking,
     todayMatches,
     recentResults,
     departments,
+    managers,
     totalUsers:  rankingRaw.length,
     updatedAt:   now.toISOString(),
   }
