@@ -3,7 +3,7 @@ import { jwtVerify } from 'jose'
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET!)
 
-const PUBLIC_PATHS = ['/login', '/forgot-password', '/api/auth']
+const PUBLIC_PATHS = ['/login', '/forgot-password', '/api/auth', '/tv']
 const ADMIN_PATHS  = ['/admin']
 
 export async function middleware(request: NextRequest) {
