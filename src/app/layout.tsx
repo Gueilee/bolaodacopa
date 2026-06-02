@@ -12,7 +12,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Bolão Copa 2026 | Vendemmia',
   description: 'Bolão corporativo da Copa do Mundo 2026 — Vendemmia Comércio Internacional',
-  icons: { icon: '/favicon.svg' },
+  icons: {
+    icon: '/favicon.png',
+    apple: '/favicon.png',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
