@@ -7,9 +7,11 @@ import { TeamFlag } from '@/components/team-flag'
 import type { MatchWithPrediction } from '@/lib/queries'
 
 type Props = {
-  match:        MatchWithPrediction
-  isUserLocked: boolean
-  index:        number
+  match:                MatchWithPrediction
+  isUserLocked:         boolean
+  index:                number
+  projectedHomeTeam?:   string | null
+  projectedAwayTeam?:   string | null
 }
 
 function PointsPill({ points }: { points: number }) {
@@ -42,7 +44,10 @@ function ScoreInput({ value, onChange, disabled }: { value: string; onChange: (v
   )
 }
 
-export function PredictionRow({ match, isUserLocked }: Props) {
+export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projectedAwayTeam }: Props) {
+  // undefined = fase de grupos (usa nome do DB), null = mata-mata ainda indefinido (mostra '?')
+  const displayHomeTeam = projectedHomeTeam !== undefined ? projectedHomeTeam : match.homeTeam
+  const displayAwayTeam = projectedAwayTeam !== undefined ? projectedAwayTeam : match.awayTeam
   const prediction = match.predictions[0] ?? null
   const isFinished = match.status === 'finished'
   const canEdit    = !isUserLocked && !isFinished
@@ -92,8 +97,10 @@ export function PredictionRow({ match, isUserLocked }: Props) {
 
         {/* Home team */}
         <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-end">
-          <span className="text-xs font-semibold truncate" style={{ color: '#1a1625' }}>{match.homeTeam}</span>
-          <TeamFlag teamName={match.homeTeam} size={28} />
+          <span className="text-xs font-semibold truncate" style={{ color: displayHomeTeam ? '#1a1625' : '#aaa8b0' }}>
+            {displayHomeTeam ?? '?'}
+          </span>
+          {displayHomeTeam && <TeamFlag teamName={displayHomeTeam} size={28} />}
         </div>
 
         {/* Score */}
@@ -121,8 +128,10 @@ export function PredictionRow({ match, isUserLocked }: Props) {
 
         {/* Away team */}
         <div className="flex items-center gap-1.5 flex-1 min-w-0">
-          <TeamFlag teamName={match.awayTeam} size={28} />
-          <span className="text-xs font-semibold truncate" style={{ color: '#1a1625' }}>{match.awayTeam}</span>
+          {displayAwayTeam && <TeamFlag teamName={displayAwayTeam} size={28} />}
+          <span className="text-xs font-semibold truncate" style={{ color: displayAwayTeam ? '#1a1625' : '#aaa8b0' }}>
+            {displayAwayTeam ?? '?'}
+          </span>
         </div>
 
         {/* Action */}

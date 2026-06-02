@@ -10,9 +10,19 @@ import { eq } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { LockPredictionsButton } from '@/components/lock-predictions-button'
 import { PredictionRow }         from '@/components/prediction-row'
+import { GroupStandingsPanel }   from '@/components/group-standings-panel'
 import { phaseLabels, phaseOrder } from '@/lib/utils'
+import {
+  computeGroupStandings,
+  computeBracketProjection,
+  type MatchData,
+  type BracketProjection,
+} from '@/lib/bracket'
 
 export const revalidate = 0
+
+// Fases que possuem times TBD resolvidos pelo bracket
+const KNOCKOUT_PHASES = new Set(['round_of_32', 'round_of_16', 'quarter_final', 'semi_final', 'third_place', 'final'])
 
 export default async function MeusPalpitesPage() {
   const session = await getSession()
@@ -29,7 +39,25 @@ export default async function MeusPalpitesPage() {
 
   const isLocked = lockStatus?.isPredictionLocked ?? false
 
-  // Agrupar partidas por fase
+  // ── Calcular classificação dos grupos e projeção do chaveamento ──────────────
+  const matchData: MatchData[] = allMatches.map(m => ({
+    id:                  m.id,
+    phase:               m.phase,
+    groupName:           m.groupName,
+    matchNumber:         m.matchNumber,
+    homeTeam:            m.homeTeam,
+    awayTeam:            m.awayTeam,
+    status:              m.status,
+    predictedHomeScore:  m.predictions[0]?.homeScore ?? null,
+    predictedAwayScore:  m.predictions[0]?.awayScore ?? null,
+    actualHomeScore:     m.homeScore ?? null,
+    actualAwayScore:     m.awayScore ?? null,
+  }))
+
+  const groupStandings   = computeGroupStandings(matchData)
+  const bracketProjection: BracketProjection = computeBracketProjection(matchData, groupStandings)
+
+  // ── Agrupar partidas por fase ─────────────────────────────────────────────────
   const phaseMap = new Map<string, typeof allMatches>()
   for (const match of allMatches) {
     if (!phaseMap.has(match.phase)) phaseMap.set(match.phase, [])
@@ -104,10 +132,7 @@ export default async function MeusPalpitesPage() {
           <div className="text-center py-6">
             <p className="text-sm mb-3" style={{ color: '#8a8490' }}>Você ainda não fez o palpite final do torneio.</p>
             {!isLocked && (
-              <a
-                href="/dashboard/finais"
-                className="text-brand-neon text-sm hover:underline"
-              >
+              <a href="/dashboard/finais" className="text-brand-neon text-sm hover:underline">
                 Fazer palpite final →
               </a>
             )}
@@ -132,15 +157,27 @@ export default async function MeusPalpitesPage() {
             </div>
 
             <div className="card overflow-hidden divide-y" style={{ borderColor: '#f0ede8' }}>
-              {phaseMatches.map((match, i) => (
-                <PredictionRow
-                  key={match.id}
-                  match={match}
-                  isUserLocked={isLocked}
-                  index={i}
-                />
-              ))}
+              {phaseMatches.map((match, i) => {
+                const proj = KNOCKOUT_PHASES.has(phase) ? bracketProjection[match.id] : undefined
+                return (
+                  <PredictionRow
+                    key={match.id}
+                    match={match}
+                    isUserLocked={isLocked}
+                    index={i}
+                    projectedHomeTeam={proj?.home}
+                    projectedAwayTeam={proj?.away}
+                  />
+                )
+              })}
             </div>
+
+            {/* Classificação dos grupos: aparece após a fase de grupos */}
+            {phase === 'group' && (
+              <div className="pt-4">
+                <GroupStandingsPanel standings={groupStandings} />
+              </div>
+            )}
           </section>
         )
       })}
