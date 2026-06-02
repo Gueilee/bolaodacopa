@@ -17,16 +17,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
         style={{ background: '#ffffff', borderRight: '1px solid #e5e2dd', boxShadow: '2px 0 12px rgba(0,0,0,0.06)' }}>
 
         {/* Logo */}
-        <div className="px-4 py-4" style={{ borderBottom: '1px solid #e5e2dd' }}>
-          <Link href="/dashboard">
+        <div className="px-1 py-2" style={{ borderBottom: '1px solid #e5e2dd' }}>
+          <Link href="/dashboard" style={{ display: 'block' }}>
             <Image
               src="/logo2.png"
               alt="Bolão Vendemmia Copa 2026"
-              width={260}
-              height={96}
+              width={256}
+              height={120}
               unoptimized
               priority
-              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 96 }}
+              style={{ objectFit: 'contain', width: '100%', height: 'auto', maxHeight: 120 }}
             />
           </Link>
         </div>
