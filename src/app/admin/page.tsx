@@ -62,51 +62,75 @@ export default async function AdminPage() {
   const pendingScoring = stats.pendingScoring
 
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-fade-in">
+    <div className="max-w-3xl mx-auto space-y-6 animate-fade-in" style={{ paddingBottom: 40 }}>
 
-      {/* ── Header ── */}
-      <div>
-        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Painel Admin</h1>
-        <p className="text-sm mt-1" style={{ color: '#8a8490' }}>
-          Gerencie partidas, sync automático e pontuação
-        </p>
+      {/* ── Hero Header ── */}
+      <div style={{
+        background: 'linear-gradient(135deg, #150820 0%, #1a0a2e 60%, #200a15 100%)',
+        borderRadius: 24, padding: '24px 28px', position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{ position: 'absolute', top: -30, right: -20, width: 160, height: 160,
+          background: 'radial-gradient(circle, rgba(255,47,105,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            <span style={{ fontSize: 24 }}>⚙️</span>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 900, color: '#faf9f5', letterSpacing: '-0.02em' }}>
+              Painel Admin
+            </h1>
+          </div>
+          <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+            Gerencie partidas, sync automático e pontuação
+          </p>
+        </div>
       </div>
 
       {/* ── Stats ── */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         {[
-          { label: 'Usuários',          value: stats.users,            accent: false },
-          { label: 'Bloqueados',        value: stats.lockedUsers,      accent: false },
-          { label: 'Partidas',          value: stats.matches,          accent: false },
-          { label: 'Palpites',          value: stats.totalPredictions, accent: false },
-          { label: 'Aguard. pontuação', value: pendingScoring,         accent: pendingScoring > 0 },
+          { label: 'Usuários',          value: stats.users,            icon: '👥', accent: false },
+          { label: 'Bloqueados',        value: stats.lockedUsers,      icon: '🔒', accent: false },
+          { label: 'Partidas',          value: stats.matches,          icon: '⚽', accent: false },
+          { label: 'Palpites',          value: stats.totalPredictions, icon: '🎯', accent: false },
+          { label: 'Aguard. pontuação', value: pendingScoring,         icon: '⏳', accent: pendingScoring > 0 },
         ].map(s => (
-          <div key={s.label} className="card p-4 text-center">
-            <p className={`text-2xl font-bold tabular-nums ${s.accent ? 'text-brand-pink' : ''}`}
-               style={s.accent ? undefined : { color: '#1a1625' }}>
+          <div key={s.label} className="card p-4 text-center" style={{
+            borderTop: s.accent ? '2px solid #ff2f69' : '2px solid transparent',
+          }}>
+            <p style={{ fontSize: 18, marginBottom: 4 }}>{s.icon}</p>
+            <p style={{ margin: '0 0 2px', fontSize: 22, fontWeight: 800,
+              color: s.accent ? '#ff2f69' : '#1a1625', letterSpacing: '-0.02em' }}>
               {s.value}
             </p>
-            <p className="text-xs mt-1" style={{ color: '#8a8490' }}>{s.label}</p>
+            <p style={{ margin: 0, fontSize: 10, color: '#8a8490', fontWeight: 600 }}>{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* ── Atalhos rápidos ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { href: '/admin/convites', icon: '✉️', label: 'Convites',  sub: 'Enviar links de acesso' },
-          { href: '/admin/rh',       icon: '📊', label: 'Dashboard RH', sub: 'Engajamento por depto' },
-          { href: '/admin/exportar', icon: '⬇️', label: 'Exportar',  sub: 'PDF e CSVs do bolão' },
+          { href: '/admin/convites', icon: '✉️', label: 'Convites',     sub: 'Enviar links de acesso',   color: '#422c76' },
+          { href: '/admin/rh',       icon: '📊', label: 'Dashboard RH', sub: 'Engajamento por depto',    color: '#01a866' },
+          { href: '/admin/exportar', icon: '⬇️', label: 'Exportar',     sub: 'PDF e CSVs do bolão',      color: '#1a6aff' },
         ].map(link => (
-          <a key={link.href} href={link.href}
-            className="flex items-center gap-3 card p-4 hover:bg-white/80 transition-all group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"
-              style={{ background: '#f0ede8' }}>
+          <a key={link.href} href={link.href} style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            background: '#fff', borderRadius: 16, padding: '16px 18px',
+            border: '1px solid rgba(0,0,0,0.06)',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.05)',
+            textDecoration: 'none', transition: 'all 0.15s',
+          }}>
+            <div style={{
+              width: 42, height: 42, borderRadius: 12, flexShrink: 0,
+              background: `${link.color}14`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+              border: `1px solid ${link.color}22`,
+            }}>
               {link.icon}
             </div>
-            <div className="min-w-0">
-              <p className="font-semibold text-sm" style={{ color: '#1a1625' }}>{link.label}</p>
-              <p className="text-xs truncate" style={{ color: '#8a8490' }}>{link.sub}</p>
+            <div>
+              <p style={{ margin: '0 0 2px', fontWeight: 700, fontSize: 14, color: '#1a1625' }}>{link.label}</p>
+              <p style={{ margin: 0, fontSize: 12, color: '#8a8490' }}>{link.sub}</p>
             </div>
           </a>
         ))}

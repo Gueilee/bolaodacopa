@@ -71,17 +71,29 @@ export default async function HrDashboardPage() {
     ])
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in" style={{ paddingBottom: 40 }}>
 
-      {/* ── Header ── */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold" style={{color:'#1a1625'}}>Dashboard RH</h1>
-          <p className="text-sm mt-1" style={{color:'#8a8490'}}>
-            Engajamento corporativo · Copa do Mundo 2026 · Vendemmia
-          </p>
+      {/* ── Hero Header ── */}
+      <div style={{
+        background: 'linear-gradient(135deg, #150820 0%, #051a10 100%)',
+        borderRadius: 24, padding: '24px 28px', position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{ position: 'absolute', top: -20, right: -10, width: 150, height: 150,
+          background: 'radial-gradient(circle, rgba(1,225,142,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <span style={{ fontSize: 24 }}>📊</span>
+              <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#faf9f5', letterSpacing: '-0.02em' }}>
+                Dashboard RH
+              </h1>
+            </div>
+            <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+              Engajamento corporativo · Copa do Mundo 2026 · Vendemmia
+            </p>
+          </div>
+          <HrExportButton />
         </div>
-        <HrExportButton />
       </div>
 
       {/* ── KPIs ── */}
