@@ -24,6 +24,19 @@ jobs:
       - name: Copiar Dockerfile.prod para Dockerfile
         run: cp Dockerfile.prod Dockerfile
 
+      - name: Verificar secrets obrigatórios
+        run: |
+          MISSING=""
+          [ -z "${{ secrets.ENV_PROD_TURSO_AUTH_TOKEN }}" ]         && MISSING="$MISSING ENV_PROD_TURSO_AUTH_TOKEN"
+          [ -z "${{ secrets.ENV_PROD_JWT_SECRET }}" ]                && MISSING="$MISSING ENV_PROD_JWT_SECRET"
+          [ -z "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ]    && MISSING="$MISSING AZURE_STORAGE_CONNECTION_STRING"
+          [ -z "${{ secrets.AZURE_ACR_PASSWORD_PROD }}" ]            && MISSING="$MISSING AZURE_ACR_PASSWORD_PROD"
+          if [ -n "$MISSING" ]; then
+            echo "::error::Secrets ausentes neste repositório:$MISSING"
+            exit 1
+          fi
+          echo "Todos os secrets obrigatórios estão configurados ✓"
+
       - name: Preencher variáveis sensíveis no .env.docker.prod
         run: |
           escape() {
@@ -46,6 +59,14 @@ jobs:
           sed -i "s|^NEXT_PUBLIC_API_FOOTBALL_KEY=.*|NEXT_PUBLIC_API_FOOTBALL_KEY=$API_FOOTBALL_KEY_ESCAPED|g" .env.docker.prod
           sed -i "s|^CRON_SECRET=.*|CRON_SECRET=$CRON_SECRET_ESCAPED|g" .env.docker.prod
           sed -i "s|^ADMIN_PASSWORD=.*|ADMIN_PASSWORD=$ADMIN_PASSWORD_ESCAPED|g" .env.docker.prod
+
+          # Diagnóstico: verifica se BLOB_READ_WRITE_TOKEN foi preenchido
+          BLOB_VAL=$(grep "^BLOB_READ_WRITE_TOKEN=" .env.docker.prod | cut -d'=' -f2-)
+          if [ -z "$BLOB_VAL" ]; then
+            echo "::error::BLOB_READ_WRITE_TOKEN ficou vazio após sed! Secret AZURE_STORAGE_CONNECTION_STRING pode estar incorreto."
+            exit 1
+          fi
+          echo "BLOB_READ_WRITE_TOKEN: preenchido ✓"
 
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
