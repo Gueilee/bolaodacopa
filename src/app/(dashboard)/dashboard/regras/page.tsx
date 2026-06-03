@@ -196,51 +196,61 @@ export default function RegrasPage() {
           </p>
         </div>
 
-        {/* Cards de pontuação */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 0 }}>
-
+        {/* Lista de pontuação — 4 linhas horizontais */}
+        <div>
           {[
             {
-              badge: '⚡', pts: 10, color: '#01a866', bg: 'rgba(1,168,102,0.06)', border: 'rgba(1,168,102,0.15)',
+              badge: '⚡', pts: 10, color: '#01a866', bg: 'rgba(1,168,102,0.05)',
               title: 'Placar Exato',
-              desc: 'Acertou os dois placares exatos, incluindo empate com placar certo.',
+              desc: 'Acertou os dois placares exatamente, incluindo empate com placar certo.',
               ex: 'Palpitou 2×1 → Resultado 2×1',
             },
             {
-              badge: '🎯', pts: 7, color: '#d4a017', bg: 'rgba(212,160,23,0.06)', border: 'rgba(212,160,23,0.15)',
-              title: 'Vencedor + Saldo',
-              desc: 'Acertou quem vence e a diferença de gols, mas errou o placar exato. Não se aplica a empates.',
-              ex: 'Palpitou 2×0 → Resultado 3×1 (saldo +2)',
+              badge: '🎯', pts: 7, color: '#d4a017', bg: 'rgba(212,160,23,0.05)',
+              title: 'Vencedor + Saldo de Gols',
+              desc: 'Acertou quem vence e a diferença de gols, mas errou o placar exato. Não vale para empates.',
+              ex: 'Palpitou 2×0 → Resultado 3×1',
             },
             {
-              badge: '✓', pts: 5, color: '#2563eb', bg: 'rgba(37,99,235,0.05)', border: 'rgba(37,99,235,0.15)',
-              title: 'Vencedor Correto / Empate',
-              desc: 'Acertou quem vence mas errou o saldo. Ou acertou que haveria empate mas errou o placar.',
-              ex: 'Palpitou 2×1 → Resultado 1×0\nPalpitou 1×1 → Resultado 2×2',
+              badge: '✓', pts: 5, color: '#2563eb', bg: 'rgba(37,99,235,0.04)',
+              title: 'Vencedor Correto ou Empate',
+              desc: 'Acertou quem vence mas errou o saldo. Ou acertou que seria empate mas errou o placar.',
+              ex: 'Palpitou 2×1 → Resultado 1×0 · Palpitou 1×1 → Resultado 2×2',
             },
             {
-              badge: '✗', pts: 0, color: '#c4bfba', bg: 'rgba(0,0,0,0.02)', border: '#e8e4df',
+              badge: '✗', pts: 0, color: '#aaa8b0', bg: 'transparent',
               title: 'Resultado Errado',
-              desc: 'Errou quem vence. Ex: previu vitória da casa mas ganhou o visitante, ou previu empate mas teve vencedor.',
+              desc: 'Errou quem vence ou previu vitória mas foi empate (e vice-versa).',
               ex: 'Palpitou 2×1 → Resultado 0×1',
             },
-          ].map((item) => (
-            <div
-              key={item.pts}
-              style={{ background: item.bg, borderRight: '1px solid #f0ede8', borderBottom: '1px solid #f0ede8', padding: '20px 20px' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 24 }}>{item.badge}</span>
-                <span style={{ fontSize: 28, fontWeight: 900, color: item.color, fontVariantNumeric: 'tabular-nums' }}>
+          ].map((item, i, arr) => (
+            <div key={item.pts} style={{
+              display: 'flex', alignItems: 'center', gap: 16,
+              padding: '16px 24px',
+              background: item.bg,
+              borderBottom: i < arr.length - 1 ? '1px solid #f0ede8' : 'none',
+            }}>
+              {/* Badge de pontos */}
+              <div style={{
+                minWidth: 64, flexShrink: 0, textAlign: 'center',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+              }}>
+                <span style={{ fontSize: 20 }}>{item.badge}</span>
+                <span style={{ fontSize: 22, fontWeight: 900, color: item.color, lineHeight: 1, letterSpacing: '-0.02em' }}>
                   {item.pts}
-                  <span style={{ fontSize: 13, fontWeight: 500, color: item.color, opacity: 0.7, marginLeft: 2 }}>pts</span>
                 </span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: item.color, opacity: 0.7 }}>pts</span>
               </div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: '#1a1625', margin: '0 0 6px' }}>{item.title}</p>
-              <p style={{ fontSize: 12, color: '#6b6672', lineHeight: 1.5, margin: '0 0 10px' }}>{item.desc}</p>
-              <p style={{ fontSize: 11, color: '#aaa8b0', fontStyle: 'italic', margin: 0, whiteSpace: 'pre-line' }}>
-                Ex: {item.ex}
-              </p>
+
+              {/* Divisor vertical */}
+              <div style={{ width: 1, alignSelf: 'stretch', background: '#f0ede8', flexShrink: 0 }} />
+
+              {/* Texto */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ margin: '0 0 3px', fontSize: 13, fontWeight: 700, color: '#1a1625' }}>{item.title}</p>
+                <p style={{ margin: '0 0 4px', fontSize: 12, color: '#6b6672', lineHeight: 1.5 }}>{item.desc}</p>
+                <p style={{ margin: 0, fontSize: 11, color: '#aaa8b0', fontStyle: 'italic' }}>Ex: {item.ex}</p>
+              </div>
             </div>
           ))}
         </div>
