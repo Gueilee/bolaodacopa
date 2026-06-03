@@ -102,6 +102,91 @@ export default function RegrasPage() {
         </div>
       </section>
 
+      {/* ── REGRA 2: Palpite Final ── */}
+      <section style={{
+        borderRadius: 20, overflow: 'hidden',
+        border: '2px solid rgba(90,44,148,0.3)',
+        boxShadow: '0 4px 24px rgba(66,44,118,0.1)',
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #422c76, #5a3e94)',
+          padding: '16px 24px',
+          display: 'flex', alignItems: 'center', gap: 12,
+        }}>
+          <span style={{ fontSize: 24 }}>🌟</span>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 15, fontWeight: 900, color: '#fff', letterSpacing: '-0.01em' }}>
+              Palpite Final — Antes do primeiro jogo
+            </h2>
+            <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>
+              Campeão, Vice e Artilheiro devem ser definidos com antecedência
+            </p>
+          </div>
+        </div>
+
+        <div style={{ padding: '20px 24px', background: '#faf8ff', borderBottom: '1px solid rgba(66,44,118,0.1)' }}>
+          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+              background: 'rgba(66,44,118,0.1)', border: '1px solid rgba(66,44,118,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+            }}>📅</div>
+            <div>
+              <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 14, color: '#1a1625' }}>
+                Prazo: 11 de junho de 2026, às 17h (Brasília)
+              </p>
+              <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                O Palpite Final (Campeão, Vice-Campeão e Artilheiro) deve ser registrado{' '}
+                <strong>antes do apito inicial do primeiro jogo da Copa</strong>.
+                Quem não registrar até esse prazo{' '}
+                <strong style={{ color: '#422c76' }}>perde os bônus de +50, +25 e +50 pontos</strong>,
+                sem possibilidade de recurso.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ padding: '20px 24px', background: '#faf8ff' }}>
+          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+              background: 'rgba(66,44,118,0.1)', border: '1px solid rgba(66,44,118,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+            }}>🔒</div>
+            <div>
+              <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 14, color: '#1a1625' }}>
+                Um único registro — sem alteração após salvar
+              </p>
+              <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                Ao clicar em <strong>"Confirmar Palpite Final"</strong>, o registro fica permanentemente
+                bloqueado. Não é possível alterar o Campeão, Vice ou Artilheiro após a confirmação,
+                mesmo que a Copa ainda não tenha começado.
+                <strong style={{ color: '#422c76' }}> Escolha com cuidado.</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Bônus */}
+        <div style={{ padding: '16px 24px', background: 'rgba(66,44,118,0.05)', borderTop: '1px solid rgba(66,44,118,0.1)', display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+          {[
+            { icon: '🏆', label: 'Campeão',      pts: '+50 pts' },
+            { icon: '⚽', label: 'Artilheiro',   pts: '+50 pts' },
+            { icon: '🥈', label: 'Vice-Campeão', pts: '+25 pts' },
+          ].map(b => (
+            <div key={b.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 16 }}>{b.icon}</span>
+              <span style={{ fontSize: 12, color: '#4a4555', fontWeight: 600 }}>{b.label}</span>
+              <span style={{
+                fontSize: 12, fontWeight: 800, padding: '2px 8px', borderRadius: 8,
+                background: 'rgba(66,44,118,0.12)', color: '#422c76',
+                border: '1px solid rgba(66,44,118,0.2)',
+              }}>{b.pts}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── Pontuação por Partida ── */}
       <section className="card overflow-hidden">
         <div style={{ padding: '20px 24px', borderBottom: '1px solid #f0ede8' }}>

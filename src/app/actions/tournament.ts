@@ -6,6 +6,9 @@ import { eq } from 'drizzle-orm'
 import { getSession } from '@/lib/session'
 import { revalidatePath } from 'next/cache'
 
+// Prazo: início do primeiro jogo da Copa 2026
+const CUP_START = new Date('2026-06-11T20:00:00Z')
+
 type TournamentInput = {
   champion:  string
   runnerUp:  string
@@ -22,33 +25,28 @@ export async function saveTournamentPrediction(
     return { success: false, error: 'Campeão e vice-campeão não podem ser o mesmo.' }
   }
 
+  // Regra: prazo encerra no início da Copa
+  if (new Date() >= CUP_START) {
+    return { success: false, error: 'Prazo encerrado: o palpite final deve ser registrado antes do início da Copa (11/06/2026 às 17h de Brasília).' }
+  }
+
+  // Regra: uma vez salvo, não pode ser alterado
   const existing = await db.query.tournamentPredictions.findFirst({
     where: eq(tournamentPredictions.userId, session.userId),
   })
 
-  if (existing?.isScored) {
-    return { success: false, error: 'Palpite já foi pontuado e não pode ser alterado.' }
+  if (existing) {
+    return { success: false, error: 'Palpite final já registrado e não pode ser alterado.' }
   }
 
-  if (existing) {
-    await db
-      .update(tournamentPredictions)
-      .set({
-        champion:  input.champion,
-        runnerUp:  input.runnerUp,
-        topScorer: input.topScorer,
-        updatedAt: new Date(),
-      })
-      .where(eq(tournamentPredictions.id, existing.id))
-  } else {
-    await db.insert(tournamentPredictions).values({
-      userId:    session.userId,
-      champion:  input.champion,
-      runnerUp:  input.runnerUp,
-      topScorer: input.topScorer,
-    })
-  }
+  await db.insert(tournamentPredictions).values({
+    userId:    session.userId,
+    champion:  input.champion,
+    runnerUp:  input.runnerUp,
+    topScorer: input.topScorer,
+  })
 
   revalidatePath('/dashboard/finais')
+  revalidatePath('/dashboard/palpites')
   return { success: true }
 }
