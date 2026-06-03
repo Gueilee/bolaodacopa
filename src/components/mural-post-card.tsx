@@ -6,6 +6,23 @@ import { useRouter } from 'next/navigation'
 import type { PostWithUser, CommentItem } from '@/app/actions/social'
 import { UserAvatar } from '@/components/user-avatar'
 
+// Imagem de post com fallback silencioso se a URL estiver quebrada
+function MediaImage({ src }: { src: string }) {
+  const [broken, setBroken] = useState(false)
+  if (broken) return null
+  return (
+    <div style={{ borderRadius: 12, overflow: 'hidden', maxHeight: 400 }}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt="Post"
+        onError={() => setBroken(true)}
+        style={{ width: '100%', maxHeight: 400, objectFit: 'cover', display: 'block' }}
+      />
+    </div>
+  )
+}
+
 function timeAgo(date: Date): string {
   const diff = Date.now() - new Date(date).getTime()
   const m = Math.floor(diff / 60000)
@@ -144,14 +161,14 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
 
       {/* ── Mídia ── */}
       {post.mediaUrl && post.mediaType === 'image' && (
-        <div style={{ borderRadius: 12, overflow: 'hidden', maxHeight: 400 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={post.mediaUrl} alt="Post" style={{ width: '100%', maxHeight: 400, objectFit: 'cover', display: 'block' }} />
-        </div>
+        <MediaImage src={post.mediaUrl} />
       )}
       {post.mediaUrl && post.mediaType === 'video' && (
         <div style={{ borderRadius: 12, overflow: 'hidden' }}>
-          <video src={post.mediaUrl} controls style={{ width: '100%', maxHeight: 400, display: 'block', background: '#000' }} />
+          <video src={post.mediaUrl} controls
+            style={{ width: '100%', maxHeight: 400, display: 'block', background: '#000' }}
+            onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = 'none' }}
+          />
         </div>
       )}
 
