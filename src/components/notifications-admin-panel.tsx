@@ -10,7 +10,7 @@ import type { NotifResult } from '@/lib/notifications'
 import type { ConnectionStatus } from '@/lib/whatsapp'
 
 type Props = {
-  status:     ConnectionStatus | null  // null = não configurado
+  status: ConnectionStatus | null
   stats: {
     optedIn:   number
     withPhone: number
@@ -19,37 +19,37 @@ type Props = {
 }
 
 function ResultBox({ result }: { result: NotifResult }) {
+  const hasError = result.failed > 0
   return (
-    <div className={`rounded-xl p-4 text-sm border animate-fade-in ${
-      result.failed > 0
-        ? 'bg-brand-pink/8 border-brand-pink/20'
-        : 'bg-brand-neon/8 border-brand-neon/20'
-    }`}>
-      <div className="flex gap-6 mb-2">
-        <span className="text-brand-neon font-bold">{result.sent} enviados</span>
-        {result.skipped > 0 && <span className="text-white/40">{result.skipped} ignorados</span>}
-        {result.failed  > 0 && <span className="text-brand-pink font-bold">{result.failed} falhas</span>}
+    <div style={{
+      padding: '14px 18px', borderRadius: 14,
+      background: hasError ? 'rgba(255,47,105,0.06)' : 'rgba(1,168,102,0.06)',
+      border: `1px solid ${hasError ? 'rgba(255,47,105,0.2)' : 'rgba(1,168,102,0.2)'}`,
+    }}>
+      <div style={{ display: 'flex', gap: 20, marginBottom: result.errors.length ? 8 : 0 }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#01a866' }}>✓ {result.sent} enviados</span>
+        {result.skipped > 0 && <span style={{ fontSize: 13, color: '#8a8490' }}>{result.skipped} ignorados</span>}
+        {result.failed  > 0 && <span style={{ fontSize: 13, fontWeight: 700, color: '#ff2f69' }}>✗ {result.failed} falhas</span>}
       </div>
       {result.errors.slice(0, 3).map((e, i) => (
-        <p key={i} className="text-brand-pink/60 text-xs font-mono truncate">{e}</p>
+        <p key={i} style={{ fontSize: 11, color: '#ff2f69', fontFamily: 'monospace', margin: '2px 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e}</p>
       ))}
     </div>
   )
 }
 
 export function NotificationsAdminPanel({ status, stats }: Props) {
-  const [isPending,   startTransition] = useTransition()
-  const [lastResult,  setLastResult]   = useState<NotifResult | null>(null)
-  const [testPhone,   setTestPhone]    = useState('')
-  const [testResult,  setTestResult]   = useState<{ ok: boolean; msg: string } | null>(null)
-  const [customMsg,   setCustomMsg]    = useState('')
-  const [customTarget, setCustomTarget]= useState<'all_optin' | 'pending_only'>('pending_only')
-  const [activeTab,   setActiveTab]    = useState<'reminder' | 'custom' | 'test'>('reminder')
+  const [isPending,    startTransition] = useTransition()
+  const [lastResult,   setLastResult]   = useState<NotifResult | null>(null)
+  const [testPhone,    setTestPhone]    = useState('')
+  const [testResult,   setTestResult]   = useState<{ ok: boolean; msg: string } | null>(null)
+  const [customMsg,    setCustomMsg]    = useState('')
+  const [customTarget, setCustomTarget] = useState<'all_optin' | 'pending_only'>('pending_only')
+  const [activeTab,    setActiveTab]    = useState<'reminder' | 'custom' | 'test'>('reminder')
 
   const configured = status !== null
   const connected  = status?.connected ?? false
 
-  // ── Lembrete em massa ──
   function handleBulkReminder() {
     setLastResult(null)
     startTransition(async () => {
@@ -58,7 +58,6 @@ export function NotificationsAdminPanel({ status, stats }: Props) {
     })
   }
 
-  // ── Mensagem custom ──
   function handleCustom() {
     if (!customMsg.trim()) return
     setLastResult(null)
@@ -68,7 +67,6 @@ export function NotificationsAdminPanel({ status, stats }: Props) {
     })
   }
 
-  // ── Teste ──
   function handleTest() {
     if (!testPhone) return
     setTestResult(null)
@@ -79,184 +77,189 @@ export function NotificationsAdminPanel({ status, stats }: Props) {
   }
 
   return (
-    <div className="card p-6 space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-      {/* ── Header + Status ── */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-sm font-semibold text-white uppercase tracking-widest">
-            Notificações WhatsApp
-          </h2>
-          <p className="text-white/35 text-xs mt-0.5">
-            Powered by Z-API · zapi.io
-          </p>
-        </div>
+      {/* ── Status + Métricas ── */}
+      <div className="card p-5" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-        {/* Status badge */}
-        <div className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-xl border ${
-          !configured ? 'bg-white/5 border-white/10 text-white/30' :
-          connected   ? 'bg-brand-neon/10 border-brand-neon/20 text-brand-neon' :
-                        'bg-brand-pink/10 border-brand-pink/20 text-brand-pink'
-        }`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${
-            !configured ? 'bg-white/25' :
-            connected   ? 'bg-brand-neon animate-pulse' : 'bg-brand-pink'
-          }`}/>
-          {!configured ? 'Não configurado' : connected ? 'Conectado' : 'Desconectado'}
-        </div>
-      </div>
-
-      {/* ── Aviso de configuração ── */}
-      {!configured && (
-        <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-          <p className="text-white/50 text-sm font-medium">Como configurar:</p>
-          <ol className="text-white/35 text-xs space-y-1 list-decimal list-inside">
-            <li>Crie uma instância em <strong className="text-white/50">app.z-api.io</strong></li>
-            <li>Escaneie o QR Code com seu número WhatsApp</li>
-            <li>Adicione ao <code className="text-brand-neon/70">.env</code>:
-              <code className="block mt-1 text-brand-neon/60 pl-3">ZAPI_INSTANCE_ID=...<br/>ZAPI_INSTANCE_TOKEN=...</code>
-            </li>
-            <li>Reinicie o servidor</li>
-          </ol>
-        </div>
-      )}
-
-      {/* ── Métricas ── */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: 'Com opt-in',    value: stats.optedIn,   color: 'text-brand-neon' },
-          { label: 'Com telefone',  value: stats.withPhone, color: 'text-white' },
-          { label: 'Enviados hoje', value: stats.sentToday, color: 'text-white' },
-        ].map((s) => (
-          <div key={s.label} className="bg-white/4 rounded-xl p-3 text-center">
-            <p className={`text-xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
-            <p className="text-white/25 text-[10px] mt-0.5">{s.label}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* ── Tabs ── */}
-      <div className="flex gap-2">
-        {[
-          { key: 'reminder', label: '📢 Lembrete em massa' },
-          { key: 'custom',   label: '✍️ Mensagem custom' },
-          { key: 'test',     label: '🧪 Testar' },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => { setActiveTab(tab.key as typeof activeTab); setLastResult(null) }}
-            className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all ${
-              activeTab === tab.key
-                ? 'bg-brand-purple text-white'
-                : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* ── Conteúdo das tabs ── */}
-
-      {activeTab === 'reminder' && (
-        <div className="space-y-4">
-          <p className="text-white/50 text-sm">
-            Envia o lembrete padrão para todos os colaboradores com opt-in que
-            <strong className="text-white/70"> ainda não finalizaram</strong> os palpites.
-            Mensagens já enviadas hoje são ignoradas automaticamente.
-          </p>
-
-          <button
-            onClick={handleBulkReminder}
-            disabled={isPending || !configured}
-            className="btn-primary text-sm"
-          >
-            {isPending ? (
-              <span className="flex items-center gap-2">
-                <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
-                </svg>
-                Enviando...
-              </span>
-            ) : `📢 Enviar lembrete para ${stats.optedIn} opt-ins`}
-          </button>
-
-          {lastResult && <ResultBox result={lastResult} />}
-        </div>
-      )}
-
-      {activeTab === 'custom' && (
-        <div className="space-y-4">
-          <div className="flex gap-2">
-            {[
-              { k: 'pending_only', l: 'Apenas pendentes' },
-              { k: 'all_optin',   l: 'Todos com opt-in' },
-            ].map((o) => (
-              <button
-                key={o.k}
-                onClick={() => setCustomTarget(o.k as typeof customTarget)}
-                className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  customTarget === o.k
-                    ? 'bg-brand-purple/60 text-white border border-brand-purple/50'
-                    : 'bg-white/5 text-white/50 hover:bg-white/10'
-                }`}
-              >
-                {o.l}
-              </button>
-            ))}
-          </div>
-
-          <textarea
-            value={customMsg}
-            onChange={(e) => setCustomMsg(e.target.value)}
-            placeholder="Digite sua mensagem... (o nome do colaborador será inserido automaticamente no início)"
-            rows={4}
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-brand-cream placeholder-white/25 focus:outline-none focus:border-brand-purple resize-none"
-          />
-
-          <button
-            onClick={handleCustom}
-            disabled={isPending || !configured || !customMsg.trim()}
-            className="btn-primary text-sm"
-          >
-            {isPending ? 'Enviando...' : 'Enviar mensagem'}
-          </button>
-
-          {lastResult && <ResultBox result={lastResult} />}
-        </div>
-      )}
-
-      {activeTab === 'test' && (
-        <div className="space-y-4">
-          <p className="text-white/50 text-sm">
-            Envia uma mensagem de teste para verificar se a integração está funcionando.
-          </p>
-
-          <div className="flex gap-3">
-            <input
-              type="tel"
-              value={testPhone}
-              onChange={(e) => setTestPhone(e.target.value)}
-              placeholder="(11) 9 9999-9999"
-              className="input-field text-sm flex-1"
-            />
-            <button
-              onClick={handleTest}
-              disabled={isPending || !configured || !testPhone}
-              className="btn-primary text-sm shrink-0"
-            >
-              {isPending ? '...' : 'Testar'}
-            </button>
-          </div>
-
-          {testResult && (
-            <p className={`text-sm ${testResult.ok ? 'text-brand-neon' : 'text-brand-pink'}`}>
-              {testResult.ok ? '✓ ' : '✗ '}{testResult.msg}
+        {/* Header + Badge */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+          <div>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#1a1625' }}>
+              Integração Z-API (WhatsApp)
             </p>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#8a8490' }}>
+              zapi.io — envio de lembretes automáticos via WhatsApp
+            </p>
+          </div>
+
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 7, padding: '6px 14px', borderRadius: 20,
+            background: !configured ? '#f5f2ef' : connected ? 'rgba(1,168,102,0.1)' : 'rgba(255,47,105,0.1)',
+            border: `1px solid ${!configured ? '#e0dbd5' : connected ? 'rgba(1,168,102,0.25)' : 'rgba(255,47,105,0.25)'}`,
+          }}>
+            <span style={{
+              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+              background: !configured ? '#c4bfba' : connected ? '#01a866' : '#ff2f69',
+            }} />
+            <span style={{
+              fontSize: 12, fontWeight: 700,
+              color: !configured ? '#8a8490' : connected ? '#01a866' : '#ff2f69',
+            }}>
+              {!configured ? 'Não configurado' : connected ? 'WhatsApp conectado' : 'Desconectado'}
+            </span>
+          </div>
+        </div>
+
+        {/* Aviso de configuração */}
+        {!configured && (
+          <div style={{
+            padding: '16px 18px', borderRadius: 14,
+            background: '#faf9f7', border: '1px solid #e8e4df',
+          }}>
+            <p style={{ margin: '0 0 10px', fontSize: 13, fontWeight: 700, color: '#1a1625' }}>
+              ⚙️ Como configurar o WhatsApp:
+            </p>
+            <ol style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {[
+                <>Crie uma instância em <strong>app.z-api.io</strong></>,
+                <>Escaneie o QR Code com o número WhatsApp da empresa</>,
+                <>Adicione ao arquivo <code style={{ background: '#f0ede8', padding: '1px 6px', borderRadius: 5, fontSize: 11 }}>.env.docker.prod</code> e faça um novo deploy:</>,
+                <><code style={{ display: 'block', background: '#f0ede8', padding: '8px 12px', borderRadius: 8, fontSize: 11, fontFamily: 'monospace', marginTop: 4, lineHeight: 1.8, color: '#422c76' }}>{'ZAPI_INSTANCE_ID=sua-instancia\nZAPI_INSTANCE_TOKEN=seu-token'}</code></>,
+              ].map((item, i) => (
+                <li key={i} style={{ fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>{item}</li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {/* Métricas */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+          {[
+            { label: 'Com opt-in',    value: stats.optedIn,   icon: '✅', color: '#01a866' },
+            { label: 'Com telefone',  value: stats.withPhone, icon: '📱', color: '#422c76' },
+            { label: 'Enviados hoje', value: stats.sentToday, icon: '📤', color: '#d4a017' },
+          ].map(s => (
+            <div key={s.label} style={{
+              background: '#f9f7f5', borderRadius: 12, padding: '12px',
+              textAlign: 'center', border: '1px solid #edeae6',
+            }}>
+              <span style={{ fontSize: 18 }}>{s.icon}</span>
+              <p style={{ margin: '4px 0 2px', fontSize: 22, fontWeight: 800, color: s.color, letterSpacing: '-0.02em' }}>
+                {s.value}
+              </p>
+              <p style={{ margin: 0, fontSize: 11, color: '#8a8490', fontWeight: 600 }}>{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Ações ── */}
+      <div className="card overflow-hidden">
+        {/* Tabs */}
+        <div style={{ display: 'flex', borderBottom: '1px solid #f0ede8' }}>
+          {[
+            { key: 'reminder', label: '📢 Lembrete em massa' },
+            { key: 'custom',   label: '✍️ Mensagem custom' },
+            { key: 'test',     label: '🧪 Testar' },
+          ].map(tab => (
+            <button key={tab.key}
+              onClick={() => { setActiveTab(tab.key as typeof activeTab); setLastResult(null) }}
+              style={{
+                flex: 1, padding: '12px 8px', border: 'none', cursor: 'pointer',
+                fontSize: 12, fontWeight: 700,
+                background: activeTab === tab.key ? '#fff' : '#faf9f7',
+                color: activeTab === tab.key ? '#422c76' : '#8a8490',
+                borderBottom: activeTab === tab.key ? '2px solid #422c76' : '2px solid transparent',
+                transition: 'all 0.15s',
+              }}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Conteúdo */}
+        <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+          {activeTab === 'reminder' && (
+            <>
+              <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                Envia o lembrete padrão para todos os colaboradores com opt-in que
+                <strong style={{ color: '#1a1625' }}> ainda não finalizaram</strong> os palpites.
+                Mensagens já enviadas hoje são ignoradas automaticamente.
+              </p>
+              <button onClick={handleBulkReminder} disabled={isPending || !configured}
+                className="btn-primary" style={{ fontSize: 13, alignSelf: 'flex-start' }}>
+                {isPending ? 'Enviando...' : `📢 Enviar lembrete para ${stats.optedIn} opt-ins`}
+              </button>
+              {!configured && (
+                <p style={{ fontSize: 12, color: '#ff2f69', margin: 0 }}>
+                  ⚠ Configure o Z-API primeiro para enviar mensagens.
+                </p>
+              )}
+              {lastResult && <ResultBox result={lastResult} />}
+            </>
+          )}
+
+          {activeTab === 'custom' && (
+            <>
+              <div style={{ display: 'flex', gap: 8 }}>
+                {[
+                  { k: 'pending_only', l: '🎯 Apenas pendentes' },
+                  { k: 'all_optin',   l: '📋 Todos com opt-in' },
+                ].map(o => (
+                  <button key={o.k} onClick={() => setCustomTarget(o.k as typeof customTarget)}
+                    style={{
+                      padding: '7px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700,
+                      background: customTarget === o.k ? '#422c76' : '#f0ede8',
+                      color: customTarget === o.k ? '#fff' : '#6b6672',
+                      transition: 'all 0.15s',
+                    }}>
+                    {o.l}
+                  </button>
+                ))}
+              </div>
+              <textarea
+                value={customMsg}
+                onChange={(e) => setCustomMsg(e.target.value)}
+                placeholder="Digite sua mensagem... (o nome do colaborador será inserido automaticamente no início)"
+                rows={4}
+                className="input-field"
+                style={{ resize: 'none', fontFamily: 'inherit' }}
+              />
+              <button onClick={handleCustom} disabled={isPending || !configured || !customMsg.trim()}
+                className="btn-primary" style={{ fontSize: 13, alignSelf: 'flex-start' }}>
+                {isPending ? 'Enviando...' : 'Enviar mensagem'}
+              </button>
+              {lastResult && <ResultBox result={lastResult} />}
+            </>
+          )}
+
+          {activeTab === 'test' && (
+            <>
+              <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                Envia uma mensagem de teste para verificar se a integração Z-API está funcionando corretamente.
+              </p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <input type="tel" value={testPhone} onChange={(e) => setTestPhone(e.target.value)}
+                  placeholder="(11) 9 9999-9999" className="input-field"
+                  style={{ flex: 1, fontSize: 13 }} />
+                <button onClick={handleTest} disabled={isPending || !configured || !testPhone}
+                  className="btn-primary" style={{ fontSize: 13, flexShrink: 0 }}>
+                  {isPending ? '...' : 'Testar'}
+                </button>
+              </div>
+              {testResult && (
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600,
+                  color: testResult.ok ? '#01a866' : '#ff2f69' }}>
+                  {testResult.ok ? '✓ ' : '✗ '}{testResult.msg}
+                </p>
+              )}
+            </>
           )}
         </div>
-      )}
+      </div>
     </div>
   )
 }
