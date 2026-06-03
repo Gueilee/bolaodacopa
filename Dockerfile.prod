@@ -12,8 +12,10 @@ COPY .env.docker.prod .env
 
 RUN npm install
 RUN npm run build
-# public/ e static/ precisam estar dentro do standalone para o servidor Next.js encontrá-los
+# public/ e static/ dentro do standalone (fallback para ambientes sem proxy)
 RUN cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static
+# Diretório de uploads persistente (monte como volume: -v /srv/bolao/uploads:/app/data/uploads)
+RUN mkdir -p data/uploads/avatars data/uploads/mural
 RUN npm prune --production
 
 # Configura o cron interno no container
