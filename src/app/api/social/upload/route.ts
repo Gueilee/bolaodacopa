@@ -2,8 +2,7 @@ export const runtime = 'nodejs'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
-import fs   from 'fs'
-import path from 'path'
+import { uploadToBlob } from '@/lib/azure-storage'
 
 const MAX_SIZE_MB   = 10
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'video/mp4', 'video/webm']
@@ -16,10 +15,6 @@ const EXT_MAP: Record<string, string> = {
   'video/mp4':  'mp4',
   'video/webm': 'webm',
 }
-
-// Salva em /data/uploads/mural/<userId>/ (volume montado no Docker)
-// Serve via /api/static/uploads/mural/<userId>/<file>
-const UPLOAD_BASE = path.join(process.cwd(), 'data', 'uploads', 'mural')
 
 export async function POST(request: NextRequest) {
   const session = await getSession()
@@ -34,17 +29,13 @@ export async function POST(request: NextRequest) {
   if (file.size / 1024 / 1024 > MAX_SIZE_MB)
     return NextResponse.json({ error: `Arquivo muito grande. Máximo ${MAX_SIZE_MB}MB.` }, { status: 400 })
 
-  const userDir = path.join(UPLOAD_BASE, session.userId)
-  fs.mkdirSync(userDir, { recursive: true })
-
   const ext      = EXT_MAP[file.type] ?? 'jpg'
   const filename = `${Date.now()}.${ext}`
-  const filePath = path.join(userDir, filename)
 
   const buffer = Buffer.from(await file.arrayBuffer())
-  fs.writeFileSync(filePath, buffer)
-
-  const url       = `/api/static/uploads/mural/${session.userId}/${filename}`
+  const blobPath = `mural/${session.userId}/${filename}`
+  
+  const url = await uploadToBlob(buffer, blobPath, file.type)
   const mediaType = file.type.startsWith('video/') ? 'video' : 'image'
 
   return NextResponse.json({ url, mediaType })
