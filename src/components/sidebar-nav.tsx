@@ -23,11 +23,13 @@ const navItems: NavItem[] = [
   { href: '/dashboard/departamentos', label: 'Por Departamento',     icon: '🏢' },
   { href: '/dashboard/mural',         label: 'Central da Torcida',  icon: '💬', section: 'Comunidade' },
   { href: '/dashboard/perfil',        label: 'Meu Perfil',           icon: '👤' },
-  { href: '/admin/rh',                label: 'Dashboard RH',         icon: '📊', roles: ['rh', 'admin'], section: 'Gestão' },
-  { href: '/tv',                      label: 'TV Corporativa',       icon: '📺', roles: ['rh', 'admin'], newTab: true },
-  { href: '/admin',                   label: 'Administração',        icon: '⚙️', roles: ['admin'] },
-  { href: '/admin/usuarios',          label: 'Colaboradores',        icon: '👥', roles: ['admin'] },
-  { href: '/admin/exportar',          label: 'Exportar',             icon: '⬇️', roles: ['admin'] },
+  { href: '/admin/rh',              label: 'Dashboard RH',   icon: '📊', roles: ['rh', 'admin'], section: 'Gestão' },
+  { href: '/tv',                    label: 'TV Corporativa',  icon: '📺', roles: ['rh', 'admin'], newTab: true },
+  { href: '/admin',                 label: 'Painel Admin',    icon: '⚙️', roles: ['admin'] },
+  { href: '/admin/usuarios',        label: 'Colaboradores',   icon: '👥', roles: ['admin'] },
+  { href: '/admin/convites',        label: 'Convites',        icon: '✉️', roles: ['admin'] },
+  { href: '/admin/exportar',        label: 'Exportar',        icon: '⬇️', roles: ['admin'] },
+  { href: '/admin/notificacoes',    label: 'Notificações',    icon: '🔔', roles: ['admin'] },
 ]
 
 type Props = { role: Role }
