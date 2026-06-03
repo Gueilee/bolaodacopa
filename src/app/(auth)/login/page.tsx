@@ -126,18 +126,27 @@ export default function LoginPage() {
   return (
     <div style={{
       position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden',
-      background: '#070512',
-      backgroundImage: 'url(/login2.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center right',
-      backgroundRepeat: 'no-repeat',
+      background: 'linear-gradient(135deg, #04020c 0%, #130836 45%, #091a0f 100%)',
     }}>
 
-      {/* Overlays decorativos */}
+      {/* Luzes ambiente — sem depender de arquivo externo */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(4,2,12,0.72) 0%, rgba(4,2,12,0.4) 35%, rgba(4,2,12,0.05) 60%, transparent 80%)' }} />
-        <div style={{ position: 'absolute', top: '20%', left: '-5%', width: '50%', height: '60%', background: 'radial-gradient(ellipse, rgba(90,62,148,0.28) 0%, transparent 70%)' }} />
-        <div style={{ position: 'absolute', bottom: '10%', left: '5%', width: '35%', height: '40%', background: 'radial-gradient(ellipse, rgba(1,225,142,0.1) 0%, transparent 70%)' }} />
+        {/* Brilho roxo grande à esquerda */}
+        <div style={{ position: 'absolute', top: '-10%', left: '-15%', width: '70%', height: '80%',
+          background: 'radial-gradient(ellipse, rgba(90,44,148,0.55) 0%, transparent 65%)' }} />
+        {/* Brilho neon verde embaixo */}
+        <div style={{ position: 'absolute', bottom: '-5%', left: '5%', width: '45%', height: '55%',
+          background: 'radial-gradient(ellipse, rgba(1,225,142,0.18) 0%, transparent 65%)' }} />
+        {/* Brilho roxo claro no centro-direita */}
+        <div style={{ position: 'absolute', top: '25%', right: '10%', width: '50%', height: '50%',
+          background: 'radial-gradient(ellipse, rgba(66,44,118,0.35) 0%, transparent 60%)' }} />
+        {/* Partículas decorativas — linhas diagonais sutis */}
+        <div style={{ position: 'absolute', inset: 0,
+          backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 60px)',
+        }} />
+        {/* Brilho rosa copa */}
+        <div style={{ position: 'absolute', top: '50%', right: '5%', width: '30%', height: '40%',
+          background: 'radial-gradient(ellipse, rgba(255,47,105,0.1) 0%, transparent 70%)' }} />
       </div>
 
       {/* ── LEFT PANEL ── */}
