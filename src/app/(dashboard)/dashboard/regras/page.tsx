@@ -297,39 +297,6 @@ export default function RegrasPage() {
         </div>
       </section>
 
-      {/* ── Bônus de Torneio ── */}
-      <section className="card overflow-hidden">
-        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f0ede8' }}>
-          <h2 className="text-base font-bold" style={{ color: '#1a1625' }}>🌟 Bônus Final de Torneio</h2>
-          <p className="text-sm mt-1" style={{ color: '#8a8490' }}>
-            Pontos extras concedidos ao final da Copa, baseados no palpite final que você registrou.
-          </p>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 0 }}>
-          {[
-            { icon: '🏆', label: 'Campeão',        pts: 50, desc: 'Acertou o time campeão do mundo' },
-            { icon: '⚽', label: 'Artilheiro',      pts: 50, desc: 'Acertou o jogador com mais gols' },
-            { icon: '🥈', label: 'Vice-Campeão',    pts: 25, desc: 'Acertou o segundo colocado' },
-          ].map(b => (
-            <div key={b.label} style={{ padding: '20px', borderRight: '1px solid #f0ede8', textAlign: 'center' }}>
-              <span style={{ fontSize: 36, display: 'block', marginBottom: 8 }}>{b.icon}</span>
-              <p style={{ fontSize: 28, fontWeight: 900, color: '#422c76', margin: '0 0 4px', fontVariantNumeric: 'tabular-nums' }}>
-                +{b.pts}
-                <span style={{ fontSize: 12, fontWeight: 500, color: '#9a86c4', marginLeft: 2 }}>pts</span>
-              </p>
-              <p style={{ fontSize: 13, fontWeight: 700, color: '#1a1625', margin: '0 0 4px' }}>{b.label}</p>
-              <p style={{ fontSize: 11, color: '#8a8490', margin: 0, lineHeight: 1.4 }}>{b.desc}</p>
-            </div>
-          ))}
-        </div>
-        <div style={{ padding: '14px 24px', background: '#faf9f7', borderTop: '1px solid #f0ede8' }}>
-          <p style={{ fontSize: 12, color: '#8a8490', margin: 0 }}>
-            💡 O palpite final pode ser alterado até você clicar em <strong style={{ color: '#1a1625' }}>"Finalizar Palpites"</strong>.
-            Após isso, fica registrado e não pode ser mudado.
-          </p>
-        </div>
-      </section>
-
       {/* ── Resumo das regras gerais ── */}
       <section className="card p-6 space-y-4">
         <h2 className="text-base font-bold" style={{ color: '#1a1625' }}>📌 Regras Gerais</h2>
