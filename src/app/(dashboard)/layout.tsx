@@ -38,7 +38,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <CountdownStrip />
 
         {/* Navigation */}
-        <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 px-2 py-3 space-y-0.5" style={{
+          overflowY: 'scroll',
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(255,255,255,0.3) transparent',
+        }}>
           <SidebarNav role={session.role as 'admin' | 'rh' | 'user'} />
         </nav>
 
