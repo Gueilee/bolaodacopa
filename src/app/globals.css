@@ -4,11 +4,13 @@
 
 @layer base {
   :root {
-    --brand-gray:   #414042;
-    --brand-purple: #422c76;
-    --brand-pink:   #ff2f69;
-    --brand-cream:  #1a1625;
-    --brand-neon:   #01E18E;
+    --brand-gray:      #414042;
+    --brand-purple:    #422c76;
+    --brand-pink:      #ff2f69;
+    --brand-cream:     #1a1625;
+    --brand-neon:      #01E18E;
+    --brand-neon-rgb:  1, 225, 142;
+    --sidebar-width:   260px;
   }
 
   * { box-sizing: border-box; }
@@ -19,12 +21,15 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 
-  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar       { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #c4bfba; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: rgba(66,44,118,0.25); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(66,44,118,0.45); }
 }
 
 @layer components {
+
+  /* ── Inputs ─────────────────────────────────────────────────────── */
   .input-field {
     @apply w-full rounded-xl px-4 py-3 text-sm transition-all duration-200;
     background-color: #ffffff;
@@ -35,67 +40,143 @@
   .input-field:focus {
     outline: none;
     border-color: #422c76;
-    box-shadow: 0 0 0 3px rgba(66, 44, 118, 0.12);
+    box-shadow: 0 0 0 3px rgba(66,44,118,0.12);
   }
 
+  /* ── Cards ───────────────────────────────────────────────────────── */
   .card {
     @apply rounded-2xl;
     background: #ffffff;
-    border: 1px solid #e8e4df;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.06);
   }
 
+  .card-hover {
+    @apply card;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card-hover:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 8px 32px rgba(66,44,118,0.12);
+    transform: translateY(-1px);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────────── */
   .btn-primary {
     @apply font-semibold py-3 px-6 rounded-xl transition-all duration-200;
-    background-color: #422c76;
+    background: linear-gradient(135deg, #422c76, #5a3e94);
     color: white;
+    box-shadow: 0 2px 12px rgba(66,44,118,0.35);
   }
-  .btn-primary:hover { background-color: #5a3e94; }
-  .btn-primary:active { transform: scale(0.97); }
-  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #5a3e94, #6e4fb0);
+    box-shadow: 0 4px 20px rgba(66,44,118,0.5);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active  { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
 
   .btn-neon {
     @apply font-bold py-3 px-6 rounded-xl transition-all duration-200;
-    background-color: #01E18E;
+    background: #01E18E;
     color: #0f0d17;
-    box-shadow: 0 0 20px rgba(1, 225, 142, 0.25);
+    box-shadow: 0 0 20px rgba(1,225,142,0.3);
   }
-  .btn-neon:hover { background-color: rgba(1, 225, 142, 0.85); }
+  .btn-neon:hover { background: rgba(1,225,142,0.88); box-shadow: 0 0 32px rgba(1,225,142,0.45); }
   .btn-neon:active { transform: scale(0.97); }
 
   .btn-ghost {
     @apply py-2 px-4 rounded-lg transition-all duration-200;
     color: #6b6672;
   }
-  .btn-ghost:hover {
-    color: #1a1625;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
+  .btn-ghost:hover { color: #1a1625; background-color: rgba(0,0,0,0.05); }
 
+  /* ── Points badge ────────────────────────────────────────────────── */
   .points-badge {
     @apply inline-flex items-center gap-1 font-bold rounded-lg px-2 text-sm;
-    color: #01a866;
-    background-color: rgba(1, 225, 142, 0.12);
-    border: 1px solid rgba(1, 225, 142, 0.3);
+    color: #00c47a;
+    background-color: rgba(1,225,142,0.1);
+    border: 1px solid rgba(1,225,142,0.25);
     padding-top: 0.125rem;
     padding-bottom: 0.125rem;
   }
 
+  /* ── Sidebar nav links ───────────────────────────────────────────── */
   .nav-link {
     @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150;
-    color: #5a5564;
+    color: rgba(255,255,255,0.55);
+    position: relative;
   }
   .nav-link:hover {
-    background-color: #f5f2ef;
-    color: #1a1625;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.92);
   }
   .nav-link.active {
-    background-color: #422c76;
-    color: #ffffff;
-    box-shadow: 0 2px 8px rgba(66, 44, 118, 0.3);
+    background: rgba(1,225,142,0.12);
+    color: #01E18E;
+    box-shadow: inset 3px 0 0 #01E18E;
   }
   .nav-link.active:hover {
-    background-color: #5a3e94;
-    color: #ffffff;
+    background: rgba(1,225,142,0.18);
+    color: #01E18E;
+  }
+
+  /* ── Sidebar section label ───────────────────────────────────────── */
+  .nav-section {
+    @apply px-3 pt-5 pb-1;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ── Stat card ───────────────────────────────────────────────────── */
+  .stat-card {
+    @apply card p-4 text-center;
+    transition: box-shadow 0.2s;
+  }
+  .stat-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 8px 32px rgba(66,44,118,0.1);
+  }
+
+  /* ── Page header ─────────────────────────────────────────────────── */
+  .page-header {
+    @apply mb-6;
+  }
+  .page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1a1625;
+    letter-spacing: -0.02em;
+  }
+  .page-header p {
+    font-size: 0.8125rem;
+    color: #8a8490;
+    margin-top: 0.25rem;
+  }
+
+  /* ── Neon divider ────────────────────────────────────────────────── */
+  .neon-divider {
+    height: 1px;
+    background: linear-gradient(90deg, #422c76, #01E18E, transparent);
+    opacity: 0.4;
   }
 }
+
+/* ── Animations ──────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulse-neon {
+  0%, 100% { box-shadow: 0 0 12px rgba(1,225,142,0.3); }
+  50%       { box-shadow: 0 0 24px rgba(1,225,142,0.6); }
+}
+
+.animate-fade-in   { animation: fadeIn 0.35s ease both; }
+.animate-slide-in  { animation: slideInLeft 0.3s ease both; }
+.animate-pulse-neon { animation: pulse-neon 2s ease-in-out infinite; }
