@@ -294,9 +294,37 @@ export default function LoginPage() {
         </div>
       </div>
 
+      {/* ── RIGHT PANEL — imagem decorativa (desktop) ── */}
+      <div style={{
+        display: 'none',
+        flex: 1,
+        position: 'relative',
+        zIndex: 1,
+      }} className="login-right-panel">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/login2.png"
+          alt=""
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            objectFit: 'cover',
+            opacity: 0.85,
+          }}
+        />
+        {/* overlay gradiente para fundir com o painel esquerdo */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to right, rgba(4,2,12,0.6) 0%, transparent 40%)',
+        }} />
+      </div>
+
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         input::placeholder { color: rgba(255,255,255,0.22); }
+        @media (min-width: 768px) {
+          .login-right-panel { display: block !important; }
+        }
       `}</style>
     </div>
   )
