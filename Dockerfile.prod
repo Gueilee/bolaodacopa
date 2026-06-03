@@ -25,4 +25,4 @@ RUN chmod 0644 /etc/cron.d/bolao-cron
 EXPOSE 3000
 
 # Exporta variáveis do .env para o cron, inicia o cron daemon e sobe o servidor Next.js
-CMD node scripts/export-env.js && cron && node --env-file=.env .next/standalone/server.js
+CMD node scripts/export-env.js && cron && node scripts/startup.js

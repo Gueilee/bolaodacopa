@@ -40,7 +40,7 @@ jobs:
 
           sed -i "s|^TURSO_AUTH_TOKEN=.*|TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN_ESCAPED|g" .env.docker.prod
           sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$JWT_SECRET_ESCAPED|g" .env.docker.prod
-          sed -i "s|^AZURE_STORAGE_CONNECTION_STRING=.*|AZURE_STORAGE_CONNECTION_STRING=$AZURE_STORAGE_CONN_ESCAPED|g" .env.docker.prod
+          sed -i "s|^BLOB_READ_WRITE_TOKEN=.*|BLOB_READ_WRITE_TOKEN=$AZURE_STORAGE_CONN_ESCAPED|g" .env.docker.prod
           sed -i "s|^MAILER_DSN=.*|MAILER_DSN=$MAILER_DSN_ESCAPED|g" .env.docker.prod
           sed -i "s|^API_FOOTBALL_KEY=.*|API_FOOTBALL_KEY=$API_FOOTBALL_KEY_ESCAPED|g" .env.docker.prod
           sed -i "s|^NEXT_PUBLIC_API_FOOTBALL_KEY=.*|NEXT_PUBLIC_API_FOOTBALL_KEY=$API_FOOTBALL_KEY_ESCAPED|g" .env.docker.prod
