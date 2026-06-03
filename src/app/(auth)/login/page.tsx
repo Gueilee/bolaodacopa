@@ -139,14 +139,14 @@ export default function LoginPage() {
       {/* ── Overlay escuro gradiente (mais escuro à esquerda para o card, transparente à direita) ── */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1,
-        background: 'linear-gradient(105deg, rgba(3,1,15,0.92) 0%, rgba(8,4,28,0.78) 38%, rgba(3,1,15,0.35) 65%, rgba(0,0,0,0.15) 100%)',
+        background: 'linear-gradient(105deg, rgba(3,1,15,0.92) 0%, rgba(3,1,15,0.82) 25%, rgba(3,1,15,0.18) 48%, rgba(0,0,0,0.04) 100%)',
       }} />
 
       {/* ── Halo de iluminação atrás do card ── */}
       <div style={{
         position: 'absolute', zIndex: 1,
         left: '-5%', top: '50%', transform: 'translateY(-50%)',
-        width: '52%', height: '90%',
+        width: '38%', height: '90%',
         background: 'radial-gradient(ellipse at 30% 50%, rgba(66,44,118,0.45) 0%, rgba(1,225,142,0.08) 45%, transparent 70%)',
         pointerEvents: 'none',
         filter: 'blur(2px)',
