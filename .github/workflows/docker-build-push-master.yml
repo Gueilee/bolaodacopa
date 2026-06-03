@@ -32,7 +32,7 @@ jobs:
 
           TURSO_AUTH_TOKEN_ESCAPED=$(escape "${{ secrets.ENV_PROD_TURSO_AUTH_TOKEN }}")
           JWT_SECRET_ESCAPED=$(escape "${{ secrets.ENV_PROD_JWT_SECRET }}")
-          BLOB_READ_WRITE_TOKEN_ESCAPED=$(escape "${{ secrets.ENV_PROD_BLOB_READ_WRITE_TOKEN }}")
+          AZURE_STORAGE_CONN_ESCAPED=$(escape "${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}")
           MAILER_DSN_ESCAPED=$(escape "${{ secrets.AZURE_SMTP_MAILER_DSN }}")
           API_FOOTBALL_KEY_ESCAPED=$(escape "${{ secrets.ENV_PROD_API_FOOTBALL_KEY }}")
           CRON_SECRET_ESCAPED=$(escape "${{ secrets.ENV_PROD_CRON_SECRET }}")
@@ -40,7 +40,7 @@ jobs:
 
           sed -i "s|^TURSO_AUTH_TOKEN=.*|TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN_ESCAPED|g" .env.docker.prod
           sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$JWT_SECRET_ESCAPED|g" .env.docker.prod
-          sed -i "s|^BLOB_READ_WRITE_TOKEN=.*|BLOB_READ_WRITE_TOKEN=$BLOB_READ_WRITE_TOKEN_ESCAPED|g" .env.docker.prod
+          sed -i "s|^AZURE_STORAGE_CONNECTION_STRING=.*|AZURE_STORAGE_CONNECTION_STRING=$AZURE_STORAGE_CONN_ESCAPED|g" .env.docker.prod
           sed -i "s|^MAILER_DSN=.*|MAILER_DSN=$MAILER_DSN_ESCAPED|g" .env.docker.prod
           sed -i "s|^API_FOOTBALL_KEY=.*|API_FOOTBALL_KEY=$API_FOOTBALL_KEY_ESCAPED|g" .env.docker.prod
           sed -i "s|^NEXT_PUBLIC_API_FOOTBALL_KEY=.*|NEXT_PUBLIC_API_FOOTBALL_KEY=$API_FOOTBALL_KEY_ESCAPED|g" .env.docker.prod

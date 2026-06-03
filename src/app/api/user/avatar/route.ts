@@ -32,10 +32,9 @@ export async function POST(request: NextRequest) {
 
   const ext      = EXT_MAP[file.type] ?? 'jpg'
   const filename = `${session.userId}.${ext}`
-
-  const buffer = Buffer.from(await file.arrayBuffer())
+  const buffer   = Buffer.from(await file.arrayBuffer())
   const blobPath = `avatars/${filename}`
-  
+
   const uploadUrl = await uploadToBlob(buffer, blobPath, file.type)
   const url = `${uploadUrl}?v=${Date.now()}`
 

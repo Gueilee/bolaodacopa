@@ -31,11 +31,10 @@ export async function POST(request: NextRequest) {
 
   const ext      = EXT_MAP[file.type] ?? 'jpg'
   const filename = `${Date.now()}.${ext}`
-
-  const buffer = Buffer.from(await file.arrayBuffer())
+  const buffer   = Buffer.from(await file.arrayBuffer())
   const blobPath = `mural/${session.userId}/${filename}`
-  
-  const url = await uploadToBlob(buffer, blobPath, file.type)
+
+  const url       = await uploadToBlob(buffer, blobPath, file.type)
   const mediaType = file.type.startsWith('video/') ? 'video' : 'image'
 
   return NextResponse.json({ url, mediaType })
