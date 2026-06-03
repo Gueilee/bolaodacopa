@@ -54,8 +54,14 @@ jobs:
           username: ${{ vars.AZURE_ACR_USERNAME_PROD }}
           password: ${{ secrets.AZURE_ACR_PASSWORD_PROD }}
 
-      - name: Build Docker image
-        run: docker build -t bolaodacopa .
+      - name: Build Docker image (com retry para falhas de rede)
+        run: |
+          for attempt in 1 2 3; do
+            echo ">>> Tentativa $attempt/3"
+            docker build -t bolaodacopa . && break
+            [ $attempt -lt 3 ] && echo "Build falhou, aguardando 15s antes de tentar novamente..." && sleep 15
+          done
+          docker images bolaodacopa
 
       - name: Tag Docker image
         run: docker tag bolaodacopa vdmprod.azurecr.io/samples/bolaodacopa
