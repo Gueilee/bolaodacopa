@@ -48,5 +48,7 @@ export async function uploadToBlob(
     }
   })
   
-  return blockBlobClient.url
+  // Retorna URL via proxy interno (/api/blob/...) porque o container
+  // está configurado como privado (sem acesso anônimo).
+  return `/api/blob/${cleanPath}`
 }
