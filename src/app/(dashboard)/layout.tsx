@@ -2,8 +2,9 @@ import { getSession } from '@/lib/session'
 import { redirect }   from 'next/navigation'
 import Link           from 'next/link'
 import Image          from 'next/image'
-import { SidebarNav } from '@/components/sidebar-nav'
-import { UserMenu }   from '@/components/user-menu'
+import { SidebarNav }           from '@/components/sidebar-nav'
+import { SidebarScrollWrapper } from '@/components/sidebar-scroll-wrapper'
+import { UserMenu }             from '@/components/user-menu'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession()
@@ -38,9 +39,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <CountdownStrip />
 
         {/* Navigation */}
-        <nav className="flex-1 px-2 py-3 space-y-0.5 sidebar-scroll">
+        <SidebarScrollWrapper>
           <SidebarNav role={session.role as 'admin' | 'rh' | 'user'} />
-        </nav>
+        </SidebarScrollWrapper>
 
         {/* User info */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: '14px 12px' }}>

@@ -43,9 +43,11 @@ export function SidebarNav({ role }: Props) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
       {visible.map((item) => {
+        // Rotas que precisam de match exato (não usar startsWith para evitar falsos positivos)
+        const exactMatch = item.href === '/dashboard' || item.href === '/admin'
         const isActive = !item.newTab && (
-          item.href === '/dashboard'
-            ? pathname === '/dashboard'
+          exactMatch
+            ? pathname === item.href
             : pathname.startsWith(item.href)
         )
 
