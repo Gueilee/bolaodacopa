@@ -34,21 +34,24 @@ export function AvatarUpload({ name, avatarUrl }: Props) {
 
     try {
       const res  = await fetch('/api/user/avatar', { method: 'POST', body: fd })
-      const data = await res.json()
+
+      let data: { url?: string; error?: string } = {}
+      try { data = await res.json() } catch { /* resposta não é JSON */ }
 
       if (!res.ok) {
-        setError(data.error ?? 'Erro ao enviar foto.')
-        setPreview(avatarUrl)  // reverte
+        setError(data.error ?? `Erro no servidor (${res.status}). Tente novamente.`)
+        setPreview(avatarUrl)
         return
       }
 
-      setPreview(data.url)
+      setPreview(data.url ?? null)
       setSuccess(true)
       setTimeout(() => setSuccess(false), 3000)
       router.refresh()
-    } catch {
-      setError('Erro de conexão. Tente novamente.')
+    } catch (err) {
+      setError('Erro de conexão. Verifique sua internet e tente novamente.')
       setPreview(avatarUrl)
+      console.error('[avatar upload]', err)
     } finally {
       setUploading(false)
       if (inputRef.current) inputRef.current.value = ''

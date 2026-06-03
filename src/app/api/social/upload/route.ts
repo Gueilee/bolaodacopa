@@ -20,9 +20,14 @@ export async function POST(request: NextRequest) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Não autenticado.' }, { status: 401 })
 
-  const formData = await request.formData()
-  const file     = formData.get('file') as File | null
+  let formData: FormData
+  try {
+    formData = await request.formData()
+  } catch {
+    return NextResponse.json({ error: 'Erro ao ler o arquivo enviado.' }, { status: 400 })
+  }
 
+  const file = formData.get('file') as File | null
   if (!file) return NextResponse.json({ error: 'Nenhum arquivo enviado.' }, { status: 400 })
   if (!ALLOWED_TYPES.includes(file.type))
     return NextResponse.json({ error: 'Tipo não suportado. Use JPG, PNG, GIF, WebP, MP4 ou WebM.' }, { status: 400 })
@@ -34,8 +39,15 @@ export async function POST(request: NextRequest) {
   const buffer   = Buffer.from(await file.arrayBuffer())
   const blobPath = `mural/${session.userId}/${filename}`
 
-  const url       = await uploadToBlob(buffer, blobPath, file.type)
-  const mediaType = file.type.startsWith('video/') ? 'video' : 'image'
+  let url: string
+  try {
+    url = await uploadToBlob(buffer, blobPath, file.type)
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err)
+    console.error('[social upload] Erro no Azure Blob:', msg)
+    return NextResponse.json({ error: `Erro no upload: ${msg}` }, { status: 500 })
+  }
 
+  const mediaType = file.type.startsWith('video/') ? 'video' : 'image'
   return NextResponse.json({ url, mediaType })
 }
