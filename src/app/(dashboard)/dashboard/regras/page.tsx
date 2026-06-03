@@ -181,17 +181,84 @@ export default function RegrasPage() {
         </div>
       </section>
 
+      {/* ── REGRA CRÍTICA: Prazo e Imutabilidade ── */}
+      <section style={{
+        borderRadius: 20, overflow: 'hidden',
+        border: '2px solid rgba(255,47,105,0.3)',
+        boxShadow: '0 4px 24px rgba(255,47,105,0.1)',
+      }}>
+        {/* Header vermelho */}
+        <div style={{
+          background: 'linear-gradient(135deg, #ff2f69, #cc1a50)',
+          padding: '16px 24px',
+          display: 'flex', alignItems: 'center', gap: 12,
+        }}>
+          <span style={{ fontSize: 24 }}>⚠️</span>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 15, fontWeight: 900, color: '#fff', letterSpacing: '-0.01em' }}>
+              Regras de Prazo — Leia com atenção
+            </h2>
+            <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 2 }}>
+              Estas regras são automáticas e não têm exceção
+            </p>
+          </div>
+        </div>
+
+        {/* Regra 1: 30 minutos */}
+        <div style={{ padding: '20px 24px', background: '#fff8f9', borderBottom: '1px solid rgba(255,47,105,0.15)' }}>
+          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+              background: 'rgba(255,47,105,0.1)', border: '1px solid rgba(255,47,105,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+            }}>⏰</div>
+            <div>
+              <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 14, color: '#1a1625' }}>
+                Prazo: 30 minutos antes de cada partida
+              </p>
+              <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                Os palpites de cada jogo <strong>fecham automaticamente 30 minutos antes do apito inicial</strong>.
+                Se você não registrar o palpite até esse prazo, os campos ficam em branco e você
+                <strong style={{ color: '#ff2f69' }}> não pontua naquele jogo</strong>.
+                Não há prorrogação de prazo, independente do motivo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Regra 2: imutabilidade */}
+        <div style={{ padding: '20px 24px', background: '#fff8f9' }}>
+          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <div style={{
+              width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+              background: 'rgba(255,47,105,0.1)', border: '1px solid rgba(255,47,105,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20,
+            }}>🔒</div>
+            <div>
+              <p style={{ margin: '0 0 6px', fontWeight: 800, fontSize: 14, color: '#1a1625' }}>
+                Palpite salvo = permanente, sem alteração
+              </p>
+              <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                Ao clicar em <strong>"Salvar"</strong> em uma partida, o palpite fica registrado no banco de dados
+                e <strong style={{ color: '#ff2f69' }}>não pode ser alterado</strong> em hipótese alguma.
+                Confira os valores antes de salvar. O sistema bloqueia automaticamente qualquer tentativa de edição posterior.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Resumo das regras gerais ── */}
       <section className="card p-6 space-y-4">
         <h2 className="text-base font-bold" style={{ color: '#1a1625' }}>📌 Regras Gerais</h2>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
           {[
-            { icon: '🔒', text: 'Ao clicar em "Finalizar Palpites", seus palpites ficam bloqueados e não podem ser alterados.' },
-            { icon: '⏰', text: 'Partidas encerradas não aceitam palpites — registre seus palpites antes de cada jogo começar.' },
+            { icon: '🔒', text: 'Ao clicar em "Finalizar Palpites", todos os seus palpites ficam bloqueados globalmente e não podem ser alterados.' },
             { icon: '📊', text: 'A pontuação é igual em todas as fases — grupo, oitavas, quartas, semi, final.' },
             { icon: '🎯', text: 'A regra de "Vencedor + Saldo" (7 pts) não se aplica a empates, pois o saldo é sempre 0.' },
-            { icon: '🏅', text: 'No caso de empate, o resultado de 90 minutos é o que conta para o bolão (não prorrogação ou pênaltis).' },
+            { icon: '🏅', text: 'No caso de prorrogação ou pênaltis, o resultado de 90 minutos é o que conta para o bolão.' },
             { icon: '🏆', text: 'O ranking é atualizado automaticamente após cada partida ser pontuada pelo administrador.' },
+            { icon: '📱', text: 'Gerencie seus palpites com antecedência — não dependa de conexão de última hora antes dos jogos.' },
           ].map((item, i) => (
             <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{item.icon}</span>

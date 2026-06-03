@@ -43,18 +43,22 @@ export async function savePrediction(
   if (!match)                       return { success: false, error: 'Partida não encontrada.' }
   if (match.status === 'finished')  return { success: false, error: 'Partida já encerrada.' }
 
+  // Regra: palpites fecham 30 minutos antes da partida começar
+  const matchStart = new Date(match.matchDate)
+  const cutoffTime = new Date(matchStart.getTime() - 30 * 60 * 1000)
+  if (new Date() >= cutoffTime) {
+    return { success: false, error: 'Prazo encerrado: os palpites fecham 30 minutos antes da partida começar.' }
+  }
+
+  // Regra: palpite já registrado não pode ser alterado
   const existing = await db.query.predictions.findFirst({
     where: and(eq(predictions.userId, session.userId), eq(predictions.matchId, matchId)),
   })
-
   if (existing) {
-    await db
-      .update(predictions)
-      .set({ homeScore, awayScore, updatedAt: new Date() })
-      .where(eq(predictions.id, existing.id))
-  } else {
-    await db.insert(predictions).values({ userId: session.userId, matchId, homeScore, awayScore })
+    return { success: false, error: 'Palpite já registrado para esta partida e não pode ser alterado.' }
   }
+
+  await db.insert(predictions).values({ userId: session.userId, matchId, homeScore, awayScore })
 
   revalidatePath('/dashboard/palpites')
   revalidatePath('/dashboard/jogos')

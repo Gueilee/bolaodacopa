@@ -7,11 +7,11 @@ import { TeamFlag } from '@/components/team-flag'
 import type { MatchWithPrediction } from '@/lib/queries'
 
 type Props = {
-  match:                MatchWithPrediction
-  isUserLocked:         boolean
-  index:                number
-  projectedHomeTeam?:   string | null
-  projectedAwayTeam?:   string | null
+  match:               MatchWithPrediction
+  isUserLocked:        boolean
+  index:               number
+  projectedHomeTeam?:  string | null
+  projectedAwayTeam?:  string | null
 }
 
 function PointsPill({ points }: { points: number }) {
@@ -44,38 +44,66 @@ function ScoreInput({ value, onChange, disabled }: { value: string; onChange: (v
   )
 }
 
+function ScoreBox({ value, highlight }: { value: number | null | string; highlight?: boolean }) {
+  return (
+    <span style={{
+      width: 44, height: 44, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      borderRadius: 10, fontWeight: 700, fontSize: 16,
+      background: highlight ? '#f5f2ef' : '#fff',
+      border: `1.5px solid ${highlight ? '#e0dbd5' : '#e8e4df'}`,
+      color: '#1a1625',
+    }}>
+      {value ?? '–'}
+    </span>
+  )
+}
+
 export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projectedAwayTeam }: Props) {
-  // undefined = fase de grupos (usa nome do DB), null = mata-mata ainda indefinido (mostra '?')
   const displayHomeTeam = projectedHomeTeam !== undefined ? projectedHomeTeam : match.homeTeam
   const displayAwayTeam = projectedAwayTeam !== undefined ? projectedAwayTeam : match.awayTeam
-  const prediction = match.predictions[0] ?? null
-  const isFinished = match.status === 'finished'
-  const canEdit    = !isUserLocked && !isFinished
+  const prediction      = match.predictions[0] ?? null
+  const isFinished      = match.status === 'finished'
+  const hasBet          = prediction !== null
 
-  const [home, setHome] = useState(prediction?.homeScore?.toString() ?? '')
-  const [away, setAway] = useState(prediction?.awayScore?.toString() ?? '')
+  // Regra: palpites fecham 30 minutos antes da partida começar
+  const matchStart  = new Date(match.matchDate)
+  const cutoffTime  = new Date(matchStart.getTime() - 30 * 60 * 1000)
+  const isPastCutoff = new Date() >= cutoffTime
+
+  // Pode editar APENAS se: não está globalmente locked, jogo não encerrou,
+  // ainda não salvou palpite nesse jogo E o prazo não encerrou
+  const canEdit = !isUserLocked && !isFinished && !hasBet && !isPastCutoff
+
+  const [home, setHome]           = useState(prediction?.homeScore?.toString() ?? '')
+  const [away, setAway]           = useState(prediction?.awayScore?.toString() ?? '')
   const [isPending, startTransition] = useTransition()
-  const [saved, setSaved] = useState(false)
+  const [saved, setSaved]         = useState(false)
+  const [error, setError]         = useState<string | null>(null)
 
-  const isDirty    = prediction
-    ? home !== String(prediction.homeScore) || away !== String(prediction.awayScore)
-    : home !== '' || away !== ''
+  const isDirty    = home !== '' || away !== ''
   const isComplete = home !== '' && away !== ''
-  const hasBet     = prediction !== null
 
   function handleSave() {
+    setError(null)
     startTransition(async () => {
       const result = await savePrediction(match.id, Number(home), Number(away))
-      if (result.success) { setSaved(true); setTimeout(() => setSaved(false), 2000) }
+      if (result.success) {
+        setSaved(true)
+      } else {
+        setError(result.error ?? 'Erro ao salvar.')
+      }
     })
   }
 
+  // Calcula minutos restantes até o cutoff (para exibir aviso)
+  const msUntilCutoff = cutoffTime.getTime() - Date.now()
+  const minutesUntilCutoff = Math.ceil(msUntilCutoff / 60000)
+  const showCutoffWarning = !isFinished && !hasBet && !isUserLocked && minutesUntilCutoff > 0 && minutesUntilCutoff <= 60
+
   return (
-    <div
-      className="px-4 py-3 transition-colors"
-      style={{ borderBottom: '1px solid #f0ede8' }}
-    >
-      {/* Meta: linha 1 = data+hora (esq) + badges (dir) | linha 2 = estádio */}
+    <div className="px-4 py-3 transition-colors" style={{ borderBottom: '1px solid #f0ede8' }}>
+
+      {/* Meta */}
       <div className="mb-2">
         <div className="flex items-center justify-between gap-2">
           <span className="text-[10px]" style={{ color: '#aaa8b0' }}>
@@ -94,6 +122,18 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
                 Encerrado
               </span>
             )}
+            {!isFinished && isPastCutoff && !hasBet && (
+              <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                style={{ background: '#fff3e0', color: '#e65100' }}>
+                ⏰ Prazo encerrado
+              </span>
+            )}
+            {showCutoffWarning && (
+              <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
+                style={{ background: '#fff8e1', color: '#f59e0b' }}>
+                ⚡ {minutesUntilCutoff}min restantes
+              </span>
+            )}
           </div>
         </div>
         {match.venue && (
@@ -103,7 +143,7 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
         )}
       </div>
 
-      {/* Main row: flag+team | input | × | input | flag+team | action */}
+      {/* Main row */}
       <div className="flex items-center gap-2">
 
         {/* Home team */}
@@ -124,15 +164,15 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
             </>
           ) : (
             <>
-              <span className="w-11 h-11 flex items-center justify-center rounded-xl font-bold text-base tabular-nums"
-                style={{ background: isFinished ? '#f5f2ef' : '#fff', border: '1.5px solid #e0dbd5', color: '#1a1625' }}>
-                {isFinished ? (match.homeScore ?? '–') : (hasBet ? prediction!.homeScore : '–')}
-              </span>
+              <ScoreBox
+                value={isFinished ? (match.homeScore ?? '–') : (hasBet ? prediction!.homeScore : '–')}
+                highlight={isFinished}
+              />
               <span className="text-sm font-light" style={{ color: '#c4bfba' }}>×</span>
-              <span className="w-11 h-11 flex items-center justify-center rounded-xl font-bold text-base tabular-nums"
-                style={{ background: isFinished ? '#f5f2ef' : '#fff', border: '1.5px solid #e0dbd5', color: '#1a1625' }}>
-                {isFinished ? (match.awayScore ?? '–') : (hasBet ? prediction!.awayScore : '–')}
-              </span>
+              <ScoreBox
+                value={isFinished ? (match.awayScore ?? '–') : (hasBet ? prediction!.awayScore : '–')}
+                highlight={isFinished}
+              />
             </>
           )}
         </div>
@@ -146,11 +186,18 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
         </div>
 
         {/* Action */}
-        <div className="w-14 shrink-0 flex justify-end">
+        <div className="w-16 shrink-0 flex justify-end">
           {isFinished && prediction?.isScored ? (
             <PointsPill points={prediction.points} />
           ) : isFinished && !hasBet ? (
             <span className="text-[11px]" style={{ color: '#c4bfba' }}>sem palpite</span>
+          ) : isFinished && hasBet ? (
+            <span className="text-[11px]" style={{ color: '#aaa8b0' }}>aguardando</span>
+          ) : hasBet ? (
+            // Palpite salvo — bloqueado permanentemente
+            <span className="text-[11px] font-bold" style={{ color: '#01a866' }}>🔒 salvo</span>
+          ) : isPastCutoff ? (
+            <span className="text-[10px] font-semibold" style={{ color: '#e65100' }}>sem palpite</span>
           ) : isUserLocked ? (
             <span className="text-[11px]" style={{ color: '#c4bfba' }}>🔒</span>
           ) : saved ? (
@@ -164,13 +211,16 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
             >
               {isPending ? '...' : 'Salvar'}
             </button>
-          ) : hasBet ? (
-            <span className="text-[11px]" style={{ color: '#01a866' }}>✓</span>
           ) : (
             <span className="text-[11px]" style={{ color: '#c4bfba' }}>—</span>
           )}
         </div>
       </div>
+
+      {/* Erro inline */}
+      {error && (
+        <p style={{ fontSize: 11, color: '#ff2f69', marginTop: 6, textAlign: 'right' }}>{error}</p>
+      )}
     </div>
   )
 }
