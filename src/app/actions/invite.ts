@@ -29,6 +29,26 @@ async function createToken(userId: string, type: 'invite' | 'password_reset'): P
   return token
 }
 
+// ─── Enviar convite por e-mail (qualquer conta do sistema) ───────────────────
+
+export async function sendInviteByEmail(
+  email: string,
+): Promise<{ success: boolean; error?: string }> {
+  await assertAdmin()
+
+  const user = await db.query.users.findFirst({
+    where: eq(users.email, email.trim().toLowerCase()),
+  })
+  if (!user) return { success: false, error: 'Nenhuma conta encontrada com este e-mail.' }
+  if (!user.isActive) return { success: false, error: 'Esta conta está inativa.' }
+
+  const token = await createToken(user.id, 'invite')
+  const result = await sendInviteEmail(user.email, user.name, token)
+
+  revalidatePath('/admin/convites')
+  return result
+}
+
 // ─── Enviar convite para um único usuário ─────────────────────────────────────
 
 export async function sendInvite(

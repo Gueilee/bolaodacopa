@@ -5,6 +5,7 @@ import { users }        from '@/db/schema'
 import { eq, and, isNull, isNotNull } from 'drizzle-orm'
 import { BulkInviteButton } from './bulk-invite-button'
 import { PendingList }      from './pending-list'
+import { InviteByEmail }   from './invite-by-email'
 
 export const revalidate  = 0
 export const maxDuration = 60
@@ -68,6 +69,9 @@ export default async function ConvitesPage() {
           </div>
         </div>
       </div>
+
+      {/* Envio por e-mail — qualquer conta */}
+      <InviteByEmail />
 
       {/* Barra de progresso */}
       <div className="card p-5" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
