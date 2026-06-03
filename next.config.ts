@@ -11,10 +11,10 @@ const nextConfig: NextConfig = {
     serverActions: allowedOrigins ? { allowedOrigins } : {},
   },
   images: {
-    unoptimized: false,
+    unoptimized: true,   // compatível com Azure e qualquer host não-Vercel
     remotePatterns: [
       { protocol: 'https', hostname: 'flagcdn.com' },
-      { protocol: 'https', hostname: '*.blob.core.windows.net' },  // Azure Blob (futuro)
+      { protocol: 'https', hostname: '*.blob.core.windows.net' },
       { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
     ],
   },
