@@ -116,7 +116,7 @@ export default function LoginPage() {
     start(async () => {
       const r = await loginAction(fd.get('email') as string, fd.get('password') as string)
       if (r?.error) setError(r.error)
-      else router.push('/dashboard')
+      else router.push('/dashboard/regras')
     })
   }
 

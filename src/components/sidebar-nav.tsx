@@ -15,10 +15,10 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { href: '/dashboard/palpites',      label: 'Meus Palpites',        icon: '🎯', section: 'Bolão' },
+  { href: '/dashboard/regras',        label: 'Regras',               icon: '📋', section: 'Bolão' },
+  { href: '/dashboard/palpites',      label: 'Meus Palpites',        icon: '🎯' },
   { href: '/dashboard/finais',        label: 'Palpite Final',        icon: '🌟' },
   { href: '/dashboard/copa-ao-vivo',  label: 'Copa ao Vivo',         icon: '⚽' },
-  { href: '/dashboard/regras',        label: 'Regras',               icon: '📋' },
   { href: '/dashboard',               label: 'Ranking Individual',   icon: '🏆', section: 'Ranking' },
   { href: '/dashboard/departamentos', label: 'Por Departamento',     icon: '🏢' },
   { href: '/dashboard/mural',         label: 'Central da Torcida',  icon: '💬', section: 'Comunidade' },
