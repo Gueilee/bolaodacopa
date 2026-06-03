@@ -3,7 +3,6 @@
 import { useState, useTransition, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { loginAction } from '@/app/actions/auth'
-import Image from 'next/image'
 
 const CUP_DATE = new Date('2026-06-11T20:00:00Z')
 
@@ -125,17 +124,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden', background: '#070512' }}>
+    <div style={{
+      position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden',
+      background: '#070512',
+      backgroundImage: 'url(/login2.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center right',
+      backgroundRepeat: 'no-repeat',
+    }}>
 
-      {/* Background */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-        <Image src="/login2.png" alt="" fill priority quality={95}
-          style={{ objectFit: 'cover', objectPosition: 'center right' }} />
-        {/* Overlay leve — deixa imagem visível dos dois lados */}
+      {/* Overlays decorativos */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(4,2,12,0.72) 0%, rgba(4,2,12,0.4) 35%, rgba(4,2,12,0.05) 60%, transparent 80%)' }} />
-        {/* Luz suave iluminando o lado esquerdo */}
-        <div style={{ position: 'absolute', top: '20%', left: '-5%', width: '50%', height: '60%', background: 'radial-gradient(ellipse, rgba(90,62,148,0.28) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '10%', left: '5%', width: '35%', height: '40%', background: 'radial-gradient(ellipse, rgba(1,225,142,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '20%', left: '-5%', width: '50%', height: '60%', background: 'radial-gradient(ellipse, rgba(90,62,148,0.28) 0%, transparent 70%)' }} />
+        <div style={{ position: 'absolute', bottom: '10%', left: '5%', width: '35%', height: '40%', background: 'radial-gradient(ellipse, rgba(1,225,142,0.1) 0%, transparent 70%)' }} />
       </div>
 
       {/* ── LEFT PANEL ── */}
