@@ -28,22 +28,21 @@ function useCountdown() {
 
 function Block({ value, label }: { value: number; label: string }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
       <div style={{
-        position: 'relative',
-        background: 'linear-gradient(145deg, rgba(1,225,142,0.15), rgba(1,225,142,0.05))',
-        border: '1.5px solid rgba(1,225,142,0.4)',
-        borderRadius: 12,
-        width: 58, height: 58,
+        background: 'rgba(1,225,142,0.12)',
+        border: '1.5px solid rgba(1,225,142,0.45)',
+        borderRadius: 10,
+        width: 52, height: 52,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontWeight: 900, fontSize: 24, color: '#01E18E',
+        fontWeight: 900, fontSize: 22, color: '#01E18E',
         fontVariantNumeric: 'tabular-nums',
-        boxShadow: '0 0 20px rgba(1,225,142,0.15), inset 0 1px 0 rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(10px)',
+        boxShadow: '0 0 18px rgba(1,225,142,0.2), inset 0 1px 0 rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(8px)',
       }}>
         {String(value).padStart(2, '0')}
       </div>
-      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+      <span style={{ fontSize: 8, fontWeight: 700, letterSpacing: '0.18em', color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase' }}>
         {label}
       </span>
     </div>
@@ -57,19 +56,19 @@ function InputField({ id, name, type, placeholder, label, autoComplete, disabled
 }) {
   const [focused, setFocused] = useState(false)
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       <label htmlFor={id} style={{
-        fontSize: 11, fontWeight: 700, letterSpacing: '0.16em',
-        textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)',
+        fontSize: 10, fontWeight: 700, letterSpacing: '0.16em',
+        textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)',
         display: 'flex', alignItems: 'center', gap: 6,
       }}>
-        <span style={{ color: '#01E18E', fontSize: 10 }}>▸</span> {label}
+        <span style={{ color: '#01E18E', fontSize: 9 }}>▸</span> {label}
       </label>
       <div style={{ position: 'relative' }}>
         <span style={{
-          position: 'absolute', left: 15, top: '50%', transform: 'translateY(-50%)',
-          color: focused ? '#01E18E' : 'rgba(255,255,255,0.25)',
-          fontSize: 14, pointerEvents: 'none', transition: 'color 0.25s',
+          position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)',
+          color: focused ? '#01E18E' : 'rgba(255,255,255,0.22)',
+          fontSize: 13, pointerEvents: 'none', transition: 'color 0.2s',
         }}>
           {icon}
         </span>
@@ -79,18 +78,16 @@ function InputField({ id, name, type, placeholder, label, autoComplete, disabled
           onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           style={{
             width: '100%', boxSizing: 'border-box',
-            padding: '14px 46px 14px 44px',
-            borderRadius: 14,
-            border: `1.5px solid ${focused ? 'rgba(1,225,142,0.6)' : 'rgba(255,255,255,0.08)'}`,
-            background: focused
-              ? 'rgba(1,225,142,0.04)'
-              : 'rgba(255,255,255,0.03)',
+            padding: '13px 44px 13px 42px',
+            borderRadius: 12,
+            border: `1.5px solid ${focused ? 'rgba(1,225,142,0.55)' : 'rgba(255,255,255,0.1)'}`,
+            background: focused ? 'rgba(1,225,142,0.05)' : 'rgba(255,255,255,0.04)',
             color: '#faf9f5', fontSize: 14,
             outline: 'none',
             boxShadow: focused
-              ? '0 0 0 4px rgba(1,225,142,0.08), inset 0 0 0 1px rgba(1,225,142,0.1)'
-              : 'inset 0 1px 0 rgba(255,255,255,0.03)',
-            transition: 'all 0.25s',
+              ? '0 0 0 3px rgba(1,225,142,0.1), inset 0 0 0 1px rgba(1,225,142,0.08)'
+              : 'none',
+            transition: 'all 0.2s',
             opacity: disabled ? 0.5 : 1,
             letterSpacing: type === 'password' ? '0.15em' : 'normal',
           }}
@@ -124,102 +121,109 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{
-      position: 'relative', minHeight: '100vh', display: 'flex', overflow: 'hidden',
-      background: 'linear-gradient(135deg, #04020c 0%, #130836 45%, #091a0f 100%)',
-    }}>
+    <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
 
-      {/* Luzes ambiente — sem depender de arquivo externo */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        {/* Brilho roxo grande à esquerda */}
-        <div style={{ position: 'absolute', top: '-10%', left: '-15%', width: '70%', height: '80%',
-          background: 'radial-gradient(ellipse, rgba(90,44,148,0.55) 0%, transparent 65%)' }} />
-        {/* Brilho neon verde embaixo */}
-        <div style={{ position: 'absolute', bottom: '-5%', left: '5%', width: '45%', height: '55%',
-          background: 'radial-gradient(ellipse, rgba(1,225,142,0.18) 0%, transparent 65%)' }} />
-        {/* Brilho roxo claro no centro-direita */}
-        <div style={{ position: 'absolute', top: '25%', right: '10%', width: '50%', height: '50%',
-          background: 'radial-gradient(ellipse, rgba(66,44,118,0.35) 0%, transparent 60%)' }} />
-        {/* Partículas decorativas — linhas diagonais sutis */}
-        <div style={{ position: 'absolute', inset: 0,
-          backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 60px)',
-        }} />
-        {/* Brilho rosa copa */}
-        <div style={{ position: 'absolute', top: '50%', right: '5%', width: '30%', height: '40%',
-          background: 'radial-gradient(ellipse, rgba(255,47,105,0.1) 0%, transparent 70%)' }} />
-      </div>
+      {/* ── Imagem de fundo completa ── */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/login2.png"
+        alt=""
+        style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%',
+          objectFit: 'cover', objectPosition: 'center',
+          zIndex: 0,
+        }}
+      />
 
-      {/* ── LEFT PANEL ── */}
+      {/* ── Overlay escuro gradiente (mais escuro à esquerda para o card, transparente à direita) ── */}
+      <div style={{
+        position: 'absolute', inset: 0, zIndex: 1,
+        background: 'linear-gradient(105deg, rgba(3,1,15,0.92) 0%, rgba(8,4,28,0.78) 38%, rgba(3,1,15,0.35) 65%, rgba(0,0,0,0.15) 100%)',
+      }} />
+
+      {/* ── Halo de iluminação atrás do card ── */}
+      <div style={{
+        position: 'absolute', zIndex: 1,
+        left: '-5%', top: '50%', transform: 'translateY(-50%)',
+        width: '52%', height: '90%',
+        background: 'radial-gradient(ellipse at 30% 50%, rgba(66,44,118,0.45) 0%, rgba(1,225,142,0.08) 45%, transparent 70%)',
+        pointerEvents: 'none',
+        filter: 'blur(2px)',
+      }} />
+
+      {/* ── Card de login (à esquerda, centralizado verticalmente) ── */}
       <div style={{
         position: 'relative', zIndex: 10,
-        width: '100%', maxWidth: 460,
-        padding: '48px 40px',
+        width: '100%', maxWidth: 400,
+        marginLeft: 'clamp(20px, 6vw, 80px)',
+        padding: '0 16px',
         boxSizing: 'border-box',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
       }}>
 
-        {/* COUNTDOWN — centralizado */}
-        <div style={{ marginBottom: 28, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-            <div style={{ width: 20, height: 1, background: 'rgba(1,225,142,0.35)' }} />
-            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+        {/* COUNTDOWN */}
+        <div style={{ marginBottom: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 18, height: 1, background: 'rgba(1,225,142,0.4)' }} />
+            <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
               ⚽ Faltam para a Copa 2026
             </span>
-            <div style={{ width: 20, height: 1, background: 'rgba(1,225,142,0.35)' }} />
+            <div style={{ width: 18, height: 1, background: 'rgba(1,225,142,0.4)' }} />
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Block value={cd.days}    label="Dias" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.6 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, marginBottom: 16, opacity: 0.5 }}>:</span>
             <Block value={cd.hours}   label="Horas" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.6 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, marginBottom: 16, opacity: 0.5 }}>:</span>
             <Block value={cd.minutes} label="Min" />
-            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 20, marginBottom: 20, opacity: 0.6 }}>:</span>
+            <span style={{ color: '#01E18E', fontWeight: 900, fontSize: 18, marginBottom: 16, opacity: 0.5 }}>:</span>
             <Block value={cd.seconds} label="Seg" />
           </div>
         </div>
 
-        {/* LOGIN CARD */}
+        {/* LOGIN CARD — glass + glow */}
         <div style={{
-          width: '100%',
-          borderRadius: 22,
-          background: 'rgba(18,12,40,0.55)',
-          backdropFilter: 'blur(44px) saturate(1.9) brightness(1.15)',
-          WebkitBackdropFilter: 'blur(44px) saturate(1.9) brightness(1.15)',
-          boxShadow: '0 20px 70px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset, 0 0 40px rgba(66,44,118,0.15)',
+          borderRadius: 20,
+          background: 'rgba(10,6,30,0.6)',
+          backdropFilter: 'blur(40px) saturate(1.8)',
+          WebkitBackdropFilter: 'blur(40px) saturate(1.8)',
+          boxShadow: [
+            '0 0 0 1px rgba(255,255,255,0.09) inset',
+            '0 0 60px rgba(66,44,118,0.55)',
+            '0 0 120px rgba(1,225,142,0.12)',
+            '0 24px 64px rgba(0,0,0,0.6)',
+          ].join(', '),
           overflow: 'hidden',
         }}>
-          {/* Neon top border */}
+          {/* Borda neon superior */}
           <div style={{ height: 2, background: 'linear-gradient(90deg, #422c76 0%, #01E18E 50%, #ff2f69 100%)' }} />
 
-          {/* Card header */}
-          <div style={{ padding: '22px 26px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
+          {/* Header */}
+          <div style={{ padding: '20px 24px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
             <div style={{
-              width: 40, height: 40, borderRadius: 12,
+              width: 38, height: 38, borderRadius: 11,
               background: 'linear-gradient(135deg, #422c76, #2a1a4e)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 18, boxShadow: '0 0 16px rgba(66,44,118,0.5)',
+              fontSize: 17, boxShadow: '0 0 20px rgba(66,44,118,0.7)',
               flexShrink: 0,
             }}>
               ⚽
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: '#faf9f5', lineHeight: 1.2 }}>
+              <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: '#faf9f5', lineHeight: 1.2 }}>
                 Entrar no Bolão
               </h2>
-              <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>
+              <p style={{ margin: 0, fontSize: 11, color: 'rgba(255,255,255,0.32)', marginTop: 2 }}>
                 Use seu acesso corporativo
               </p>
             </div>
           </div>
 
-          {/* Divider */}
-          <div style={{ margin: '18px 26px 0', height: 1, background: 'linear-gradient(to right, rgba(255,255,255,0.08), transparent)' }} />
+          <div style={{ margin: '16px 24px 0', height: 1, background: 'linear-gradient(to right, rgba(255,255,255,0.08), transparent)' }} />
 
           {/* Form */}
-          <div style={{ padding: '20px 26px 26px' }}>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ padding: '18px 24px 24px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <InputField
                 id="email" name="email" type="email"
                 placeholder="nome@vendemmia.com.br"
@@ -233,7 +237,7 @@ export default function LoginPage() {
                 autoComplete="current-password" disabled={isPending} icon="🔑"
                 right={
                   <button type="button" onClick={() => setShowPass(v => !v)} tabIndex={-1}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.3)', fontSize: 17, padding: '4px', lineHeight: 1, transition: 'color 0.2s' }}>
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.3)', fontSize: 16, padding: '4px', lineHeight: 1 }}>
                     {showPass ? '🙈' : '👁'}
                   </button>
                 }
@@ -242,34 +246,33 @@ export default function LoginPage() {
               {error && (
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 10,
-                  borderRadius: 12, padding: '12px 15px',
+                  borderRadius: 10, padding: '11px 14px',
                   background: 'rgba(255,47,105,0.08)',
                   border: '1px solid rgba(255,47,105,0.25)',
                   color: '#ff6b8a', fontSize: 13,
                 }}>
-                  <span style={{ fontSize: 16 }}>⚠</span><span>{error}</span>
+                  <span style={{ fontSize: 15 }}>⚠</span><span>{error}</span>
                 </div>
               )}
 
               <button type="submit" disabled={isPending}
                 style={{
-                  marginTop: 6, width: '100%', padding: '15px',
-                  borderRadius: 14, border: 'none',
+                  marginTop: 4, width: '100%', padding: '14px',
+                  borderRadius: 12, border: 'none',
                   cursor: isPending ? 'not-allowed' : 'pointer',
                   background: isPending
-                    ? 'rgba(66,44,118,0.5)'
+                    ? 'rgba(66,44,118,0.4)'
                     : 'linear-gradient(135deg, #3d2870 0%, #5a3e94 50%, #422c76 100%)',
-                  color: '#faf9f5', fontSize: 15, fontWeight: 800,
+                  color: '#faf9f5', fontSize: 14, fontWeight: 800,
                   letterSpacing: '0.06em',
-                  boxShadow: isPending ? 'none' : '0 4px 24px rgba(66,44,118,0.6), 0 0 0 1px rgba(255,255,255,0.06) inset',
+                  boxShadow: isPending ? 'none' : '0 4px 24px rgba(66,44,118,0.7), 0 0 0 1px rgba(255,255,255,0.06) inset',
                   opacity: isPending ? 0.7 : 1,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
                   transition: 'all 0.2s',
-                  position: 'relative', overflow: 'hidden',
                 }}>
                 {isPending ? (
                   <>
-                    <svg style={{ animation: 'spin 1s linear infinite', width: 17, height: 17 }} viewBox="0 0 24 24" fill="none">
+                    <svg style={{ animation: 'spin 1s linear infinite', width: 16, height: 16 }} viewBox="0 0 24 24" fill="none">
                       <circle style={{ opacity: 0.25 }} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path style={{ opacity: 0.75 }} fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                     </svg>
@@ -280,51 +283,23 @@ export default function LoginPage() {
                     <span>Entrar</span>
                     <span style={{
                       background: 'rgba(1,225,142,0.2)', border: '1px solid rgba(1,225,142,0.4)',
-                      borderRadius: 8, padding: '2px 10px', color: '#01E18E', fontSize: 16, fontWeight: 900,
+                      borderRadius: 7, padding: '2px 10px', color: '#01E18E', fontSize: 15, fontWeight: 900,
                     }}>→</span>
                   </>
                 )}
               </button>
             </form>
 
-            <p style={{ textAlign: 'center', marginTop: 18, fontSize: 11, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.04em' }}>
+            <p style={{ textAlign: 'center', marginTop: 16, fontSize: 10, color: 'rgba(255,255,255,0.16)', letterSpacing: '0.04em' }}>
               🔒 Acesso exclusivo · Vendemmia Logística Integrada
             </p>
           </div>
         </div>
       </div>
 
-      {/* ── RIGHT PANEL — imagem decorativa (desktop) ── */}
-      <div style={{
-        display: 'none',
-        flex: 1,
-        position: 'relative',
-        zIndex: 1,
-      }} className="login-right-panel">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/login2.png"
-          alt=""
-          style={{
-            position: 'absolute', inset: 0,
-            width: '100%', height: '100%',
-            objectFit: 'cover',
-            opacity: 0.85,
-          }}
-        />
-        {/* overlay gradiente para fundir com o painel esquerdo */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(to right, rgba(4,2,12,0.6) 0%, transparent 40%)',
-        }} />
-      </div>
-
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        input::placeholder { color: rgba(255,255,255,0.22); }
-        @media (min-width: 768px) {
-          .login-right-panel { display: block !important; }
-        }
+        input::placeholder { color: rgba(255,255,255,0.2); }
       `}</style>
     </div>
   )
