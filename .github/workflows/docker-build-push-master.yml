@@ -54,15 +54,14 @@ jobs:
           username: ${{ vars.AZURE_ACR_USERNAME_PROD }}
           password: ${{ secrets.AZURE_ACR_PASSWORD_PROD }}
 
-      - name: Build e Push para Azure Container Registry
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: vdmprod.azurecr.io/samples/bolaodacopa:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Build Docker image
+        run: docker build -t bolaodacopa .
+
+      - name: Tag Docker image
+        run: docker tag bolaodacopa vdmprod.azurecr.io/samples/bolaodacopa
+
+      - name: Push Docker image to Azure Container Registry
+        run: docker push vdmprod.azurecr.io/samples/bolaodacopa
 
       - name: Recriar container no Portainer
         run: |
