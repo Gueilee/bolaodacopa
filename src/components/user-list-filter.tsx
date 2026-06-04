@@ -32,7 +32,6 @@ export function UserListFilter({ users, departments }: Props) {
         || u.name.toLowerCase().includes(q)
         || u.email.toLowerCase().includes(q)
         || (u.department ?? '').toLowerCase().includes(q)
-        || (u.manager ?? '').toLowerCase().includes(q)
       const matchDept = !dept || u.department === dept
       const matchRole = !role || u.role === role
       return matchSearch && matchDept && matchRole
