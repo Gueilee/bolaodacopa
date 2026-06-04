@@ -6,14 +6,35 @@ import { phaseLabels } from '@/lib/utils'
 
 function Flag({ team, size = 48 }: { team: string; size?: number }) {
   const url = getFlagUrl(team, size)
-  if (!url) return null
+  if (!url) return <span style={{ fontSize: size * 0.55, lineHeight: 1 }}>🏳</span>
   // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
       src={url} alt={team}
-      style={{ width: size, height: Math.round(size * 0.67), objectFit: 'cover', borderRadius: 4, boxShadow: '0 2px 8px rgba(0,0,0,0.5)' }}
+      style={{ width: size, height: Math.round(size * 0.67), objectFit: 'cover', borderRadius: 4, boxShadow: '0 2px 8px rgba(0,0,0,0.5)', flexShrink: 0 }}
     />
   )
+}
+
+function formatTime(date: Date | string): string {
+  return new Date(date).toLocaleTimeString('pt-BR', {
+    hour:     '2-digit',
+    minute:   '2-digit',
+    timeZone: 'America/Sao_Paulo',
+  })
+}
+
+function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString('pt-BR', {
+    day:      '2-digit',
+    month:    '2-digit',
+    timeZone: 'America/Sao_Paulo',
+  })
+}
+
+function phaseLabel(match: TvMatch): string {
+  if (match.groupName) return match.groupName
+  return phaseLabels[match.phase as keyof typeof phaseLabels] ?? match.phase
 }
 
 function winner(m: TvMatch): 'home' | 'away' | 'draw' {
@@ -21,10 +42,6 @@ function winner(m: TvMatch): 'home' | 'away' | 'draw' {
   if (m.homeScore > m.awayScore) return 'home'
   if (m.awayScore > m.homeScore) return 'away'
   return 'draw'
-}
-
-function formatDate(date: Date | string): string {
-  return new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', timeZone: 'America/Sao_Paulo' })
 }
 
 export function SlideResults({ matches }: { matches: TvMatch[] }) {
@@ -39,114 +56,110 @@ export function SlideResults({ matches }: { matches: TvMatch[] }) {
   }
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '4px 48px 0', gap: 14 }}>
-      <h2 style={{ fontSize: 32, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center', letterSpacing: '0.04em' }}>
-        📊 &nbsp;ÚLTIMOS RESULTADOS
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '0 48px', gap: 10 }}>
+
+      {/* Header */}
+      <h2 style={{ fontSize: 28, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center', letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>
+        📊 &nbsp;Últimos Resultados
       </h2>
 
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 7, justifyContent: 'center' }}>
-        {matches.slice(0, 10).map((match) => {
-          const w     = winner(match)
-          const label = match.groupName ?? phaseLabels[match.phase as keyof typeof phaseLabels] ?? match.phase
-          const flagSize = 44
-
-          const homeWon  = w === 'home'
-          const awayWon  = w === 'away'
-          const isDraw   = w === 'draw'
+      {/* Lista de resultados */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, justifyContent: 'center' }}>
+        {matches.slice(0, 8).map((match) => {
+          const w       = winner(match)
+          const homeWon = w === 'home'
+          const awayWon = w === 'away'
+          const phase   = phaseLabel(match)
+          const flagSz  = 40
 
           return (
             <div
               key={match.id}
               style={{
                 display: 'grid',
-                gridTemplateColumns: '64px 100px 1fr 120px 1fr 36px',
+                gridTemplateColumns: '130px 1fr 110px 1fr 50px',
                 alignItems: 'center',
-                gap: 12,
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.07)',
-                borderRadius: 14,
-                padding: '12px 20px',
+                gap: 10,
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 16,
+                padding: '12px 18px',
               }}
             >
-              {/* Date */}
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: 'rgba(255,255,255,0.5)', margin: 0 }}>
-                  {formatDate(match.matchDate)}
-                </p>
-              </div>
-
-              {/* Phase / Group */}
-              <div>
-                <p style={{
-                  fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)',
-                  textTransform: 'uppercase', letterSpacing: '0.1em', margin: 0,
-                }}>
-                  {label}
-                </p>
-                {match.venue && (
-                  <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', margin: '3px 0 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    📍 {match.venue}
-                  </p>
+              {/* Info da partida: data, hora, fase, estádio */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: '#01E18E' }}>
+                    {formatTime(match.matchDate)}
+                  </span>
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>Brasília</span>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  {formatDate(match.matchDate)} · {phase}
+                </span>
+                {(match.venue || match.city) && (
+                  <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', lineHeight: 1.3 }}>
+                    📍 {[match.venue, match.city].filter(Boolean).join(' — ')}
+                  </span>
                 )}
               </div>
 
-              {/* Home team */}
+              {/* Time da casa */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'flex-end',
-                opacity: awayWon ? 0.45 : 1,
+                display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'flex-end',
+                opacity: awayWon ? 0.5 : 1,
               }}>
                 <p style={{
-                  fontSize: 17, fontWeight: homeWon ? 900 : 600,
+                  fontSize: 16, fontWeight: homeWon ? 900 : 600,
                   color: homeWon ? 'white' : 'rgba(255,255,255,0.75)',
-                  margin: 0, textAlign: 'right',
+                  margin: 0, textAlign: 'right', lineHeight: 1.2,
                 }}>
                   {match.homeTeam}
                 </p>
-                <Flag team={match.homeTeam} size={flagSize} />
+                <Flag team={match.homeTeam} size={flagSz} />
               </div>
 
-              {/* Score */}
+              {/* Placar */}
               <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-                background: 'rgba(0,0,0,0.3)',
-                borderRadius: 10, padding: '6px 14px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                background: 'rgba(0,0,0,0.35)', borderRadius: 10, padding: '8px 12px',
               }}>
                 <span style={{
                   fontSize: 28, fontWeight: 900,
-                  color: homeWon ? '#01E18E' : 'white',
-                  fontVariantNumeric: 'tabular-nums',
+                  color: homeWon ? '#01E18E' : 'rgba(255,255,255,0.9)',
+                  fontVariantNumeric: 'tabular-nums', lineHeight: 1,
                 }}>
-                  {match.homeScore}
+                  {match.homeScore ?? '–'}
                 </span>
-                <span style={{ fontSize: 16, color: 'rgba(255,255,255,0.25)', fontWeight: 700 }}>×</span>
+                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.25)', fontWeight: 700 }}>×</span>
                 <span style={{
                   fontSize: 28, fontWeight: 900,
-                  color: awayWon ? '#01E18E' : 'white',
-                  fontVariantNumeric: 'tabular-nums',
+                  color: awayWon ? '#01E18E' : 'rgba(255,255,255,0.9)',
+                  fontVariantNumeric: 'tabular-nums', lineHeight: 1,
                 }}>
-                  {match.awayScore}
+                  {match.awayScore ?? '–'}
                 </span>
               </div>
 
-              {/* Away team */}
+              {/* Time visitante */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                opacity: homeWon ? 0.45 : 1,
+                display: 'flex', alignItems: 'center', gap: 10,
+                opacity: homeWon ? 0.5 : 1,
               }}>
-                <Flag team={match.awayTeam} size={flagSize} />
+                <Flag team={match.awayTeam} size={flagSz} />
                 <p style={{
-                  fontSize: 17, fontWeight: awayWon ? 900 : 600,
+                  fontSize: 16, fontWeight: awayWon ? 900 : 600,
                   color: awayWon ? 'white' : 'rgba(255,255,255,0.75)',
-                  margin: 0,
+                  margin: 0, lineHeight: 1.2,
                 }}>
                   {match.awayTeam}
                 </p>
               </div>
 
-              {/* Result icon */}
+              {/* Ícone de resultado */}
               <div style={{ textAlign: 'center' }}>
-                <span style={{ fontSize: 20 }}>
-                  {isDraw ? '🤝' : '✅'}
+                <span style={{ fontSize: 22 }}>
+                  {w === 'draw' ? '🤝' : '✅'}
                 </span>
               </div>
             </div>
