@@ -11,18 +11,33 @@ const DISPLAY_NAME: Record<string, string> = {
 }
 function displayName(name: string): string { return DISPLAY_NAME[name] ?? name }
 
-// ─── Flag com tamanho mínimo 32px para visibilidade ───────────────────────────
+// ─── Flag com fallback visual (nunca some, sempre mostra algo) ───────────────
 
-function Flag({ team, size = 32 }: { team: string; size?: number }) {
-  const actualSize = Math.max(size, 32)
-  const url = getFlagUrl(displayName(team), actualSize) || getFlagUrl(team, actualSize)
-  if (!url) return <span style={{ fontSize: Math.round(actualSize * 0.7), lineHeight: 1 }}>🏳</span>
+function Flag({ team, size = 40 }: { team: string; size?: number }) {
+  const [failed, setFailed] = useState(false)
+  // Sempre usa w40 (mais confiável no flagcdn.com)
+  const url = getFlagUrl(displayName(team), 40) || getFlagUrl(team, 40)
+  const w = Math.max(size, 28)
+  const h = Math.round(w * 0.67)
+
+  if (!url || failed) {
+    return (
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: w, height: h, borderRadius: 3, background: '#f0ede8',
+        fontSize: Math.round(h * 0.9), lineHeight: 1, flexShrink: 0,
+      }}>
+        🏳
+      </span>
+    )
+  }
   // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
       src={url} alt={displayName(team)}
-      style={{ width: actualSize, height: Math.round(actualSize * 0.67), objectFit: 'cover', borderRadius: 4, flexShrink: 0, display: 'block' }}
-      onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+      width={w} height={h}
+      style={{ objectFit: 'cover', borderRadius: 4, flexShrink: 0, display: 'block' }}
+      onError={() => setFailed(true)}
     />
   )
 }
@@ -76,7 +91,7 @@ function MatchCard({ match, featured = false }: { match: LiveMatch; featured?: b
   const isLive     = match.status === 'live'
   const isFinished = match.status === 'finished'
   const hasScore   = match.homeScore !== null && match.awayScore !== null
-  const flagSz     = featured ? 40 : 32
+  const flagSz     = featured ? 44 : 40  // sempre ≥ 40 para garantir visibilidade
 
   return (
     <div style={{
@@ -186,7 +201,7 @@ function GroupTable({ name, teams }: { name: string; teams: GroupTeam[] }) {
             <span style={{ fontSize: 9, color: i < 2 ? '#422c76' : '#c4bfba', fontWeight: 700, minWidth: 10, flexShrink: 0 }}>
               {i + 1}
             </span>
-            <Flag team={t.name} size={20} />
+            <Flag team={t.name} size={28} />
             <span style={{ fontSize: 12, fontWeight: 600, color: '#1a1625',
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {displayName(t.name)}
