@@ -3,8 +3,8 @@ import { users }      from '@/db/schema'
 import { eq, asc }   from 'drizzle-orm'
 import { getSession } from '@/lib/session'
 import { redirect }   from 'next/navigation'
-import { UserAdminRow }  from '@/components/user-admin-row'
-import { CreateUserForm }from '@/components/create-user-form'
+import { CreateUserForm }   from '@/components/create-user-form'
+import { UserListFilter }  from '@/components/user-list-filter'
 
 export const revalidate = 0
 export const metadata   = { title: 'Gestão de Usuários | Bolão Copa 2026' }
@@ -14,7 +14,7 @@ export default async function UsuariosPage() {
   if (!session || session.role !== 'admin') redirect('/dashboard')
 
   const allUsers = await db.query.users.findMany({
-    orderBy: [asc(users.department), asc(users.name)],
+    orderBy: [asc(users.name)],
   })
 
   // Departamentos únicos para o select
@@ -59,25 +59,20 @@ export default async function UsuariosPage() {
         <CreateUserForm existingDepartments={departments} />
       </section>
 
-      {/* ── Lista ── */}
-      <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-widest" style={{color:'#8a8490'}}>
+      {/* ── Lista com busca e filtros ── */}
+      <section>
+        <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em',
+          color: '#8a8490', margin: '0 0 12px 4px' }}>
           Colaboradores ({allUsers.length})
-        </h2>
+        </p>
 
-        <div className="card overflow-hidden" style={{borderBottom:'none'}}>
-          {allUsers.length === 0 ? (
-            <p className="text-sm text-center py-10" style={{color:'#8a8490'}}>Nenhum colaborador cadastrado.</p>
-          ) : (
-            allUsers.map((u) => (
-              <UserAdminRow
-                key={u.id}
-                user={u}
-                existingDepartments={departments}
-              />
-            ))
-          )}
-        </div>
+        {allUsers.length === 0 ? (
+          <div className="card p-10" style={{ textAlign: 'center' }}>
+            <p style={{ fontSize: 14, color: '#8a8490' }}>Nenhum colaborador cadastrado.</p>
+          </div>
+        ) : (
+          <UserListFilter users={allUsers} departments={departments} />
+        )}
       </section>
     </div>
   )
