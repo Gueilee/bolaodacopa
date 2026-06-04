@@ -21,6 +21,9 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'flagcdn.com' },
       { protocol: 'https', hostname: '*.blob.core.windows.net' },
       { protocol: 'https', hostname: '*.public.blob.vercel-storage.com' },
+      { protocol: 'https', hostname: 'upload.wikimedia.org' },   // fotos jogadores Wikipedia
+      { protocol: 'https', hostname: '*.wikimedia.org' },
+      { protocol: 'https', hostname: 'www.thesportsdb.com' },    // TheSportsDB fallback
     ],
   },
   async rewrites() {
