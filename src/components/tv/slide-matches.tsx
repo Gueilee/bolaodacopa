@@ -36,10 +36,6 @@ export function SlideMatches({ matches }: { matches: TvMatch[] }) {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '4px 48px 0', gap: 16 }}>
-      <h2 style={{ fontSize: 32, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center', letterSpacing: '0.04em' }}>
-        ⚽ &nbsp;JOGOS DE HOJE
-      </h2>
-
       <div style={{
         flex: 1,
         display: 'grid',

@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
-import { users, matches, predictions, socialPosts } from '@/db/schema'
-import { desc, asc, eq, and, count, sql, gte, lte } from 'drizzle-orm'
+import { users, matches, predictions, socialPosts, matchGoals } from '@/db/schema'
+import { desc, asc, eq, and, count, sql } from 'drizzle-orm'
 import { getRanking, getManagerRanking } from '@/lib/queries'
 
 export type TvRankingEntry = {
@@ -51,6 +51,14 @@ export type TvPost = {
   createdAt:     Date
 }
 
+export type TvGroupTeam = {
+  name: string; played: number; won: number; drawn: number; lost: number
+  goalsFor: number; goalsAgainst: number; goalDiff: number; points: number
+}
+export type TvGroup = { name: string; teams: TvGroupTeam[] }
+
+export type TvScorer = { playerName: string; country: string; goals: number }
+
 export type TvData = {
   ranking:         TvRankingEntry[]
   todayMatches:    TvMatch[]
@@ -58,12 +66,28 @@ export type TvData = {
   departments:     TvDept[]
   managers:        TvManager[]
   posts:           TvPost[]
+  groups:          TvGroup[]
+  topScorers:      TvScorer[]
   totalUsers:      number
   updatedAt:       string
 }
 
+// Artilheiros conhecidos (fallback pré-Copa)
+const PRE_COPA_SCORERS: TvScorer[] = [
+  { playerName: 'Kylian Mbappé',      country: 'França',       goals: 0 },
+  { playerName: 'Erling Haaland',     country: 'Noruega',      goals: 0 },
+  { playerName: 'Vinícius Júnior',    country: 'Brasil',       goals: 0 },
+  { playerName: 'Harry Kane',         country: 'Inglaterra',   goals: 0 },
+  { playerName: 'Lionel Messi',       country: 'Argentina',    goals: 0 },
+  { playerName: 'Lautaro Martínez',   country: 'Argentina',    goals: 0 },
+  { playerName: 'Bukayo Saka',        country: 'Inglaterra',   goals: 0 },
+  { playerName: 'Raphinha',           country: 'Brasil',       goals: 0 },
+  { playerName: 'Jamal Musiala',      country: 'Alemanha',     goals: 0 },
+  { playerName: 'Viktor Gyökeres',    country: 'Suécia',       goals: 0 },
+]
+
 export async function getTvData(): Promise<TvData> {
-  const [rankingRaw, allMatches, managersRaw, postsRaw] = await Promise.all([
+  const [rankingRaw, allMatches, managersRaw, postsRaw, goalsRaw] = await Promise.all([
     getRanking(),
     db.query.matches.findMany({ orderBy: [asc(matches.matchDate)] }),
     getManagerRanking(),
@@ -72,6 +96,16 @@ export async function getTvData(): Promise<TvData> {
       with: { user: { columns: { name: true, avatarUrl: true } } },
       limit: 12,
     }),
+    db.select({
+      playerName: matchGoals.playerName,
+      country:    matchGoals.country,
+      goals:      sql<number>`cast(count(*) as integer)`,
+    })
+    .from(matchGoals)
+    .where(eq(matchGoals.isOwnGoal, false))
+    .groupBy(matchGoals.playerName, matchGoals.country)
+    .orderBy(desc(sql`count(*)`))
+    .limit(10),
   ])
 
   const now   = new Date()
@@ -139,6 +173,14 @@ export async function getTvData(): Promise<TvData> {
     createdAt:     p.createdAt,
   }))
 
+  // Groups standings
+  const groups = computeTvGroups(allMatches)
+
+  // Top scorers: real data or pre-Copa list
+  const topScorers: TvScorer[] = goalsRaw.length >= 3
+    ? goalsRaw.map(r => ({ playerName: r.playerName, country: r.country, goals: Number(r.goals) }))
+    : PRE_COPA_SCORERS
+
   return {
     ranking,
     todayMatches,
@@ -146,9 +188,43 @@ export async function getTvData(): Promise<TvData> {
     departments,
     managers,
     posts,
+    groups,
+    topScorers,
     totalUsers:  rankingRaw.length,
     updatedAt:   now.toISOString(),
   }
+}
+
+function computeTvGroups(allMatches: (typeof matches.$inferSelect)[]): TvGroup[] {
+  const groupMap = new Map<string, Map<string, TvGroupTeam>>()
+
+  for (const m of allMatches.filter(x => x.phase === 'group')) {
+    const g = m.groupName ?? 'Grupo ?'
+    if (!groupMap.has(g)) groupMap.set(g, new Map())
+    const teams = groupMap.get(g)!
+    const emptyT = (n: string): TvGroupTeam => ({ name: n, played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0, goalDiff: 0, points: 0 })
+    if (!teams.has(m.homeTeam)) teams.set(m.homeTeam, emptyT(m.homeTeam))
+    if (!teams.has(m.awayTeam)) teams.set(m.awayTeam, emptyT(m.awayTeam))
+
+    if (m.status === 'finished' && m.homeScore !== null && m.awayScore !== null) {
+      const h = teams.get(m.homeTeam)!; const a = teams.get(m.awayTeam)!
+      h.played++; a.played++
+      h.goalsFor += m.homeScore; h.goalsAgainst += m.awayScore; h.goalDiff = h.goalsFor - h.goalsAgainst
+      a.goalsFor += m.awayScore; a.goalsAgainst += m.homeScore; a.goalDiff = a.goalsFor - a.goalsAgainst
+      if (m.homeScore > m.awayScore)      { h.won++;   h.points += 3; a.lost++ }
+      else if (m.homeScore < m.awayScore) { a.won++;   a.points += 3; h.lost++ }
+      else                                { h.drawn++; h.points++;    a.drawn++; a.points++ }
+    }
+  }
+
+  return [...groupMap.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([name, teamsMap]) => ({
+      name,
+      teams: [...teamsMap.values()].sort((a, b) =>
+        b.points - a.points || b.goalDiff - a.goalDiff || b.goalsFor - a.goalsFor || a.name.localeCompare(b.name)
+      ),
+    }))
 }
 
 function toTvMatch(m: typeof matches.$inferSelect): TvMatch {

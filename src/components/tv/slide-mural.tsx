@@ -166,13 +166,10 @@ export function SlideMural({ posts }: Props) {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#01E18E', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-            💬 Central da Torcida
-          </p>
-          <h2 style={{ margin: '4px 0 0', fontSize: 42, fontWeight: 900, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em' }}>
+          <h2 style={{ margin: 0, fontSize: 36, fontWeight: 900, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em' }}>
             O TIME EM CAMPO
           </h2>
-          <p style={{ margin: '6px 0 0', fontSize: 16, color: 'rgba(255,255,255,0.4)' }}>
+          <p style={{ margin: '6px 0 0', fontSize: 15, color: 'rgba(255,255,255,0.4)' }}>
             Últimas publicações dos colaboradores
           </p>
         </div>

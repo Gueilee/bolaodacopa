@@ -2,25 +2,29 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { TvData } from '@/lib/tv-data'
-import { SlideWelcome }     from './slide-welcome'
-import { SlideRanking }     from './slide-ranking'
-import { SlideDepartments } from './slide-departments'
-import { SlideManagers }    from './slide-managers'
-import { SlideMatches }     from './slide-matches'
-import { SlideResults }     from './slide-results'
-import { SlideMural }       from './slide-mural'
+import { SlideWelcome }      from './slide-welcome'
+import { SlideRanking }      from './slide-ranking'
+import { SlideDepartments }  from './slide-departments'
+import { SlideManagers }     from './slide-managers'
+import { SlideMatches }      from './slide-matches'
+import { SlideResults }      from './slide-results'
+import { SlideMural }        from './slide-mural'
+import { SlideGroups }       from './slide-groups'
+import { SlideArtilheiros }  from './slide-artilheiros'
 
 type SlideConfig = { id: string; duration: number; label: string }
 
 const SLIDES: SlideConfig[] = [
-  { id: 'cover',       duration: 8000,  label: '' },
-  { id: 'welcome',     duration: 10000, label: '🏆 Bolão Copa 2026' },
-  { id: 'ranking',     duration: 14000, label: '🥇 Ranking Individual' },
-  { id: 'departments', duration: 12000, label: '🏢 Por Departamento' },
-  { id: 'managers',    duration: 12000, label: '👔 Por Gestor' },
-  { id: 'matches',     duration: 12000, label: '⚽ Jogos do Dia' },
-  { id: 'results',     duration: 12000, label: '📊 Últimos Resultados' },
-  { id: 'mural',       duration: 22000, label: '💬 Central da Torcida' },
+  { id: 'cover',        duration: 8000,  label: '' },
+  { id: 'welcome',      duration: 10000, label: '🏆 Bolão Copa 2026' },
+  { id: 'ranking',      duration: 14000, label: '🥇 Ranking Individual' },
+  { id: 'departments',  duration: 12000, label: '🏢 Por Departamento' },
+  { id: 'managers',     duration: 12000, label: '👔 Por Gestor' },
+  { id: 'matches',      duration: 14000, label: '⚽ Jogos do Dia' },
+  { id: 'results',      duration: 14000, label: '📊 Últimos Resultados' },
+  { id: 'groups',       duration: 18000, label: '🏆 Grupos' },
+  { id: 'artilheiros',  duration: 16000, label: '⚽ Artilheiros' },
+  { id: 'mural',        duration: 22000, label: '💬 Central da Torcida' },
 ]
 
 export function TvSlideshow({ data }: { data: TvData }) {
@@ -162,7 +166,7 @@ export function TvSlideshow({ data }: { data: TvData }) {
           }}>
             {/* Logo */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo2.png" alt="Logo" style={{ height: 64, objectFit: 'contain' }} />
+            <img src="/logo2.png" alt="Logo" style={{ height: 90, objectFit: 'contain' }} />
 
             {/* Current slide name */}
             <span style={{
@@ -176,15 +180,17 @@ export function TvSlideshow({ data }: { data: TvData }) {
             <TvClock participants={data.totalUsers} />
           </div>
 
-          {/* Slide content */}
-          <div style={{ position: 'absolute', inset: 0, paddingTop: 80, paddingBottom: 60 }}>
-            {slide.id === 'welcome'     && <SlideWelcome data={data} />}
-            {slide.id === 'ranking'     && <SlideRanking entries={data.ranking} />}
-            {slide.id === 'departments' && <SlideDepartments departments={data.departments} />}
-            {slide.id === 'managers'    && <SlideManagers managers={data.managers} />}
-            {slide.id === 'matches'     && <SlideMatches matches={data.todayMatches} />}
-            {slide.id === 'results'     && <SlideResults matches={data.recentResults} />}
-            {slide.id === 'mural'       && <SlideMural posts={data.posts} />}
+          {/* Slide content — paddingTop maior para não sobrepor o header com logo 90px */}
+          <div style={{ position: 'absolute', inset: 0, paddingTop: 112, paddingBottom: 60 }}>
+            {slide.id === 'welcome'      && <SlideWelcome data={data} />}
+            {slide.id === 'ranking'      && <SlideRanking entries={data.ranking} />}
+            {slide.id === 'departments'  && <SlideDepartments departments={data.departments} />}
+            {slide.id === 'managers'     && <SlideManagers managers={data.managers} />}
+            {slide.id === 'matches'      && <SlideMatches matches={data.todayMatches} />}
+            {slide.id === 'results'      && <SlideResults matches={data.recentResults} />}
+            {slide.id === 'groups'       && <SlideGroups groups={data.groups} />}
+            {slide.id === 'artilheiros'  && <SlideArtilheiros scorers={data.topScorers} />}
+            {slide.id === 'mural'        && <SlideMural posts={data.posts} />}
           </div>
 
           {/* Bottom bar: progress + dots */}

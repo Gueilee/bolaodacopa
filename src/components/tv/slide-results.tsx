@@ -58,11 +58,6 @@ export function SlideResults({ matches }: { matches: TvMatch[] }) {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '0 48px', gap: 10 }}>
 
-      {/* Header */}
-      <h2 style={{ fontSize: 28, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center', letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0 }}>
-        📊 &nbsp;Últimos Resultados
-      </h2>
-
       {/* Lista de resultados */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, justifyContent: 'center' }}>
         {matches.slice(0, 8).map((match) => {

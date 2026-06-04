@@ -18,10 +18,6 @@ export function SlideRanking({ entries }: { entries: TvRankingEntry[] }) {
       height: '100%', display: 'flex', flexDirection: 'column',
       padding: '0 60px', gap: 32,
     }}>
-      <h2 style={{ fontSize: 36, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center', letterSpacing: '-0.01em' }}>
-        🏆 Ranking Individual
-      </h2>
-
       <div style={{ display: 'flex', gap: 48, flex: 1, minHeight: 0 }}>
 
         {/* Podium — top 3 */}
