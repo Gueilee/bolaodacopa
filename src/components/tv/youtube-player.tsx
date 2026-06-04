@@ -35,17 +35,17 @@ export function YoutubePlayer({ onModeChange }: Props) {
     if (newMode !== 'hidden') setMuted(false)
   }, [onModeChange])
 
-  // Constrói URL do iframe
+  const [embedBlocked, setEmbedBlocked] = useState(false)
+
+  const CHANNEL_ID = 'UCZiYbVptd3PVPf4f6eR6UaQ'
+  const ytWatchUrl = liveInfo.videoId
+    ? `https://www.youtube.com/watch?v=${liveInfo.videoId}`
+    : `https://www.youtube.com/@CazeTV/live`
+
+  // Sempre usa o embed via channel ID (evita restrição por vídeo individual)
   const embedUrl = () => {
-    const params = [`autoplay=1`, `mute=${muted ? 1 : 0}`, `rel=0`, `modestbranding=1`, `iv_load_policy=3`].join('&')
-    if (liveInfo.videoId) {
-      return `https://www.youtube.com/embed/${liveInfo.videoId}?${params}`
-    }
-    if (liveInfo.channelId) {
-      return `https://www.youtube.com/embed/live_stream?channel=${liveInfo.channelId}&${params}`
-    }
-    // Fallback: embed da página ao vivo do canal
-    return `https://www.youtube.com/embed?listType=user_uploads&list=CazeTV&${params}`
+    const params = [`autoplay=1`, `mute=${muted ? 1 : 0}`, `rel=0`, `modestbranding=1`].join('&')
+    return `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&${params}`
   }
 
   // ── Botão de entrada ───────────────────────────────────────────────────────
@@ -127,15 +127,20 @@ export function YoutubePlayer({ onModeChange }: Props) {
         </div>
 
         {/* Player 16:9 */}
-        <div style={{ position: 'relative', paddingBottom: '56.25%' }}>
-          <iframe
-            key={embedUrl()} // re-monta quando muted muda
-            src={embedUrl()}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="CazéTV"
-          />
+        <div style={{ position: 'relative', paddingBottom: '56.25%', background: '#111' }}>
+          {!embedBlocked ? (
+            <iframe
+              key={embedUrl()}
+              src={embedUrl()}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="CazéTV"
+              onError={() => setEmbedBlocked(true)}
+            />
+          ) : (
+            <EmbedFallback url={ytWatchUrl} isLive={isLive} />
+          )}
         </div>
 
         {/* Bottom info */}
@@ -157,14 +162,21 @@ export function YoutubePlayer({ onModeChange }: Props) {
         @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
       `}</style>
 
-      <iframe
-        key={`fs-${embedUrl()}`}
-        src={embedUrl()}
-        style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        title="CazéTV"
-      />
+      {!embedBlocked ? (
+        <iframe
+          key={`fs-${embedUrl()}`}
+          src={embedUrl()}
+          style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          title="CazéTV"
+          onError={() => setEmbedBlocked(true)}
+        />
+      ) : (
+        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
+          <EmbedFallback url={ytWatchUrl} isLive={isLive} large />
+        </div>
+      )}
 
       {/* Top controls */}
       <div style={{
@@ -197,6 +209,61 @@ export function YoutubePlayer({ onModeChange }: Props) {
           BOLÃO COPA 2026 · VENDEMMIA
         </span>
       </div>
+    </div>
+  )
+}
+
+// ─── Fallback quando embedding está bloqueado ────────────────────────────────
+
+function EmbedFallback({ url, isLive, large = false }: { url: string; isLive: boolean; large?: boolean }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', gap: large ? 24 : 16,
+      background: 'linear-gradient(135deg, #0d0000, #1a0000)',
+    }}>
+      {/* Logo YouTube */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: large ? 12 : 8 }}>
+        <div style={{ fontSize: large ? 56 : 36 }}>📺</div>
+        <p style={{ margin: 0, fontSize: large ? 22 : 15, fontWeight: 900, color: 'white', letterSpacing: '0.05em' }}>
+          CazéTV
+        </p>
+        {isLive && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, background: 'rgba(255,0,0,0.2)', border: '1px solid rgba(255,0,0,0.4)' }}>
+            <span style={{ width: large ? 9 : 7, height: large ? 9 : 7, borderRadius: '50%', background: '#ff4444', animation: 'pulse-dot 1s infinite', display: 'inline-block' }} />
+            <span style={{ fontSize: large ? 13 : 10, fontWeight: 700, color: '#ff6666' }}>AO VIVO AGORA</span>
+          </div>
+        )}
+      </div>
+
+      <p style={{ margin: 0, fontSize: large ? 14 : 11, color: 'rgba(255,255,255,0.4)', textAlign: 'center', maxWidth: 280, lineHeight: 1.5 }}>
+        {isLive
+          ? 'Transmissão ao vivo disponível no YouTube'
+          : 'Canal disponível no YouTube'}
+      </p>
+
+      {/* Botão abrir YouTube */}
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={e => e.stopPropagation()}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: large ? '14px 28px' : '10px 20px',
+          borderRadius: 12,
+          background: '#ff0000',
+          color: 'white', textDecoration: 'none',
+          fontSize: large ? 16 : 12, fontWeight: 800,
+          boxShadow: '0 4px 20px rgba(255,0,0,0.5)',
+          letterSpacing: '0.04em',
+        }}
+      >
+        <svg width={large ? 22 : 16} height={large ? 22 : 16} viewBox="0 0 24 24" fill="white">
+          <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.83.55 9.38.55 9.38.55s7.55 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+        </svg>
+        {isLive ? 'Assistir ao vivo no YouTube' : 'Abrir no YouTube'}
+      </a>
     </div>
   )
 }
