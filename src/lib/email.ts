@@ -78,52 +78,62 @@ function inviteTemplate(name: string, link: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bolão Copa 2026 — Seu acesso chegou!</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f2ef;font-family:'Helvetica Neue',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f2ef;padding:40px 0;">
+<body style="margin:0;padding:0;background:#f0ede8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0ede8;padding:32px 0;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-          <!-- Logo / Header -->
+          <!-- HEADER — fundo sólido para compatibilidade máxima com clientes de e-mail -->
           <tr>
-            <td style="background:linear-gradient(135deg,#422c76 0%,#2a1a4e 100%);border-radius:20px 20px 0 0;padding:36px 40px;text-align:center;">
-              <p style="margin:0;font-size:13px;font-weight:700;color:#01E18E;letter-spacing:0.15em;text-transform:uppercase;">
+            <td bgcolor="#2a1a4e" style="background-color:#2a1a4e;border-radius:20px 20px 0 0;padding:32px 40px;text-align:center;">
+              <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#01E18E;letter-spacing:0.18em;text-transform:uppercase;">
                 Vendemmia Comércio Internacional
               </p>
-              <h1 style="margin:12px 0 0;font-size:28px;font-weight:900;color:#ffffff;line-height:1.2;">
-                ⚽ Bolão Copa do Mundo 2026
+              <div style="font-size:32px;margin:10px 0 6px;">⚽</div>
+              <h1 style="margin:0;font-size:26px;font-weight:900;color:#ffffff;line-height:1.2;letter-spacing:-0.01em;">
+                Bolão Copa do Mundo 2026
               </h1>
+              <p style="margin:8px 0 0;font-size:13px;color:rgba(255,255,255,0.55);">
+                Bolão Corporativo · Vendemmia
+              </p>
             </td>
           </tr>
 
-          <!-- Body -->
+          <!-- BARRA NEON -->
           <tr>
-            <td style="background:#ffffff;padding:40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;">
-              <p style="margin:0 0 16px;font-size:16px;color:#1a1625;font-weight:600;">
+            <td style="padding:0;line-height:0;font-size:0;">
+              <div style="height:3px;background:#01E18E;"></div>
+            </td>
+          </tr>
+
+          <!-- CORPO -->
+          <tr>
+            <td style="background:#ffffff;padding:36px 40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;">
+              <p style="margin:0 0 16px;font-size:17px;color:#1a1625;font-weight:700;">
                 Olá, ${firstName}! 👋
               </p>
-              <p style="margin:0 0 16px;font-size:15px;color:#4a4555;line-height:1.6;">
-                Você foi convidado para participar do <strong>Bolão Corporativo da Copa do Mundo 2026</strong>
+              <p style="margin:0 0 14px;font-size:14px;color:#4a4555;line-height:1.7;">
+                Você foi convidado para participar do <strong style="color:#1a1625;">Bolão Corporativo da Copa do Mundo 2026</strong>
                 da Vendemmia. Faça seus palpites, dispute no ranking individual e torça pelo seu departamento!
               </p>
-              <p style="margin:0 0 24px;font-size:15px;color:#4a4555;line-height:1.6;">
+              <p style="margin:0 0 28px;font-size:14px;color:#4a4555;line-height:1.7;">
                 Para criar sua senha e acessar o sistema, clique no botão abaixo.
-                O link é <strong>válido por 7 dias</strong> e de uso único.
+                O link é <strong style="color:#1a1625;">válido por 7 dias</strong> e de uso único.
               </p>
 
-              <!-- CTA Button -->
-              <table cellpadding="0" cellspacing="0" style="margin:0 auto 32px;">
+              <!-- BOTÃO CTA -->
+              <table cellpadding="0" cellspacing="0" style="margin:0 auto 28px;">
                 <tr>
-                  <td style="background:#422c76;border-radius:12px;padding:0;">
-                    <a href="${link}" style="display:block;padding:16px 36px;font-size:16px;font-weight:800;color:#ffffff;text-decoration:none;letter-spacing:0.02em;">
+                  <td bgcolor="#422c76" style="background-color:#422c76;border-radius:12px;">
+                    <a href="${link}" style="display:block;padding:16px 40px;font-size:16px;font-weight:800;color:#ffffff;text-decoration:none;letter-spacing:0.02em;">
                       🔐 &nbsp;Criar minha senha
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <!-- Link fallback -->
-              <p style="margin:0 0 8px;font-size:12px;color:#8a8490;">
+              <p style="margin:0 0 6px;font-size:12px;color:#8a8490;">
                 Se o botão não funcionar, copie e cole este link no navegador:
               </p>
               <p style="margin:0;font-size:11px;color:#422c76;word-break:break-all;">
@@ -132,38 +142,176 @@ function inviteTemplate(name: string, link: string): string {
             </td>
           </tr>
 
-          <!-- Regras rápidas -->
+          <!-- REGRAS CRÍTICAS DE PRAZO -->
           <tr>
-            <td style="background:#f9f7f5;padding:28px 40px;border:1px solid #e8e4df;border-top:none;">
-              <p style="margin:0 0 14px;font-size:12px;font-weight:700;color:#6b6672;text-transform:uppercase;letter-spacing:0.1em;">
-                Como funciona a pontuação
+            <td bgcolor="#fff5f7" style="background-color:#fff5f7;padding:28px 40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;border-top:3px solid #ff2f69;">
+              <p style="margin:0 0 16px;font-size:13px;font-weight:800;color:#cc1a50;text-transform:uppercase;letter-spacing:0.1em;">
+                ⚠️ Regras Importantes — Leia antes de acessar
               </p>
-              <table width="100%" cellpadding="0" cellspacing="0">
+
+              <!-- Regra 1 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
                 <tr>
-                  <td style="padding:4px 0;font-size:13px;color:#4a4555;">⚡ Placar exato</td>
-                  <td style="padding:4px 0;font-size:13px;font-weight:800;color:#1a1625;text-align:right;">10 pts</td>
+                  <td width="36" valign="top" style="padding-top:2px;">
+                    <div style="width:28px;height:28px;background:#ff2f69;border-radius:8px;text-align:center;line-height:28px;font-size:14px;">⏰</div>
+                  </td>
+                  <td style="padding-left:12px;">
+                    <p style="margin:0 0 4px;font-size:13px;font-weight:800;color:#1a1625;">
+                      Prazo: 30 minutos antes de cada jogo
+                    </p>
+                    <p style="margin:0;font-size:13px;color:#4a4555;line-height:1.6;">
+                      Os palpites de cada partida <strong>fecham automaticamente 30 minutos antes do apito inicial</strong>.
+                      Se você não registrar até esse prazo, os campos ficam em branco e você
+                      <strong style="color:#ff2f69;">não pontua naquele jogo</strong>.
+                    </p>
+                  </td>
                 </tr>
+              </table>
+
+              <!-- Regra 2 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:0;">
                 <tr>
-                  <td style="padding:4px 0;font-size:13px;color:#4a4555;">🎯 Vencedor + saldo corretos</td>
-                  <td style="padding:4px 0;font-size:13px;font-weight:800;color:#1a1625;text-align:right;">7 pts</td>
-                </tr>
-                <tr>
-                  <td style="padding:4px 0;font-size:13px;color:#4a4555;">✓ Vencedor correto</td>
-                  <td style="padding:4px 0;font-size:13px;font-weight:800;color:#1a1625;text-align:right;">5 pts</td>
-                </tr>
-                <tr>
-                  <td style="padding:4px 0;font-size:13px;color:#4a4555;">✗ Resultado errado</td>
-                  <td style="padding:4px 0;font-size:13px;font-weight:800;color:#c4bfba;text-align:right;">0 pts</td>
+                  <td width="36" valign="top" style="padding-top:2px;">
+                    <div style="width:28px;height:28px;background:#ff2f69;border-radius:8px;text-align:center;line-height:28px;font-size:14px;">🔒</div>
+                  </td>
+                  <td style="padding-left:12px;">
+                    <p style="margin:0 0 4px;font-size:13px;font-weight:800;color:#1a1625;">
+                      Palpite salvo = permanente, sem alteração
+                    </p>
+                    <p style="margin:0;font-size:13px;color:#4a4555;line-height:1.6;">
+                      Ao clicar em "Salvar" em uma partida, o palpite fica registrado e
+                      <strong style="color:#ff2f69;">não pode ser alterado</strong>.
+                      Confira bem os valores antes de salvar.
+                    </p>
+                  </td>
                 </tr>
               </table>
             </td>
           </tr>
 
-          <!-- Footer -->
+          <!-- PALPITE FINAL -->
           <tr>
-            <td style="background:#f0ede8;border-radius:0 0 20px 20px;padding:20px 40px;text-align:center;border:1px solid #e8e4df;border-top:none;">
-              <p style="margin:0;font-size:11px;color:#aaa8b0;line-height:1.5;">
-                Este e-mail foi enviado para <strong>${name}</strong> por ser colaborador(a) da Vendemmia.<br/>
+            <td bgcolor="#f8f6ff" style="background-color:#f8f6ff;padding:28px 40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;border-top:3px solid #422c76;">
+              <p style="margin:0 0 16px;font-size:13px;font-weight:800;color:#422c76;text-transform:uppercase;letter-spacing:0.1em;">
+                🌟 Palpite Final — Obrigatório antes da Copa
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
+                <tr>
+                  <td width="36" valign="top" style="padding-top:2px;">
+                    <div style="width:28px;height:28px;background:#422c76;border-radius:8px;text-align:center;line-height:28px;font-size:14px;">📅</div>
+                  </td>
+                  <td style="padding-left:12px;">
+                    <p style="margin:0 0 4px;font-size:13px;font-weight:800;color:#1a1625;">
+                      Deadline: 11 de junho de 2026 às 17h (Brasília)
+                    </p>
+                    <p style="margin:0;font-size:13px;color:#4a4555;line-height:1.6;">
+                      Registre <strong>Campeão, Vice-Campeão e Artilheiro</strong> antes do início da Copa.
+                      Quem não registrar perde os bônus. Uma vez salvo, <strong style="color:#422c76;">não pode ser alterado</strong>.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Bônus -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:10px;border:1px solid #e0dbd5;">
+                <tr>
+                  <td style="padding:12px 16px;border-right:1px solid #f0ede8;text-align:center;">
+                    <p style="margin:0;font-size:20px;">🏆</p>
+                    <p style="margin:4px 0 0;font-size:15px;font-weight:900;color:#422c76;">+50 pts</p>
+                    <p style="margin:2px 0 0;font-size:11px;color:#8a8490;">Campeão</p>
+                  </td>
+                  <td style="padding:12px 16px;border-right:1px solid #f0ede8;text-align:center;">
+                    <p style="margin:0;font-size:20px;">⚽</p>
+                    <p style="margin:4px 0 0;font-size:15px;font-weight:900;color:#422c76;">+50 pts</p>
+                    <p style="margin:2px 0 0;font-size:11px;color:#8a8490;">Artilheiro</p>
+                  </td>
+                  <td style="padding:12px 16px;text-align:center;">
+                    <p style="margin:0;font-size:20px;">🥈</p>
+                    <p style="margin:4px 0 0;font-size:15px;font-weight:900;color:#422c76;">+25 pts</p>
+                    <p style="margin:2px 0 0;font-size:11px;color:#8a8490;">Vice-Campeão</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- PONTUAÇÃO POR PARTIDA -->
+          <tr>
+            <td style="background:#f9f7f5;padding:28px 40px;border:1px solid #e8e4df;border-top:none;">
+              <p style="margin:0 0 16px;font-size:13px;font-weight:800;color:#6b6672;text-transform:uppercase;letter-spacing:0.1em;">
+                ⚽ Pontuação por partida
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:7px 0;border-bottom:1px solid #f0ede8;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="font-size:20px;width:32px;">⚡</td>
+                        <td style="font-size:13px;color:#4a4555;padding-left:8px;"><strong style="color:#1a1625;">Placar exato</strong> — Acertou os dois placares exatamente</td>
+                        <td style="font-size:14px;font-weight:900;color:#01a866;text-align:right;white-space:nowrap;">10 pts</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0;border-bottom:1px solid #f0ede8;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="font-size:20px;width:32px;">🎯</td>
+                        <td style="font-size:13px;color:#4a4555;padding-left:8px;"><strong style="color:#1a1625;">Vencedor + Saldo</strong> — Acertou quem vence e a diferença de gols</td>
+                        <td style="font-size:14px;font-weight:900;color:#d4a017;text-align:right;white-space:nowrap;">7 pts</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0;border-bottom:1px solid #f0ede8;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="font-size:20px;width:32px;">✅</td>
+                        <td style="font-size:13px;color:#4a4555;padding-left:8px;"><strong style="color:#1a1625;">Vencedor correto / Empate</strong> — Acertou quem vence ou que seria empate</td>
+                        <td style="font-size:14px;font-weight:900;color:#2563eb;text-align:right;white-space:nowrap;">5 pts</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:7px 0;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="font-size:20px;width:32px;">❌</td>
+                        <td style="font-size:13px;color:#4a4555;padding-left:8px;"><strong style="color:#1a1625;">Resultado errado</strong> — Errou o vencedor</td>
+                        <td style="font-size:14px;font-weight:900;color:#c4bfba;text-align:right;white-space:nowrap;">0 pts</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- REGRAS GERAIS -->
+          <tr>
+            <td style="background:#f0ede8;padding:24px 40px;border:1px solid #e8e4df;border-top:none;">
+              <p style="margin:0 0 12px;font-size:12px;font-weight:700;color:#6b6672;text-transform:uppercase;letter-spacing:0.1em;">
+                📌 Lembre-se
+              </p>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr><td style="padding:4px 0;font-size:12px;color:#4a4555;line-height:1.6;">🔒 &nbsp;Ao salvar um jogo, o palpite não pode mais ser alterado.</td></tr>
+                <tr><td style="padding:4px 0;font-size:12px;color:#4a4555;line-height:1.6;">📊 &nbsp;A pontuação é igual em todas as fases — grupo, oitavas, quartas, semi, final.</td></tr>
+                <tr><td style="padding:4px 0;font-size:12px;color:#4a4555;line-height:1.6;">🏅 &nbsp;No caso de prorrogação ou pênaltis, o resultado de 90 minutos é o que conta.</td></tr>
+                <tr><td style="padding:4px 0;font-size:12px;color:#4a4555;line-height:1.6;">🏆 &nbsp;O ranking é atualizado automaticamente após cada partida finalizada.</td></tr>
+                <tr><td style="padding:4px 0;font-size:12px;color:#4a4555;line-height:1.6;">📱 &nbsp;Gerencie seus palpites com antecedência — não dependa de conexão de última hora.</td></tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td bgcolor="#2a1a4e" style="background-color:#2a1a4e;border-radius:0 0 20px 20px;padding:20px 40px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">
+                Este e-mail foi enviado para <strong style="color:rgba(255,255,255,0.7);">${name}</strong> por ser colaborador(a) da Vendemmia.<br/>
                 Dúvidas? Fale com o RH ou o organizador do bolão.
               </p>
             </td>
