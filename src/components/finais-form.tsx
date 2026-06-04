@@ -18,25 +18,38 @@ const TEAMS_2026 = [
   'Uzbequistão', 'Venezuela', 'Venezuela', 'Venezuela',
 ].filter((v, i, a) => a.indexOf(v) === i).sort()
 
-// Mapa de bandeiras por país
-const FLAG: Record<string, string> = {
-  'África do Sul': '🇿🇦', 'Albânia': '🇦🇱', 'Alemanha': '🇩🇪', 'Arábia Saudita': '🇸🇦',
-  'Argentina': '🇦🇷', 'Austrália': '🇦🇺', 'Áustria': '🇦🇹', 'Bélgica': '🇧🇪',
-  'Bolívia': '🇧🇴', 'Bósnia': '🇧🇦', 'Bósnia e Herzegovina': '🇧🇦', 'Brasil': '🇧🇷',
-  'Camarões': '🇨🇲', 'Canadá': '🇨🇦', 'Chile': '🇨🇱', 'China': '🇨🇳',
-  'Colômbia': '🇨🇴', 'Coreia do Sul': '🇰🇷', 'Costa do Marfim': '🇨🇮', 'Costa Rica': '🇨🇷',
-  'Croácia': '🇭🇷', 'Dinamarca': '🇩🇰', 'Egito': '🇪🇬', 'Equador': '🇪🇨',
-  'Escócia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Eslováquia': '🇸🇰', 'Eslovênia': '🇸🇮', 'Espanha': '🇪🇸',
-  'EUA': '🇺🇸', 'França': '🇫🇷', 'Gana': '🇬🇭', 'Geórgia': '🇬🇪',
-  'Honduras': '🇭🇳', 'Holanda': '🇳🇱', 'Hungria': '🇭🇺', 'Inglaterra': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
-  'Irã': '🇮🇷', 'Iraque': '🇮🇶', 'Jamaica': '🇯🇲', 'Japão': '🇯🇵',
-  'Jordânia': '🇯🇴', 'Mali': '🇲🇱', 'Marrocos': '🇲🇦', 'México': '🇲🇽',
-  'Nigéria': '🇳🇬', 'Noruega': '🇳🇴', 'Nova Zelândia': '🇳🇿', 'Países Baixos': '🇳🇱',
-  'Panamá': '🇵🇦', 'Paraguai': '🇵🇾', 'Peru': '🇵🇪', 'Polônia': '🇵🇱',
-  'Portugal': '🇵🇹', 'Qatar': '🇶🇦', 'Romênia': '🇷🇴', 'Senegal': '🇸🇳',
-  'Sérvia': '🇷🇸', 'Suécia': '🇸🇪', 'Suíça': '🇨🇭', 'Turquia': '🇹🇷',
-  'Ucrânia': '🇺🇦', 'Uruguai': '🇺🇾', 'Uzbequistão': '🇺🇿', 'Venezuela': '🇻🇪',
-  'Argélia': '🇩🇿', 'Catar': '🇶🇦',
+// ISO codes para flagcdn.com — imagens reais de bandeiras (funciona em Windows)
+const COUNTRY_CODE: Record<string, string> = {
+  'África do Sul': 'za', 'Albânia': 'al', 'Alemanha': 'de', 'Arábia Saudita': 'sa',
+  'Argentina': 'ar', 'Austrália': 'au', 'Áustria': 'at', 'Bélgica': 'be',
+  'Bolívia': 'bo', 'Bósnia': 'ba', 'Bósnia e Herzegovina': 'ba', 'Brasil': 'br',
+  'Camarões': 'cm', 'Canadá': 'ca', 'Chile': 'cl', 'China': 'cn',
+  'Colômbia': 'co', 'Coreia do Sul': 'kr', 'Costa do Marfim': 'ci', 'Costa Rica': 'cr',
+  'Croácia': 'hr', 'Dinamarca': 'dk', 'Egito': 'eg', 'Equador': 'ec',
+  'Escócia': 'gb', 'Eslováquia': 'sk', 'Eslovênia': 'si', 'Espanha': 'es',
+  'EUA': 'us', 'França': 'fr', 'Gana': 'gh', 'Geórgia': 'ge',
+  'Honduras': 'hn', 'Holanda': 'nl', 'Hungria': 'hu', 'Inglaterra': 'gb',
+  'Irã': 'ir', 'Iraque': 'iq', 'Jamaica': 'jm', 'Japão': 'jp',
+  'Jordânia': 'jo', 'Mali': 'ml', 'Marrocos': 'ma', 'México': 'mx',
+  'Nigéria': 'ng', 'Noruega': 'no', 'Nova Zelândia': 'nz', 'Países Baixos': 'nl',
+  'Panamá': 'pa', 'Paraguai': 'py', 'Peru': 'pe', 'Polônia': 'pl',
+  'Portugal': 'pt', 'Qatar': 'qa', 'Romênia': 'ro', 'Senegal': 'sn',
+  'Sérvia': 'rs', 'Suécia': 'se', 'Suíça': 'ch', 'Turquia': 'tr',
+  'Ucrânia': 'ua', 'Uruguai': 'uy', 'Uzbequistão': 'uz', 'Venezuela': 've',
+  'Argélia': 'dz', 'Catar': 'qa',
+}
+
+function FlagImg({ country, size = 32 }: { country: string; size?: number }) {
+  const code = COUNTRY_CODE[country]
+  if (!code) return <span style={{ fontSize: size * 0.7 }}>🏳</span>
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={`https://flagcdn.com/w40/${code}.png`}
+      alt={country}
+      style={{ width: size, height: size * 0.67, objectFit: 'cover', borderRadius: 3, display: 'block' }}
+    />
+  )
 }
 
 // Top 50 artilheiros prováveis Copa 2026
@@ -128,15 +141,19 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
   const [champion,       setChampion]       = useState('')
   const [runnerUp,       setRunnerUp]        = useState('')
   const [scorerSelect,   setScorerSelect]    = useState('')   // valor do select
-  const [scorerCustom,   setScorerCustom]    = useState('')   // campo livre quando "OUTRO"
+  const [scorerCustom,   setScorerCustom]    = useState('')   // nome quando "OUTRO"
+  const [scorerCountry,  setScorerCountry]   = useState('')   // país quando "OUTRO"
   const [isPending,      startTransition]    = useTransition()
   const [error,          setError]           = useState<string | null>(null)
   const [saved,          setSaved]           = useState(false)
 
   const isOutro   = scorerSelect === '__outro__'
-  const topScorer = isOutro ? scorerCustom.trim() : scorerSelect
+  const topScorer = isOutro
+    ? (scorerCountry ? `${scorerCustom.trim()} (${scorerCountry})` : scorerCustom.trim())
+    : scorerSelect
 
-  const isValid = champion && runnerUp && topScorer && champion !== runnerUp
+  const outroValid = !isOutro || (scorerCustom.trim() !== '' && scorerCountry !== '')
+  const isValid = champion && runnerUp && topScorer && champion !== runnerUp && outroValid
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -315,48 +332,38 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
 
         {/* ── Campeão ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
-            🏆 Campeão
-          </label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555' }}>🏆 Campeão</label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              width: 52, height: 44, borderRadius: 12, flexShrink: 0,
+              width: 56, height: 44, borderRadius: 12, flexShrink: 0,
               background: '#f5f2ef', border: '1.5px solid #e0dbd5',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, transition: 'all 0.2s',
             }}>
-              {champion ? (FLAG[champion] ?? '🏳') : '🏆'}
+              {champion ? <FlagImg country={champion} size={36} /> : <span style={{ fontSize: 22 }}>🏆</span>}
             </div>
             <select value={champion} onChange={(e) => setChampion(e.target.value)}
               required disabled={isPending} className="input-field" style={{ fontSize: 13, flex: 1 }}>
               <option value="">Selecione um país...</option>
-              {TEAMS_2026.map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
+              {TEAMS_2026.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
         </div>
 
         {/* ── Vice-campeão ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
-            🥈 Vice-campeão
-          </label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555' }}>🥈 Vice-campeão</label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              width: 52, height: 44, borderRadius: 12, flexShrink: 0,
+              width: 56, height: 44, borderRadius: 12, flexShrink: 0,
               background: '#f5f2ef', border: '1.5px solid #e0dbd5',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, transition: 'all 0.2s',
             }}>
-              {runnerUp ? (FLAG[runnerUp] ?? '🏳') : '🥈'}
+              {runnerUp ? <FlagImg country={runnerUp} size={36} /> : <span style={{ fontSize: 22 }}>🥈</span>}
             </div>
             <select value={runnerUp} onChange={(e) => setRunnerUp(e.target.value)}
               required disabled={isPending} className="input-field" style={{ fontSize: 13, flex: 1 }}>
               <option value="">Selecione um país...</option>
-              {TEAMS_2026.filter((t) => t !== champion).map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
+              {TEAMS_2026.filter((t) => t !== champion).map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
           {champion && runnerUp && champion === runnerUp && (
@@ -366,21 +373,18 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
 
         {/* ── Artilheiro ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
-            ⚽ Artilheiro
-          </label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555' }}>⚽ Artilheiro</label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
-              width: 52, height: 44, borderRadius: 12, flexShrink: 0,
+              width: 56, height: 44, borderRadius: 12, flexShrink: 0,
               background: '#f5f2ef', border: '1.5px solid #e0dbd5',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 28, transition: 'all 0.2s',
             }}>
               {scorerSelect && scorerSelect !== '__outro__'
-                ? (FLAG[TOP_SCORERS.find(p => p.name === scorerSelect)?.country ?? ''] ?? '⚽')
-                : scorerSelect === '__outro__' ? '✍️' : '⚽'}
+                ? <FlagImg country={TOP_SCORERS.find(p => p.name === scorerSelect)?.country ?? ''} size={36} />
+                : <span style={{ fontSize: 22 }}>{scorerSelect === '__outro__' ? '✍️' : '⚽'}</span>}
             </div>
-            <select value={scorerSelect} onChange={(e) => { setScorerSelect(e.target.value); setScorerCustom('') }}
+            <select value={scorerSelect} onChange={(e) => { setScorerSelect(e.target.value); setScorerCustom(''); setScorerCountry('') }}
               required disabled={isPending} className="input-field" style={{ fontSize: 13, flex: 1 }}>
               <option value="">Selecione o artilheiro...</option>
               {TOP_SCORERS.map((p) => (
@@ -390,20 +394,39 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
             </select>
           </div>
           {isOutro && (
-            <input
-              type="text"
-              value={scorerCustom}
-              onChange={(e) => setScorerCustom(e.target.value)}
-              required
-              disabled={isPending}
-              placeholder="Digite o nome completo do jogador"
-              className="input-field"
-              style={{ fontSize: 13 }}
-              autoFocus
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <input
+                type="text"
+                value={scorerCustom}
+                onChange={(e) => setScorerCustom(e.target.value)}
+                required
+                disabled={isPending}
+                placeholder="Nome completo do jogador"
+                className="input-field"
+                style={{ fontSize: 13 }}
+                autoFocus
+              />
+              <select
+                value={scorerCountry}
+                onChange={(e) => setScorerCountry(e.target.value)}
+                required
+                disabled={isPending}
+                className="input-field"
+                style={{ fontSize: 13 }}
+              >
+                <option value="">Selecione o país do jogador...</option>
+                {TEAMS_2026.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+              {scorerCountry && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <FlagImg country={scorerCountry} size={24} />
+                  <span style={{ fontSize: 12, color: '#4a4555', fontWeight: 600 }}>{scorerCountry}</span>
+                </div>
+              )}
+            </div>
           )}
           <p style={{ fontSize: 11, color: '#8a8490', margin: 0 }}>
-            Top 50 prováveis artilheiros da Copa 2026 · Selecione &quot;Outro&quot; para digitar livremente
+            Top 50 prováveis artilheiros · Selecione &quot;Outro&quot; para digitar nome e país livremente
           </p>
         </div>
 
