@@ -9,7 +9,7 @@ type User = {
   email:              string
   role:               'admin' | 'rh' | 'user'
   department:         string | null
-  manager:            string | null
+  avatarUrl:          string | null
   isActive:           boolean
   totalPoints:        number
   isPredictionLocked: boolean

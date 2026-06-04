@@ -59,6 +59,25 @@ export async function createUser(data: {
   return { success: true }
 }
 
+// ─── Atualizar perfil (role) ──────────────────────────────────────────────────
+
+export async function updateUserRole(
+  userId: string,
+  role:   'admin' | 'rh' | 'user',
+): Promise<{ success: boolean; error?: string }> {
+  const session = await getSession()
+  if (!session || session.role !== 'admin') return { success: false, error: 'Acesso negado.' }
+
+  await db
+    .update(users)
+    .set({ role, updatedAt: new Date() })
+    .where(eq(users.id, userId))
+
+  revalidatePath('/admin/usuarios')
+  revalidatePath('/dashboard')
+  return { success: true }
+}
+
 // ─── Ativar / desativar usuário ───────────────────────────────────────────────
 
 export async function toggleUserActive(

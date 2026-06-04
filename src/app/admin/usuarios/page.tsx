@@ -15,6 +15,10 @@ export default async function UsuariosPage() {
 
   const allUsers = await db.query.users.findMany({
     orderBy: [asc(users.name)],
+    columns: {
+      id: true, name: true, email: true, role: true, department: true,
+      avatarUrl: true, isActive: true, totalPoints: true, isPredictionLocked: true,
+    },
   })
 
   // Departamentos únicos para o select
