@@ -3,23 +3,25 @@
 import { useState, useCallback, useEffect } from 'react'
 
 type PlayerMode = 'hidden' | 'pip' | 'fullscreen'
-type LiveInfo   = { videoId: string | null; channelId: string | null }
+
+const CHANNEL_ID  = 'UCZiYbVptd3PVPf4f6eR6UaQ'
+const CHANNEL_URL = 'https://www.youtube.com/@CazeTV/live'
+
+type LiveData = { videoId: string | null; title?: string }
 
 type Props = { onModeChange?: (mode: PlayerMode) => void }
 
 export function YoutubePlayer({ onModeChange }: Props) {
   const [mode,     setMode]     = useState<PlayerMode>('hidden')
-  const [muted,    setMuted]    = useState(true) // começa mutado para autoplay
-  const [liveInfo, setLiveInfo] = useState<LiveInfo>({ videoId: null, channelId: null })
+  const [live,     setLive]     = useState<LiveData>({ videoId: null })
   const [isLive,   setIsLive]   = useState(false)
 
-  // Busca video ID da CazéTV a cada 5 minutos
   useEffect(() => {
     async function fetchLive() {
       try {
         const res  = await fetch('/api/cazetv-live')
         const data = await res.json()
-        setLiveInfo({ videoId: data.videoId, channelId: data.channelId })
+        setLive({ videoId: data.videoId })
         setIsLive(!!data.videoId)
       } catch { /* silencioso */ }
     }
@@ -31,52 +33,43 @@ export function YoutubePlayer({ onModeChange }: Props) {
   const changeMode = useCallback((newMode: PlayerMode) => {
     setMode(newMode)
     onModeChange?.(newMode)
-    // Desmuta ao abrir manualmente
-    if (newMode !== 'hidden') setMuted(false)
   }, [onModeChange])
 
-  const [embedBlocked, setEmbedBlocked] = useState(false)
-
-  const CHANNEL_ID = 'UCZiYbVptd3PVPf4f6eR6UaQ'
-  const ytWatchUrl = liveInfo.videoId
-    ? `https://www.youtube.com/watch?v=${liveInfo.videoId}`
-    : `https://www.youtube.com/@CazeTV/live`
-
-  // Sempre usa o embed via channel ID (evita restrição por vídeo individual)
-  const embedUrl = () => {
-    const params = [`autoplay=1`, `mute=${muted ? 1 : 0}`, `rel=0`, `modestbranding=1`].join('&')
-    return `https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&${params}`
+  const openYoutube = () => {
+    const url = live.videoId
+      ? `https://www.youtube.com/watch?v=${live.videoId}`
+      : CHANNEL_URL
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
-  // ── Botão de entrada ───────────────────────────────────────────────────────
+  // ── Botão flutuante (hidden) ────────────────────────────────────────────────
   if (mode === 'hidden') {
     return (
       <>
         <style>{`
-          @keyframes pulse-entry { 0%,100%{box-shadow:0 4px 20px rgba(255,0,0,0.5),0 0 0 0 rgba(255,0,0,0.4)} 50%{box-shadow:0 4px 28px rgba(255,0,0,0.8),0 0 0 6px rgba(255,0,0,0)} }
-          @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+          @keyframes pulse-glow { 0%,100%{box-shadow:0 4px 20px rgba(255,0,0,0.45)} 50%{box-shadow:0 4px 32px rgba(255,0,0,0.9),0 0 0 4px rgba(255,0,0,0.15)} }
+          @keyframes dot-blink  { 0%,100%{opacity:1} 50%{opacity:0.25} }
         `}</style>
         <button
           onClick={() => changeMode('pip')}
           style={{
             position: 'fixed', bottom: 80, right: 24, zIndex: 90,
-            display: 'flex', alignItems: 'center', gap: 10,
-            padding: '10px 18px', borderRadius: 14,
-            background: 'linear-gradient(135deg, #cc0000, #990000)',
-            border: '1px solid rgba(255,100,100,0.35)',
-            boxShadow: '0 4px 20px rgba(255,0,0,0.5)',
+            display: 'flex', alignItems: 'center', gap: 12,
+            padding: '11px 20px', borderRadius: 16,
+            background: 'linear-gradient(135deg, #cc0000 0%, #880000 100%)',
+            border: '1px solid rgba(255,100,100,0.3)',
             cursor: 'pointer', color: 'white',
-            animation: isLive ? 'pulse-entry 2s ease-in-out infinite' : 'none',
-            transition: 'transform 0.15s',
+            animation: isLive ? 'pulse-glow 2s ease-in-out infinite' : 'none',
+            boxShadow: '0 4px 20px rgba(255,0,0,0.45)',
           }}
         >
-          <span style={{ fontSize: 22 }}>📺</span>
-          <div>
-            <p style={{ margin: 0, fontSize: 13, fontWeight: 900, letterSpacing: '0.06em' }}>CazéTV</p>
-            <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <YtIcon size={22} />
+          <div style={{ textAlign: 'left' }}>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 900, letterSpacing: '0.05em' }}>CazéTV</p>
+            <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 5 }}>
               {isLive ? (
                 <>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff4444', animation: 'pulse-dot 1s infinite', display: 'inline-block' }} />
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff5555', animation: 'dot-blink 1s infinite', display: 'inline-block', flexShrink: 0 }} />
                   AO VIVO agora
                 </>
               ) : 'Abrir canal'}
@@ -87,125 +80,171 @@ export function YoutubePlayer({ onModeChange }: Props) {
     )
   }
 
-  // ── PiP Mode ───────────────────────────────────────────────────────────────
+  // ── PiP Panel ───────────────────────────────────────────────────────────────
   if (mode === 'pip') {
     return (
       <div style={{
         position: 'fixed', bottom: 80, right: 24, zIndex: 90,
-        width: 460, borderRadius: 16, overflow: 'hidden',
-        background: '#0a0a0a',
-        boxShadow: '0 12px 56px rgba(0,0,0,0.9), 0 0 0 1px rgba(255,50,50,0.3)',
-        animation: 'slideInPip 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+        width: 380, borderRadius: 18, overflow: 'hidden',
+        background: 'linear-gradient(135deg, #0d0000 0%, #1a0505 100%)',
+        border: '1px solid rgba(255,50,50,0.3)',
+        boxShadow: '0 12px 56px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,80,80,0.15)',
+        animation: 'slideUp 0.3s cubic-bezier(0.34,1.5,0.64,1)',
       }}>
         <style>{`
-          @keyframes slideInPip { from{opacity:0;transform:translateY(24px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
-          @keyframes pulse-dot  { 0%,100%{opacity:1} 50%{opacity:0.3} }
+          @keyframes slideUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+          @keyframes dot-blink{ 0%,100%{opacity:1} 50%{opacity:0.25} }
+          @keyframes spin-slow { to{transform:rotate(360deg)} }
         `}</style>
 
         {/* Top bar */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '8px 12px',
-          background: 'linear-gradient(90deg, #cc0000, #880000)',
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'rgba(204,0,0,0.85)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff6666', animation: 'pulse-dot 1s infinite', display: 'inline-block' }} />
-            <span style={{ fontSize: 12, fontWeight: 900, color: 'white', letterSpacing: '0.08em' }}>
+            {isLive && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff6666', animation: 'dot-blink 1s infinite', display: 'inline-block' }} />}
+            <span style={{ fontSize: 13, fontWeight: 900, color: 'white', letterSpacing: '0.07em' }}>
               CazéTV {isLive ? '· AO VIVO' : '· Canal'}
             </span>
           </div>
-          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-            <button onClick={() => setMuted(m => !m)} style={pipBtn} title={muted ? 'Ativar som' : 'Silenciar'}>
-              {muted ? '🔇' : '🔊'}
-            </button>
-            <button onClick={() => changeMode('fullscreen')} style={{ ...pipBtn, display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px' }} title="Tela cheia">
+          <div style={{ display: 'flex', gap: 6 }}>
+            <button onClick={() => changeMode('fullscreen')} style={{ ...pipBtn, display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px' }}>
               <ExpandIcon />
               <span style={{ fontSize: 11, fontWeight: 700 }}>Tela cheia</span>
             </button>
-            <button onClick={() => changeMode('hidden')} style={{ ...pipBtn, opacity: 0.6, fontSize: 15 }}>✕</button>
+            <button onClick={() => changeMode('hidden')} style={{ ...pipBtn, opacity: 0.6 }}>✕</button>
           </div>
         </div>
 
-        {/* Player 16:9 */}
-        <div style={{ position: 'relative', paddingBottom: '56.25%', background: '#111' }}>
-          {!embedBlocked ? (
-            <iframe
-              key={embedUrl()}
-              src={embedUrl()}
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title="CazéTV"
-              onError={() => setEmbedBlocked(true)}
-            />
-          ) : (
-            <EmbedFallback url={ytWatchUrl} isLive={isLive} />
-          )}
-        </div>
+        {/* Content — CTA panel */}
+        <div style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
 
-        {/* Bottom info */}
-        <div style={{ padding: '6px 12px', background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>youtube.com/@CazeTV</span>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)' }}>
-            {isLive ? '🔴 Transmissão ao vivo' : '📼 Últimos vídeos'}
-          </span>
+          {/* Ícone animado */}
+          <div style={{ position: 'relative' }}>
+            <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(255,0,0,0.1)', border: '2px solid rgba(255,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <YtIcon size={36} />
+            </div>
+            {isLive && (
+              <div style={{ position: 'absolute', top: -4, right: -4, padding: '2px 7px', borderRadius: 20, background: '#cc0000', border: '2px solid #0d0000' }}>
+                <span style={{ fontSize: 9, fontWeight: 900, color: 'white', letterSpacing: '0.1em' }}>LIVE</span>
+              </div>
+            )}
+          </div>
+
+          {/* Texto */}
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 900, color: 'white' }}>CazéTV</p>
+            <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, maxWidth: 260 }}>
+              {isLive
+                ? '🔴 Transmissão ao vivo agora · O canal transmite jogos da Copa 2026'
+                : 'Canal de esportes ao vivo · Jogos da Copa do Mundo 2026'}
+            </p>
+          </div>
+
+          {/* Botão principal */}
+          <button
+            onClick={openYoutube}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '13px 28px', borderRadius: 14, border: 'none', cursor: 'pointer',
+              background: isLive
+                ? 'linear-gradient(135deg, #ff0000, #cc0000)'
+                : 'linear-gradient(135deg, #444, #222)',
+              color: 'white', fontSize: 14, fontWeight: 800,
+              boxShadow: isLive ? '0 4px 24px rgba(255,0,0,0.55)' : '0 4px 16px rgba(0,0,0,0.4)',
+              letterSpacing: '0.03em', width: '100%', justifyContent: 'center',
+              transition: 'transform 0.15s',
+            }}
+          >
+            <YtIcon size={18} />
+            {isLive ? 'Assistir ao vivo' : 'Abrir no YouTube'}
+          </button>
+
+          <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>
+            Abre em nova aba · youtube.com/@CazeTV
+          </p>
         </div>
       </div>
     )
   }
 
-  // ── Fullscreen Mode ────────────────────────────────────────────────────────
+  // ── Fullscreen Panel ─────────────────────────────────────────────────────────
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 200, background: '#000', animation: 'fadeFs 0.25s ease' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'linear-gradient(135deg, #0a0000 0%, #1a0505 50%, #0a0000 100%)', animation: 'fadeFs 0.25s ease', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 32 }}>
       <style>{`
-        @keyframes fadeFs  { from{opacity:0} to{opacity:1} }
-        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        @keyframes fadeFs    { from{opacity:0} to{opacity:1} }
+        @keyframes dot-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+        @keyframes float-up  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
       `}</style>
 
-      {!embedBlocked ? (
-        <iframe
-          key={`fs-${embedUrl()}`}
-          src={embedUrl()}
-          style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title="CazéTV"
-          onError={() => setEmbedBlocked(true)}
-        />
-      ) : (
-        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0a' }}>
-          <EmbedFallback url={ytWatchUrl} isLive={isLive} large />
-        </div>
-      )}
+      {/* Decoração de fundo */}
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(204,0,0,0.12) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
-      {/* Top controls */}
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, padding: '16px 24px',
-        background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        {/* Badge */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 16px', borderRadius: 24, background: 'rgba(204,0,0,0.9)', border: '1px solid rgba(255,100,100,0.3)' }}>
-          <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff6666', animation: 'pulse-dot 1s infinite', display: 'inline-block' }} />
-          <span style={{ fontSize: 14, fontWeight: 900, color: 'white', letterSpacing: '0.08em' }}>
-            CazéTV {isLive ? '· AO VIVO' : ''}
-          </span>
+      {/* Conteúdo central */}
+      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
+
+        {/* Logo */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, animation: 'float-up 3s ease-in-out infinite' }}>
+          <div style={{ width: 120, height: 120, borderRadius: '50%', background: 'rgba(255,0,0,0.12)', border: '3px solid rgba(255,0,0,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 60px rgba(255,0,0,0.25)' }}>
+            <YtIcon size={60} />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ margin: 0, fontSize: 42, fontWeight: 900, color: 'white', letterSpacing: '-0.02em', lineHeight: 1 }}>CazéTV</p>
+            <p style={{ margin: '6px 0 0', fontSize: 15, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+              Canal de Esportes ao Vivo
+            </p>
+          </div>
         </div>
 
-        {/* Controles */}
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => setMuted(m => !m)} style={fsBtn}>{muted ? '🔇' : '🔊'}</button>
-          <button onClick={() => changeMode('pip')} style={{ ...fsBtn, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <CollapseIcon />
-            <span style={{ fontSize: 13, fontWeight: 700 }}>PiP</span>
-          </button>
-          <button onClick={() => changeMode('hidden')} style={{ ...fsBtn, opacity: 0.6 }}>✕ Fechar</button>
-        </div>
+        {/* Badge ao vivo */}
+        {isLive && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 24px', borderRadius: 30, background: 'rgba(204,0,0,0.25)', border: '1px solid rgba(255,50,50,0.4)', backdropFilter: 'blur(8px)' }}>
+            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5555', animation: 'dot-blink 1s infinite', display: 'inline-block' }} />
+            <span style={{ fontSize: 15, fontWeight: 900, color: '#ff8888', letterSpacing: '0.12em' }}>TRANSMISSÃO AO VIVO AGORA</span>
+          </div>
+        )}
+
+        {/* Descrição */}
+        <p style={{ margin: 0, fontSize: 17, color: 'rgba(255,255,255,0.4)', textAlign: 'center', maxWidth: 480, lineHeight: 1.6 }}>
+          {isLive
+            ? 'A CazéTV está transmitindo ao vivo agora.\nClique abaixo para assistir os jogos da Copa 2026.'
+            : 'A Copa do Mundo 2026 será transmitida pela CazéTV.\nAbra o YouTube para conferir os jogos.'}
+        </p>
+
+        {/* Botão principal */}
+        <button
+          onClick={openYoutube}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            padding: '18px 48px', borderRadius: 18, border: 'none', cursor: 'pointer',
+            background: isLive
+              ? 'linear-gradient(135deg, #ff0000, #cc0000)'
+              : 'linear-gradient(135deg, #555, #333)',
+            color: 'white', fontSize: 20, fontWeight: 900,
+            boxShadow: isLive ? '0 8px 40px rgba(255,0,0,0.55)' : '0 8px 24px rgba(0,0,0,0.5)',
+            letterSpacing: '0.04em',
+            transition: 'transform 0.15s, box-shadow 0.15s',
+          }}
+        >
+          <YtIcon size={28} />
+          {isLive ? '▶ Assistir ao vivo no YouTube' : '▶ Abrir CazéTV no YouTube'}
+        </button>
+
+        <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
+          Abre em nova aba · youtube.com/@CazeTV
+        </p>
       </div>
 
-      {/* Bolão watermark */}
-      <div style={{ position: 'absolute', bottom: 16, left: 16, padding: '5px 12px', borderRadius: 8, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.08)' }}>
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 600, letterSpacing: '0.06em' }}>
+      {/* Controles topo */}
+      <div style={{ position: 'absolute', top: 20, right: 24, display: 'flex', gap: 10, zIndex: 2 }}>
+        <button onClick={() => changeMode('pip')} style={{ ...fsBtn, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <CollapseIcon />
+          <span>PiP</span>
+        </button>
+        <button onClick={() => changeMode('hidden')} style={{ ...fsBtn, opacity: 0.6 }}>✕ Fechar</button>
+      </div>
+
+      {/* Watermark Bolão */}
+      <div style={{ position: 'absolute', bottom: 20, left: 20, padding: '6px 14px', borderRadius: 8, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.08)' }}>
+        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: '0.08em' }}>
           BOLÃO COPA 2026 · VENDEMMIA
         </span>
       </div>
@@ -213,80 +252,23 @@ export function YoutubePlayer({ onModeChange }: Props) {
   )
 }
 
-// ─── Fallback quando embedding está bloqueado ────────────────────────────────
+// ─── Ícone YouTube ────────────────────────────────────────────────────────────
 
-function EmbedFallback({ url, isLive, large = false }: { url: string; isLive: boolean; large?: boolean }) {
+function YtIcon({ size = 24 }: { size?: number }) {
   return (
-    <div style={{
-      position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', gap: large ? 24 : 16,
-      background: 'linear-gradient(135deg, #0d0000, #1a0000)',
-    }}>
-      {/* Logo YouTube */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: large ? 12 : 8 }}>
-        <div style={{ fontSize: large ? 56 : 36 }}>📺</div>
-        <p style={{ margin: 0, fontSize: large ? 22 : 15, fontWeight: 900, color: 'white', letterSpacing: '0.05em' }}>
-          CazéTV
-        </p>
-        {isLive && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, background: 'rgba(255,0,0,0.2)', border: '1px solid rgba(255,0,0,0.4)' }}>
-            <span style={{ width: large ? 9 : 7, height: large ? 9 : 7, borderRadius: '50%', background: '#ff4444', animation: 'pulse-dot 1s infinite', display: 'inline-block' }} />
-            <span style={{ fontSize: large ? 13 : 10, fontWeight: 700, color: '#ff6666' }}>AO VIVO AGORA</span>
-          </div>
-        )}
-      </div>
-
-      <p style={{ margin: 0, fontSize: large ? 14 : 11, color: 'rgba(255,255,255,0.4)', textAlign: 'center', maxWidth: 280, lineHeight: 1.5 }}>
-        {isLive
-          ? 'Transmissão ao vivo disponível no YouTube'
-          : 'Canal disponível no YouTube'}
-      </p>
-
-      {/* Botão abrir YouTube */}
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={e => e.stopPropagation()}
-        style={{
-          display: 'flex', alignItems: 'center', gap: 10,
-          padding: large ? '14px 28px' : '10px 20px',
-          borderRadius: 12,
-          background: '#ff0000',
-          color: 'white', textDecoration: 'none',
-          fontSize: large ? 16 : 12, fontWeight: 800,
-          boxShadow: '0 4px 20px rgba(255,0,0,0.5)',
-          letterSpacing: '0.04em',
-        }}
-      >
-        <svg width={large ? 22 : 16} height={large ? 22 : 16} viewBox="0 0 24 24" fill="white">
-          <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.83.55 9.38.55 9.38.55s7.55 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
-        </svg>
-        {isLive ? 'Assistir ao vivo no YouTube' : 'Abrir no YouTube'}
-      </a>
-    </div>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="white">
+      <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.83.55 9.38.55 9.38.55s7.55 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+    </svg>
   )
 }
 
-// ─── Ícones ───────────────────────────────────────────────────────────────────
-
 function ExpandIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
-      <path d="M3 3h7v2H5v5H3V3zm14 0h4v7h-2V5h-5V3h3zm3 14h-2v5h-5v2h7v-7zM3 17h2v5h5v2H3v-7z"/>
-    </svg>
-  )
+  return <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M3 3h7v2H5v5H3V3zm14 0h4v7h-2V5h-5V3h3zm3 14h-2v5h-5v2h7v-7zM3 17h2v5h5v2H3v-7z"/></svg>
 }
 
 function CollapseIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-      <path d="M19 11h-8v6h8v-6zM21 3H3v18h18V3zm-2 16H5V5h14v14z"/>
-    </svg>
-  )
+  return <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M19 11h-8v6h8v-6zM21 3H3v18h18V3zm-2 16H5V5h14v14z"/></svg>
 }
-
-// ─── Estilos ──────────────────────────────────────────────────────────────────
 
 const pipBtn: React.CSSProperties = {
   background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.18)',
@@ -296,5 +278,5 @@ const pipBtn: React.CSSProperties = {
 const fsBtn: React.CSSProperties = {
   background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.18)',
   backdropFilter: 'blur(10px)', borderRadius: 10, color: 'white',
-  padding: '9px 14px', cursor: 'pointer', fontSize: 15, fontWeight: 700,
+  padding: '9px 14px', cursor: 'pointer', fontSize: 14, fontWeight: 700,
 }
