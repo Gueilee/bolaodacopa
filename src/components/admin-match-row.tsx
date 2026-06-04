@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react'
 import { scoreMatch } from '@/app/actions/scoring'
 import { formatMatchTime, formatMatchDate } from '@/lib/utils'
 import { TeamFlag } from '@/components/team-flag'
+import { AdminGoalEntry } from '@/components/admin-goal-entry'
 import type { AdminMatch } from '@/lib/queries'
 
 type Props = { match: AdminMatch }
@@ -240,6 +241,19 @@ export function AdminMatchRow({ match }: Props) {
             </p>
           )}
         </form>
+      )}
+
+      {/* ── Artilharia: sempre visível para jogos finalizados ── */}
+      {isFinished && match.homeScore !== null && match.awayScore !== null && (
+        <div style={{ padding: '0 20px 16px', background: '#faf9f8' }}>
+          <AdminGoalEntry
+            matchId={match.id}
+            homeTeam={match.homeTeam}
+            awayTeam={match.awayTeam}
+            homeScore={match.homeScore}
+            awayScore={match.awayScore}
+          />
+        </div>
       )}
     </div>
   )

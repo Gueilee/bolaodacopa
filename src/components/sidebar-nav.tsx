@@ -29,6 +29,7 @@ const navItems: NavItem[] = [
   { href: '/admin/usuarios',        label: 'Colaboradores',   icon: '👥', roles: ['admin'] },
   { href: '/admin/convites',        label: 'Convites',        icon: '✉️', roles: ['admin'] },
   { href: '/admin/exportar',        label: 'Exportar',        icon: '⬇️', roles: ['admin'] },
+  { href: '/admin/artilheiros',     label: 'Artilheiros',     icon: '⚽', roles: ['admin'] },
 ]
 
 type Props = { role: Role }

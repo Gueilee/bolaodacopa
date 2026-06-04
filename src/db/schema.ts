@@ -312,8 +312,35 @@ export const socialLikesRelations = relations(socialLikes, ({ one }) => ({
   post: one(socialPosts, { fields: [socialLikes.postId], references: [socialPosts.id] }),
 }))
 
+// ─────────────────────────────────────────────
+// MATCH GOALS — gols por jogador por partida
+// ─────────────────────────────────────────────
+export const matchGoals = sqliteTable(
+  'match_goals',
+  {
+    id:         text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    matchId:    text('match_id').notNull().references(() => matches.id, { onDelete: 'cascade' }),
+    playerName: text('player_name').notNull(),
+    country:    text('country').notNull(),
+    isOwnGoal:  integer('is_own_goal', { mode: 'boolean' }).notNull().default(false),
+    minute:     integer('minute'),
+    createdAt:  integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    matchIdx: index('match_goals_match_idx').on(t.matchId),
+  }),
+)
+
+export type MatchGoal    = typeof matchGoals.$inferSelect
+export type NewMatchGoal = typeof matchGoals.$inferInsert
+
+export const matchGoalsRelations = relations(matchGoals, ({ one }) => ({
+  match: one(matches, { fields: [matchGoals.matchId], references: [matches.id] }),
+}))
+
 export const matchesRelations = relations(matches, ({ many }) => ({
   predictions: many(predictions),
+  goals:       many(matchGoals),
 }))
 
 export const predictionsRelations = relations(predictions, ({ one }) => ({
