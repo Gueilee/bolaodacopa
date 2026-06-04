@@ -4,17 +4,19 @@ import { useState, useCallback, useEffect } from 'react'
 
 type PlayerMode = 'hidden' | 'pip' | 'fullscreen'
 
-const CHANNEL_ID  = 'UCZiYbVptd3PVPf4f6eR6UaQ'
-const CHANNEL_URL = 'https://www.youtube.com/@CazeTV/live'
+const CHANNEL_ID  = 'UCgCKagVhzGnZcuP9bSMgMCg'
+const CHANNEL_URL = 'https://www.youtube.com/@getv/live'
 
 type LiveData = { videoId: string | null; title?: string }
 
 type Props = { onModeChange?: (mode: PlayerMode) => void }
 
 export function YoutubePlayer({ onModeChange }: Props) {
-  const [mode,     setMode]     = useState<PlayerMode>('hidden')
-  const [live,     setLive]     = useState<LiveData>({ videoId: null })
-  const [isLive,   setIsLive]   = useState(false)
+  const [mode,        setMode]        = useState<PlayerMode>('hidden')
+  const [live,        setLive]        = useState<LiveData>({ videoId: null })
+  const [isLive,      setIsLive]      = useState(false)
+  const [tryEmbed,    setTryEmbed]    = useState(true)   // tenta embed, muda para false se bloqueado
+  const [embedFailed, setEmbedFailed] = useState(false)
 
   useEffect(() => {
     async function fetchLive() {
@@ -65,7 +67,7 @@ export function YoutubePlayer({ onModeChange }: Props) {
         >
           <YtIcon size={22} />
           <div style={{ textAlign: 'left' }}>
-            <p style={{ margin: 0, fontSize: 14, fontWeight: 900, letterSpacing: '0.05em' }}>CazéTV</p>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 900, letterSpacing: '0.05em' }}>GE TV</p>
             <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 5 }}>
               {isLive ? (
                 <>
@@ -102,7 +104,7 @@ export function YoutubePlayer({ onModeChange }: Props) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             {isLive && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#ff6666', animation: 'dot-blink 1s infinite', display: 'inline-block' }} />}
             <span style={{ fontSize: 13, fontWeight: 900, color: 'white', letterSpacing: '0.07em' }}>
-              CazéTV {isLive ? '· AO VIVO' : '· Canal'}
+              GE TV {isLive ? '· AO VIVO' : '· Canal'}
             </span>
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
@@ -131,7 +133,7 @@ export function YoutubePlayer({ onModeChange }: Props) {
 
           {/* Texto */}
           <div style={{ textAlign: 'center' }}>
-            <p style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 900, color: 'white' }}>CazéTV</p>
+            <p style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 900, color: 'white' }}>GE TV</p>
             <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, maxWidth: 260 }}>
               {isLive
                 ? '🔴 Transmissão ao vivo agora · O canal transmite jogos da Copa 2026'
@@ -139,27 +141,45 @@ export function YoutubePlayer({ onModeChange }: Props) {
             </p>
           </div>
 
-          {/* Botão principal */}
-          <button
-            onClick={openYoutube}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              padding: '13px 28px', borderRadius: 14, border: 'none', cursor: 'pointer',
-              background: isLive
-                ? 'linear-gradient(135deg, #ff0000, #cc0000)'
-                : 'linear-gradient(135deg, #444, #222)',
-              color: 'white', fontSize: 14, fontWeight: 800,
-              boxShadow: isLive ? '0 4px 24px rgba(255,0,0,0.55)' : '0 4px 16px rgba(0,0,0,0.4)',
-              letterSpacing: '0.03em', width: '100%', justifyContent: 'center',
-              transition: 'transform 0.15s',
-            }}
-          >
-            <YtIcon size={18} />
-            {isLive ? 'Assistir ao vivo' : 'Abrir no YouTube'}
-          </button>
+          {/* Embed direto se disponível, launcher se bloqueado */}
+          {tryEmbed && !embedFailed ? (
+            <div style={{ width: '100%', position: 'relative', paddingBottom: '56.25%', borderRadius: 10, overflow: 'hidden', background: '#000' }}>
+              <iframe
+                key={`${CHANNEL_ID}-pip`}
+                src={`https://www.youtube.com/embed/live_stream?channel=${CHANNEL_ID}&autoplay=1&mute=0&rel=0&modestbranding=1`}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 'none' }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="GE TV"
+                onError={() => setEmbedFailed(true)}
+              />
+              <button
+                onClick={() => { setTryEmbed(false); setEmbedFailed(false) }}
+                style={{ position: 'absolute', bottom: 6, right: 6, background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: 'rgba(255,255,255,0.5)', fontSize: 10, padding: '3px 8px', cursor: 'pointer' }}
+                title="Embed bloqueado? Usar launcher"
+              >
+                Bloqueado?
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={openYoutube}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '13px 28px', borderRadius: 14, border: 'none', cursor: 'pointer',
+                background: isLive ? 'linear-gradient(135deg, #ff0000, #cc0000)' : 'linear-gradient(135deg, #444, #222)',
+                color: 'white', fontSize: 14, fontWeight: 800,
+                boxShadow: isLive ? '0 4px 24px rgba(255,0,0,0.55)' : '0 4px 16px rgba(0,0,0,0.4)',
+                letterSpacing: '0.03em', width: '100%', justifyContent: 'center',
+              }}
+            >
+              <YtIcon size={18} />
+              {isLive ? 'Assistir ao vivo' : 'Abrir no YouTube'}
+            </button>
+          )}
 
           <p style={{ margin: 0, fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>
-            Abre em nova aba · youtube.com/@CazeTV
+            {tryEmbed && !embedFailed ? 'Embed direto' : 'Abre em nova aba · youtube.com/@getv'}
           </p>
         </div>
       </div>
@@ -187,7 +207,7 @@ export function YoutubePlayer({ onModeChange }: Props) {
             <YtIcon size={60} />
           </div>
           <div style={{ textAlign: 'center' }}>
-            <p style={{ margin: 0, fontSize: 42, fontWeight: 900, color: 'white', letterSpacing: '-0.02em', lineHeight: 1 }}>CazéTV</p>
+            <p style={{ margin: 0, fontSize: 42, fontWeight: 900, color: 'white', letterSpacing: '-0.02em', lineHeight: 1 }}>GE TV</p>
             <p style={{ margin: '6px 0 0', fontSize: 15, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
               Canal de Esportes ao Vivo
             </p>
@@ -205,8 +225,8 @@ export function YoutubePlayer({ onModeChange }: Props) {
         {/* Descrição */}
         <p style={{ margin: 0, fontSize: 17, color: 'rgba(255,255,255,0.4)', textAlign: 'center', maxWidth: 480, lineHeight: 1.6 }}>
           {isLive
-            ? 'A CazéTV está transmitindo ao vivo agora.\nClique abaixo para assistir os jogos da Copa 2026.'
-            : 'A Copa do Mundo 2026 será transmitida pela CazéTV.\nAbra o YouTube para conferir os jogos.'}
+            ? 'A GE TV está transmitindo ao vivo agora.\nClique abaixo para assistir os jogos da Copa 2026.'
+            : 'A Copa do Mundo 2026 será transmitida pela GE TV.\nAbra o YouTube para conferir os jogos.'}
         </p>
 
         {/* Botão principal */}
@@ -225,11 +245,11 @@ export function YoutubePlayer({ onModeChange }: Props) {
           }}
         >
           <YtIcon size={28} />
-          {isLive ? '▶ Assistir ao vivo no YouTube' : '▶ Abrir CazéTV no YouTube'}
+          {isLive ? '▶ Assistir ao vivo no YouTube' : '▶ Abrir GE TV no YouTube'}
         </button>
 
         <p style={{ margin: 0, fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>
-          Abre em nova aba · youtube.com/@CazeTV
+          Abre em nova aba · youtube.com/@getv
         </p>
       </div>
 

@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server'
 
 // Channel ID correto da CazéTV (atualizar se necessário)
 // Obter em: youtube.com/@CazeTV → Ctrl+U → pesquisar "externalId"
-const CAZETV_CHANNEL_ID = process.env.CAZETV_CHANNEL_ID ?? 'UCZiYbVptd3PVPf4f6eR6UaQ'
+const CAZETV_CHANNEL_ID = process.env.CAZETV_CHANNEL_ID ?? 'UCgCKagVhzGnZcuP9bSMgMCg'
 
 // Cache em memória (30 min)
 let cached: { videoId: string | null; ts: number } = { videoId: null, ts: 0 }
