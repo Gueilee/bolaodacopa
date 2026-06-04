@@ -137,24 +137,10 @@ export default async function ConvitesPage() {
                 <span style={{ fontSize: 11, color: '#8a8490', fontWeight: 400 }}>clique para expandir</span>
               </summary>
 
-              <div style={{ padding: '0 20px 20px', borderTop: '1px solid #f0ede8' }}>
-                <div style={{
-                  margin: '16px 0', padding: '14px 16px', borderRadius: 12,
-                  background: '#fff9f0', border: '1px solid #fde8c0',
-                }}>
-                  <p style={{ margin: '0 0 8px', fontSize: 12, fontWeight: 700, color: '#b07820' }}>
-                    ⚠️ Antes de enviar em massa, verifique:
-                  </p>
-                  <ul style={{ margin: 0, paddingLeft: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    {[
-                      'O e-mail de envio está verificado no Resend',
-                      'NEXT_PUBLIC_BASE_URL aponta para o domínio correto',
-                      'Cada e-mail contém um link único válido por 7 dias',
-                    ].map((t, i) => (
-                      <li key={i} style={{ fontSize: 12, color: '#8a6030' }}>{t}</li>
-                    ))}
-                  </ul>
-                </div>
+              <div style={{ padding: '16px 20px 20px', borderTop: '1px solid #f0ede8' }}>
+                <p style={{ margin: '0 0 16px', fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
+                  Cada colaborador receberá um e-mail personalizado com link único válido por 7 dias para criar sua senha e acessar o sistema.
+                </p>
                 <BulkInviteButton pendingCount={pending.length} />
               </div>
             </details>
