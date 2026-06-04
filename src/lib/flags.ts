@@ -78,17 +78,87 @@ export const TEAM_ISO: Record<string, string> = {
   'Croácia':          'hr',
   'Gana':             'gh',
   // Variações de nome que podem existir no banco
-  'Congo DR':         'cd',
-  'Holanda':          'nl',
-  'Costa Marfim':     'ci',
+  'Congo DR':           'cd',
+  'Holanda':            'nl',
+  'Costa Marfim':       'ci',
+  'Nigéria':            'ng',
+  'Bósnia e Herzegovina': 'ba',
+  'Geórgia':            'ge',
+  'Hungria':            'hu',
+  'Eslováquia':         'sk',
+  'Eslovênia':          'si',
+  'Dinarmarca':         'dk',
+  'Dinamarca':          'dk',
+  'Sérvia':             'rs',
+  'Portugal':           'pt',
+  'Polônia':            'pl',
+  'Bélgica':            'be',
+  'Alemanha':           'de',
+  'França':             'fr',
+  'Inglaterra':         'gb',
+  'Coreia do Sul':      'kr',
+  'Rep. Tcheca':        'cz',
+  'República Tcheca':   'cz',
+  'África do Sul':      'za',
+  'México':             'mx',
+  'Colômbia':           'co',
+  'Equador':            'ec',
+  'Brasil':             'br',
+  'Argentina':          'ar',
+  'Uruguai':            'uy',
+  'Chile':              'cl',
+  'Bolívia':            'bo',
+  'Peru':               'pe',
+  'Venezuela':          've',
+  'Paraguai':           'py',
+  'EUA':                'us',
+  'Canadá':             'ca',
+  'Jamaica':            'jm',
+  'Japão':              'jp',
+  'Austrália':          'au',
+  'Marrocos':           'ma',
+  'Senegal':            'sn',
+  'Costa do Marfim':    'ci',
+  'Egito':              'eg',
+  'Gana':               'gh',
+  'Camarões':           'cm',
+  'Espanha':            'es',
+  'Portugal':           'pt',
+  'Irã':                'ir',
+  'Iraque':             'iq',
+  'Jordânia':           'jo',
+  'Arábia Saudita':     'sa',
+  'Qatar':              'qa',
+  'Catar':              'qa',
+  'Uzbequistão':        'uz',
+  'Turquia':            'tr',
+  'Croácia':            'hr',
+  'Suíça':              'ch',
+  'Suécia':             'se',
+  'Noruega':            'no',
+  'Áustria':            'at',
+  'Escócia':            'gb',
+  'Romênia':            'ro',
+  'Ucrânia':            'ua',
+  'Nova Zelândia':      'nz',
+  'Países Baixos':      'nl',
 
   // Placeholder mata-mata
-  'A Definir':        '',
-  'TBD':              '',
+  'A Definir':          '',
+  'TBD':                '',
+}
+
+// Tamanhos válidos no flagcdn.com
+const VALID_SIZES = [16, 20, 24, 32, 40, 48, 64, 80, 96, 128]
+
+function snapSize(size: number): number {
+  return VALID_SIZES.reduce((prev, curr) =>
+    Math.abs(curr - size) < Math.abs(prev - size) ? curr : prev
+  )
 }
 
 export function getFlagUrl(teamName: string, size: number = 40): string {
   const code = TEAM_ISO[teamName]
   if (!code) return ''
-  return `https://flagcdn.com/w${size}/${code}.png`
+  return `https://flagcdn.com/w${snapSize(size)}/${code}.png`
 }
