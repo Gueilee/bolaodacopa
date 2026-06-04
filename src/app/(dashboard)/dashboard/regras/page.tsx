@@ -312,11 +312,10 @@ export default function RegrasPage() {
         <h2 className="text-base font-bold" style={{ color: '#1a1625' }}>📌 Regras Gerais</h2>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
           {[
-            { icon: '🔒', text: 'Ao clicar em "Finalizar Palpites", todos os seus palpites ficam bloqueados globalmente e não podem ser alterados.' },
+            { icon: '🔒', text: 'Ao clicar em "Salvar um Jogo", seu palpite fica bloqueado e não pode ser alterado.' },
             { icon: '📊', text: 'A pontuação é igual em todas as fases — grupo, oitavas, quartas, semi, final.' },
-            { icon: '🎯', text: 'A regra de "Vencedor + Saldo" (7 pts) não se aplica a empates, pois o saldo é sempre 0.' },
             { icon: '🏅', text: 'No caso de prorrogação ou pênaltis, o resultado de 90 minutos é o que conta para o bolão.' },
-            { icon: '🏆', text: 'O ranking é atualizado automaticamente após cada partida ser pontuada pelo administrador.' },
+            { icon: '🏆', text: 'O ranking é atualizado automaticamente após cada partida finalizada.' },
             { icon: '📱', text: 'Gerencie seus palpites com antecedência — não dependa de conexão de última hora antes dos jogos.' },
           ].map((item, i) => (
             <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
