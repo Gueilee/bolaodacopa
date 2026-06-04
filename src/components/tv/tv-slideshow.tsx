@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { TvData } from '@/lib/tv-data'
+import { YoutubePlayer }     from './youtube-player'
 import { SlideWelcome }      from './slide-welcome'
 import { SlideRanking }      from './slide-ranking'
 import { SlideDepartments }  from './slide-departments'
@@ -28,8 +29,9 @@ const SLIDES: SlideConfig[] = [
 ]
 
 export function TvSlideshow({ data }: { data: TvData }) {
-  const [current, setCurrent] = useState(0)
-  const [progress, setProgress] = useState(0)
+  const [current,    setCurrent]    = useState(0)
+  const [progress,   setProgress]   = useState(0)
+  const [ytFullscreen, setYtFullscreen] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showControls, setShowControls] = useState(false)
   const hideControlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -229,6 +231,9 @@ export function TvSlideshow({ data }: { data: TvData }) {
           </div>
         </>
       )}
+
+      {/* ── Player CazéTV (PiP / Fullscreen) ── */}
+      <YoutubePlayer onModeChange={(m) => setYtFullscreen(m === 'fullscreen')} />
 
       {/* ── Fullscreen button (aparece ao mover o mouse) ── */}
       <button
