@@ -74,7 +74,7 @@ export function LockPredictionsButton({ filled, total, isLocked, lockedAt }: Pro
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
             <p className="font-semibold mb-1" style={{ color: '#1a1625' }}>
-              Finalize seus palpites antes da Copa começar
+              Finalize seus palpites antes dos 30 minutos de cada jogo começar
             </p>
             <p className="text-sm" style={{ color: '#6b6672' }}>
               {filled}/{total} jogos preenchidos ({percent}%)
@@ -83,7 +83,7 @@ export function LockPredictionsButton({ filled, total, isLocked, lockedAt }: Pro
               )}
             </p>
             <p className="text-xs mt-2" style={{ color: '#8a8490' }}>
-              ⚠ Após finalizar, nenhum palpite poderá ser alterado até o fim da Copa.
+              ⚠ Após salvar, nenhum palpite poderá ser alterado.
             </p>
           </div>
 
