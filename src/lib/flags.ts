@@ -95,7 +95,6 @@ export const TEAM_ISO: Record<string, string> = {
   'Rep. Tcheca':          'cz',
   'República Tcheca':     'cz',
   'Haiti':                'ht',
-  'Holanda':              'nl',
 
   // Placeholder mata-mata
   'A Definir':            '',
