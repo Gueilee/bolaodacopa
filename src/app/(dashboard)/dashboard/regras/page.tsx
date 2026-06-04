@@ -93,7 +93,7 @@ export default function RegrasPage() {
                 Palpite salvo = permanente, sem alteração
               </p>
               <p style={{ margin: 0, fontSize: 13, color: '#4a4555', lineHeight: 1.6 }}>
-                Ao clicar em <strong>"Salvar"</strong> em uma partida, o palpite fica registrado no banco de dados
+                Ao clicar em <strong>"Salvar"</strong> em uma partida, o palpite fica registrado
                 e <strong style={{ color: '#ff2f69' }}>não pode ser alterado</strong> em hipótese alguma.
                 Confira os valores antes de salvar. O sistema bloqueia automaticamente qualquer tentativa de edição posterior.
               </p>
