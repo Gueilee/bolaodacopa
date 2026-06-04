@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import { users, matches, predictions } from '@/db/schema'
+import { users, matches, predictions, socialPosts } from '@/db/schema'
 import { desc, asc, eq, and, count, sql, gte, lte } from 'drizzle-orm'
 import { getRanking, getManagerRanking } from '@/lib/queries'
 
@@ -38,21 +38,39 @@ export type TvManager = {
   leader:       string
 }
 
+export type TvPost = {
+  id:            string
+  content:       string | null
+  mediaUrl:      string | null
+  mediaType:     string
+  userName:      string
+  userAvatar:    string | null
+  likesCount:    number
+  commentsCount: number
+  createdAt:     Date
+}
+
 export type TvData = {
   ranking:         TvRankingEntry[]
   todayMatches:    TvMatch[]
   recentResults:   TvMatch[]
   departments:     TvDept[]
   managers:        TvManager[]
+  posts:           TvPost[]
   totalUsers:      number
   updatedAt:       string
 }
 
 export async function getTvData(): Promise<TvData> {
-  const [rankingRaw, allMatches, managersRaw] = await Promise.all([
+  const [rankingRaw, allMatches, managersRaw, postsRaw] = await Promise.all([
     getRanking(),
     db.query.matches.findMany({ orderBy: [asc(matches.matchDate)] }),
     getManagerRanking(),
+    db.query.socialPosts.findMany({
+      orderBy: [desc(socialPosts.createdAt)],
+      with: { user: { columns: { name: true, avatarUrl: true } } },
+      limit: 12,
+    }),
   ])
 
   const now   = new Date()
@@ -108,12 +126,25 @@ export async function getTvData(): Promise<TvData> {
     leader:       m.leader,
   }))
 
+  const posts: TvPost[] = postsRaw.map(p => ({
+    id:            p.id,
+    content:       p.content,
+    mediaUrl:      p.mediaUrl,
+    mediaType:     p.mediaType,
+    userName:      p.user.name,
+    userAvatar:    p.user.avatarUrl,
+    likesCount:    p.likesCount,
+    commentsCount: p.commentsCount,
+    createdAt:     p.createdAt,
+  }))
+
   return {
     ranking,
     todayMatches,
     recentResults,
     departments,
     managers,
+    posts,
     totalUsers:  rankingRaw.length,
     updatedAt:   now.toISOString(),
   }

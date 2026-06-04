@@ -8,6 +8,7 @@ import { SlideDepartments } from './slide-departments'
 import { SlideManagers }    from './slide-managers'
 import { SlideMatches }     from './slide-matches'
 import { SlideResults }     from './slide-results'
+import { SlideMural }       from './slide-mural'
 
 type SlideConfig = { id: string; duration: number; label: string }
 
@@ -19,6 +20,7 @@ const SLIDES: SlideConfig[] = [
   { id: 'managers',    duration: 12000, label: '👔 Por Gestor' },
   { id: 'matches',     duration: 12000, label: '⚽ Jogos do Dia' },
   { id: 'results',     duration: 12000, label: '📊 Últimos Resultados' },
+  { id: 'mural',       duration: 22000, label: '💬 Central da Torcida' },
 ]
 
 export function TvSlideshow({ data }: { data: TvData }) {
@@ -182,6 +184,7 @@ export function TvSlideshow({ data }: { data: TvData }) {
             {slide.id === 'managers'    && <SlideManagers managers={data.managers} />}
             {slide.id === 'matches'     && <SlideMatches matches={data.todayMatches} />}
             {slide.id === 'results'     && <SlideResults matches={data.recentResults} />}
+            {slide.id === 'mural'       && <SlideMural posts={data.posts} />}
           </div>
 
           {/* Bottom bar: progress + dots */}
