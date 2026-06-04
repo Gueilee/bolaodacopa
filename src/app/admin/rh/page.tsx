@@ -101,29 +101,28 @@ export default async function HrDashboardPage() {
         <HrKpiCards data={overview} />
       </Suspense>
 
-      {/* ── Linha 2: Departamentos + Top Performers ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Section
-            title="Engajamento por Departamento"
-            subtitle="Taxa de colaboradores que finalizaram os palpites"
-          >
-            <Suspense fallback={<Skeleton />}>
-              <HrDeptChart data={depts} />
-            </Suspense>
-          </Section>
-        </div>
+      {/* ── Engajamento por Departamento — full width para caber os nomes ── */}
+      <Section
+        title="Engajamento por Departamento"
+        subtitle="Taxa de colaboradores que finalizaram os palpites"
+      >
+        <Suspense fallback={<Skeleton />}>
+          <HrDeptChart data={depts} />
+        </Suspense>
+      </Section>
 
-        <div>
-          <Section
-            title="Top 10 Performers"
-            subtitle="Por pontuação acumulada"
-          >
-            <Suspense fallback={<Skeleton />}>
-              <HrTopPerformers data={topPerformers} />
-            </Suspense>
-          </Section>
-        </div>
+      {/* ── Top Performers — 2 colunas lado a lado ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Section title="Top 10 Performers" subtitle="Por pontuação acumulada">
+          <Suspense fallback={<Skeleton />}>
+            <HrTopPerformers data={topPerformers.slice(0, 5)} />
+          </Suspense>
+        </Section>
+        <Section title=" " subtitle=" ">
+          <Suspense fallback={<Skeleton />}>
+            <HrTopPerformers data={topPerformers.slice(5, 10)} />
+          </Suspense>
+        </Section>
       </div>
 
       {/* ── Linha 3: Timeline + Distribuição ── */}

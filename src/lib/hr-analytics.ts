@@ -229,6 +229,7 @@ export type TopPerformer = {
   position:   number
   name:       string
   department: string | null
+  avatarUrl:  string | null
   points:     number
   exactCount: number
   betCount:   number
@@ -240,6 +241,7 @@ export async function getTopPerformers(limit = 10): Promise<TopPerformer[]> {
       id:         users.id,
       name:       users.name,
       department: users.department,
+      avatarUrl:  users.avatarUrl,
       points:     users.totalPoints,
       exactCount: sql<number>`cast(sum(case when ${predictions.points} = 10 then 1 else 0 end) as integer)`,
       betCount:   count(predictions.id),
@@ -255,6 +257,7 @@ export async function getTopPerformers(limit = 10): Promise<TopPerformer[]> {
     position:   i + 1,
     name:       r.name,
     department: r.department,
+    avatarUrl:  r.avatarUrl ?? null,
     points:     r.points,
     exactCount: Number(r.exactCount),
     betCount:   Number(r.betCount),

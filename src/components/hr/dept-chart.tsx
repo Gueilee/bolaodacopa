@@ -2,107 +2,130 @@ import type { DeptStats } from '@/lib/hr-analytics'
 
 type Props = { data: DeptStats[] }
 
-function rateColor(pct: number): string {
-  if (pct >= 80) return 'bg-brand-neon'
-  if (pct >= 50) return 'bg-yellow-400'
-  return 'bg-brand-pink'
-}
-
-function rateBadge(pct: number): string {
-  if (pct >= 80) return 'text-brand-neon bg-brand-neon/10 border-brand-neon/20'
-  if (pct >= 50) return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20'
-  return 'text-brand-pink bg-brand-pink/10 border-brand-pink/20'
+function rateConfig(pct: number) {
+  if (pct >= 80) return { bar: '#01E18E', badge: { bg: 'rgba(1,168,102,0.1)', color: '#01a866', border: 'rgba(1,168,102,0.25)' } }
+  if (pct >= 50) return { bar: '#f59e0b', badge: { bg: 'rgba(245,158,11,0.1)', color: '#d97706', border: 'rgba(245,158,11,0.25)' } }
+  return           { bar: '#ff2f69', badge: { bg: 'rgba(255,47,105,0.08)', color: '#ff2f69', border: 'rgba(255,47,105,0.2)' } }
 }
 
 export function HrDeptChart({ data }: Props) {
   if (data.length === 0) {
     return (
-      <p className="text-sm text-center py-8" style={{color:'#8a8490'}}>
-        Nenhum departamento cadastrado ainda. Atribua departamentos aos colaboradores no painel de usuários.
-      </p>
+      <div style={{ textAlign: 'center', padding: '32px 0' }}>
+        <p style={{ fontSize: 14, color: '#8a8490', margin: 0 }}>
+          Nenhum departamento cadastrado ainda.
+        </p>
+      </div>
     )
   }
 
-  const maxTotal = Math.max(...data.map((d) => d.total))
+  const maxTotal = Math.max(...data.map(d => d.total), 1)
 
   return (
-    <div className="space-y-1">
+    <div>
       {/* Header */}
-      <div className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[10px] font-semibold uppercase tracking-wider" style={{color:'#8a8490'}}>
-        <span>Departamento</span>
-        <span className="text-right w-16">Colabs</span>
-        <span className="text-right w-20 hidden sm:block">Finalizaram</span>
-        <span className="text-right w-14">Taxa</span>
-        <span className="text-right w-16 hidden md:block">Média pts</span>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 70px 90px 80px 80px',
+        padding: '8px 16px', gap: 8,
+        borderBottom: '1px solid #f0ede8',
+      }}>
+        {['Departamento', 'Colabs', 'Finalizaram', 'Taxa', 'Média pts'].map((h, i) => (
+          <span key={h} style={{
+            fontSize: 10, fontWeight: 700, color: '#aaa8b0',
+            textTransform: 'uppercase', letterSpacing: '0.08em',
+            textAlign: i > 0 ? 'center' : 'left',
+          }}>{h}</span>
+        ))}
       </div>
 
-      {data.map((dept) => (
-        <div
-          key={dept.department}
-          className="grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 items-center px-4 py-3 rounded-xl transition-colors hover:bg-white/3"
-        >
-          {/* Nome + barra */}
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-sm font-medium truncate" style={{color:'#1a1625'}}>
-                {dept.department}
-              </span>
-              {dept.leader && (
-                <span className="text-[10px] hidden sm:inline truncate" style={{color:'#8a8490'}}>
-                  líder: {dept.leader.split(' ')[0]}
+      {/* Rows */}
+      {data.map((dept, i) => {
+        const cfg = rateConfig(dept.participationRate)
+        return (
+          <div
+            key={dept.department}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 70px 90px 80px 80px',
+              padding: '12px 16px', gap: 8, alignItems: 'center',
+              borderBottom: i < data.length - 1 ? '1px solid #f5f2ef' : 'none',
+              background: i % 2 === 0 ? '#ffffff' : '#faf9f7',
+            }}
+          >
+            {/* Nome + líder + barra */}
+            <div style={{ minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: '#1a1625' }}>
+                  {dept.department}
                 </span>
-              )}
+                {dept.leader && (
+                  <span style={{ fontSize: 10, color: '#aaa8b0', flexShrink: 0 }}>
+                    líder: {dept.leader.split(' ')[0]}
+                  </span>
+                )}
+              </div>
+              {/* Barra de progresso */}
+              <div style={{
+                height: 6, borderRadius: 6, overflow: 'hidden',
+                width: `${Math.max(15, (dept.total / maxTotal) * 100)}%`,
+                background: '#f0ede8', minWidth: 40,
+              }}>
+                <div style={{
+                  height: '100%', borderRadius: 6,
+                  width: `${dept.participationRate}%`,
+                  background: cfg.bar,
+                  transition: 'width 0.5s ease',
+                }} />
+              </div>
             </div>
-            {/* Barra proporcional ao total + barra interna de finalizados */}
-            <div
-              className="h-1.5 rounded-full overflow-hidden"
-              style={{ width: `${Math.max(20, (dept.total / maxTotal) * 100)}%`, background:'#e8e4df' }}
-            >
-              <div
-                className={`h-full rounded-full transition-all duration-700 ${rateColor(dept.participationRate)}`}
-                style={{ width: `${dept.participationRate}%` }}
-              />
+
+            {/* Total */}
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: '#1a1625', fontVariantNumeric: 'tabular-nums' }}>
+                {dept.total}
+              </span>
+            </div>
+
+            {/* Finalizados */}
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ fontSize: 14, fontWeight: 600, color: '#4a4555', fontVariantNumeric: 'tabular-nums' }}>
+                {dept.locked}
+              </span>
+            </div>
+
+            {/* Taxa */}
+            <div style={{ textAlign: 'center' }}>
+              <span style={{
+                fontSize: 12, fontWeight: 800, padding: '4px 10px', borderRadius: 20, display: 'inline-block',
+                background: cfg.badge.bg, color: cfg.badge.color, border: `1px solid ${cfg.badge.border}`,
+              }}>
+                {dept.participationRate}%
+              </span>
+            </div>
+
+            {/* Média pts */}
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: '#4a4555', fontVariantNumeric: 'tabular-nums' }}>
+                {dept.avgPoints > 0 ? dept.avgPoints.toFixed(1) : '—'}
+              </span>
             </div>
           </div>
-
-          {/* Total */}
-          <span className="text-sm tabular-nums text-right w-16" style={{color:'#8a8490'}}>
-            {dept.total}
-          </span>
-
-          {/* Finalizados */}
-          <span className="text-sm tabular-nums text-right w-20 hidden sm:block" style={{color:'#8a8490'}}>
-            {dept.locked}
-          </span>
-
-          {/* Taxa */}
-          <span
-            className={`text-xs font-bold tabular-nums px-2 py-0.5 rounded-md border text-right w-14 inline-flex items-center justify-center ${rateBadge(dept.participationRate)}`}
-          >
-            {dept.participationRate}%
-          </span>
-
-          {/* Média de pontos */}
-          <span className="text-sm tabular-nums text-right w-16 hidden md:block" style={{color:'#8a8490'}}>
-            {dept.avgPoints > 0 ? dept.avgPoints.toFixed(0) : '—'}
-          </span>
-        </div>
-      ))}
+        )
+      })}
 
       {/* Legenda */}
-      <div className="flex items-center gap-4 pt-3 px-4 text-[10px]" style={{color:'#8a8490'}}>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-1.5 rounded-full bg-brand-neon inline-block" />
-          ≥ 80% (ótimo)
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-1.5 rounded-full bg-yellow-400 inline-block" />
-          50–79% (atenção)
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-3 h-1.5 rounded-full bg-brand-pink inline-block" />
-          {'< 50% (crítico)'}
-        </span>
+      <div style={{ display: 'flex', gap: 20, padding: '12px 16px', borderTop: '1px solid #f0ede8', flexWrap: 'wrap' }}>
+        {[
+          { color: '#01E18E', label: '≥ 80% — ótimo' },
+          { color: '#f59e0b', label: '50–79% — atenção' },
+          { color: '#ff2f69', label: '< 50% — crítico' },
+        ].map(l => (
+          <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 12, height: 6, borderRadius: 3, background: l.color, flexShrink: 0 }} />
+            <span style={{ fontSize: 10, color: '#8a8490' }}>{l.label}</span>
+          </div>
+        ))}
       </div>
     </div>
   )
