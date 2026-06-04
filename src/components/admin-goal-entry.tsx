@@ -3,7 +3,7 @@
 import { useState, useTransition, useEffect } from 'react'
 import { addGoal, removeGoal, getMatchGoals } from '@/app/actions/goals'
 import type { MatchGoal } from '@/db/schema'
-import { getFlagUrl } from '@/lib/flags'
+import { FlagImg } from '@/components/flag-img'
 
 // Jogadores conhecidos para autocomplete
 const KNOWN_PLAYERS = [
@@ -19,12 +19,6 @@ const KNOWN_PLAYERS = [
   'Ayase Ueda','Cody Gakpo','Mehdi Taremi','Sardar Azmoun',
 ]
 
-function FlagImg({ country, size = 20 }: { country: string; size?: number }) {
-  const url = getFlagUrl(country, size)
-  if (!url) return null
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={url} alt={country} style={{ width: size, height: Math.round(size * 0.67), objectFit: 'cover', borderRadius: 2, flexShrink: 0 }} />
-}
 
 type Props = {
   matchId:  string

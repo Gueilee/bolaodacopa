@@ -1,17 +1,10 @@
 import { getSession }    from '@/lib/session'
 import { redirect }      from 'next/navigation'
 import { getTopScorers } from '@/app/actions/goals'
-import { getFlagUrl }    from '@/lib/flags'
+import { FlagImg }       from '@/components/flag-img'
 
 export const revalidate = 0
 export const metadata   = { title: 'Artilheiros | Admin Bolão Copa 2026' }
-
-function FlagImg({ country }: { country: string }) {
-  const url = getFlagUrl(country, 24)
-  if (!url) return null
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={url} alt={country} style={{ width: 24, height: 16, objectFit: 'cover', borderRadius: 2, flexShrink: 0 }} />
-}
 
 function Medal({ pos }: { pos: number }) {
   if (pos === 1) return <span style={{ fontSize: 20 }}>🥇</span>
