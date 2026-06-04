@@ -81,10 +81,10 @@ export async function getCopaLiveData(): Promise<CopaLiveData> {
     .slice(0, 10)
     .map(toL)
 
-  // Próximos dias (excluindo hoje e terminados)
+  // Próxima rodada = apenas o PRÓXIMO dia com jogos (hoje incluso se ainda há jogos)
   const upcoming = allMatches.filter(m => {
     const d = new Date(m.matchDate)
-    return d >= tmr && m.status === 'upcoming'
+    return d >= now && m.status === 'upcoming'
   })
 
   const dayMap = new Map<string, LiveMatch[]>()
@@ -94,8 +94,9 @@ export async function getCopaLiveData(): Promise<CopaLiveData> {
     dayMap.get(key)!.push(toL(m))
   }
 
+  // Só o primeiro dia com jogos (próxima rodada)
   const upcomingDays = [...dayMap.entries()]
-    .slice(0, 5)
+    .slice(0, 1)
     .map(([date, ms]) => ({ date, matches: ms }))
 
   // Standings dos grupos
