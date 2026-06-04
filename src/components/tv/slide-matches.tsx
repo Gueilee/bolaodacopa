@@ -24,9 +24,9 @@ export function SlideMatches({ matches }: { matches: TvMatch[] }) {
   if (matches.length === 0) {
     return (
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-        <span style={{ fontSize: 90 }}>📅</span>
-        <p style={{ color: 'white', fontSize: 32, fontWeight: 800, margin: 0 }}>Nenhum jogo hoje</p>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 20, margin: 0 }}>Confira o calendário completo no sistema</p>
+        <span style={{ fontSize: 90 }}>⏳</span>
+        <p style={{ color: 'white', fontSize: 32, fontWeight: 800, margin: 0 }}>Copa começa em 11/06/2026</p>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 20, margin: 0 }}>17h00 · Estádio Azteca · México × África do Sul</p>
       </div>
     )
   }

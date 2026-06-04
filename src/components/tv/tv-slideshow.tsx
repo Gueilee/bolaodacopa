@@ -180,8 +180,8 @@ export function TvSlideshow({ data }: { data: TvData }) {
             <TvClock participants={data.totalUsers} />
           </div>
 
-          {/* Slide content — paddingTop maior para não sobrepor o header com logo 90px */}
-          <div style={{ position: 'absolute', inset: 0, paddingTop: 112, paddingBottom: 60 }}>
+          {/* Slide content — paddingTop calculado: logo 90px + padding 16px*2 = 122px mínimo */}
+          <div style={{ position: 'absolute', inset: 0, paddingTop: 126, paddingBottom: 60 }}>
             {slide.id === 'welcome'      && <SlideWelcome data={data} />}
             {slide.id === 'ranking'      && <SlideRanking entries={data.ranking} />}
             {slide.id === 'departments'  && <SlideDepartments departments={data.departments} />}

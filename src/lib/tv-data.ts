@@ -112,12 +112,22 @@ export async function getTvData(): Promise<TvData> {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const tmr   = new Date(today.getTime() + 86400000)
 
-  const todayMatches: TvMatch[] = allMatches
-    .filter((m) => {
-      const d = new Date(m.matchDate)
-      return d >= today && d < tmr
-    })
+  // Jogos de hoje; se vazio, mostra o próximo dia com partidas
+  let todayMatches: TvMatch[] = allMatches
+    .filter((m) => { const d = new Date(m.matchDate); return d >= today && d < tmr })
     .map(toTvMatch)
+
+  if (todayMatches.length === 0) {
+    const upcoming = allMatches
+      .filter(m => new Date(m.matchDate) >= tmr && m.status === 'upcoming')
+      .sort((a, b) => new Date(a.matchDate).getTime() - new Date(b.matchDate).getTime())
+    if (upcoming.length > 0) {
+      const nextDay = new Date(upcoming[0].matchDate).toISOString().split('T')[0]
+      todayMatches = upcoming
+        .filter(m => new Date(m.matchDate).toISOString().split('T')[0] === nextDay)
+        .slice(0, 9).map(toTvMatch)
+    }
+  }
 
   const recentResults: TvMatch[] = allMatches
     .filter((m) => m.status === 'finished')

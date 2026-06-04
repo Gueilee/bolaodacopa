@@ -19,12 +19,8 @@ export function SlideDepartments({ departments }: { departments: TvDept[] }) {
   ]
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '0 60px', gap: 28 }}>
-      <h2 style={{ fontSize: 36, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center' }}>
-        🏢 Ranking por Departamento
-      </h2>
-
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: departments.length > 5 ? '1fr 1fr' : '1fr', gap: 16, alignContent: 'center' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '0 60px', gap: 16 }}>
+      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: departments.length > 5 ? '1fr 1fr' : '1fr', gap: 12, alignContent: 'center' }}>
         {departments.slice(0, 10).map((dept, i) => {
           const color = DEPT_COLORS[i % DEPT_COLORS.length]
           const barW  = (dept.totalPoints / maxPoints) * 100

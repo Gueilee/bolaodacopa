@@ -22,14 +22,12 @@ export function SlideArtilheiros({ scorers }: { scorers: TvScorer[] }) {
   const right = top10.slice(half)
 
   return (
-    <div style={{ height: '100%', padding: '0 48px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ height: '100%', padding: '8px 48px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
 
       {!hasRealData && (
-        <div style={{ textAlign: 'center' }}>
-          <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>
-            Prováveis artilheiros · Copa do Mundo 2026
-          </span>
-        </div>
+        <p style={{ margin: 0, textAlign: 'center', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>
+          Prováveis artilheiros · Copa do Mundo 2026
+        </p>
       )}
 
       <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, alignContent: 'center' }}>

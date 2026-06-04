@@ -18,10 +18,7 @@ export function SlideManagers({ managers }: { managers: TvManager[] }) {
   const medalColors = ['#f5c518', '#a0a0a0', '#cd7f32']
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '4px 48px 0', gap: 16 }}>
-      <h2 style={{ fontSize: 30, fontWeight: 900, color: 'white', margin: 0, textAlign: 'center', letterSpacing: '0.04em' }}>
-        👔 &nbsp;RANKING POR GESTOR
-      </h2>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', padding: '0 48px', gap: 16 }}>
 
       {/* Top 3 destaque */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
