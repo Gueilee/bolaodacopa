@@ -4,20 +4,6 @@ import { useState } from 'react'
 import type { TvScorer } from '@/lib/tv-data'
 import { getFlagUrl } from '@/lib/flags'
 
-// Top 10 prováveis sempre preenchidos
-const PRE_COPA: TvScorer[] = [
-  { playerName: 'Kylian Mbappé',      country: 'França',       goals: 0 },
-  { playerName: 'Erling Haaland',     country: 'Noruega',      goals: 0 },
-  { playerName: 'Vinícius Júnior',    country: 'Brasil',       goals: 0 },
-  { playerName: 'Lautaro Martínez',   country: 'Argentina',    goals: 0 },
-  { playerName: 'Harry Kane',         country: 'Inglaterra',   goals: 0 },
-  { playerName: 'Raphinha',           country: 'Brasil',       goals: 0 },
-  { playerName: 'Bukayo Saka',        country: 'Inglaterra',   goals: 0 },
-  { playerName: 'Jamal Musiala',      country: 'Alemanha',     goals: 0 },
-  { playerName: 'Victor Osimhen',     country: 'Nigéria',      goals: 0 },
-  { playerName: 'Viktor Gyökeres',    country: 'Suécia',       goals: 0 },
-]
-
 const MEDALS = ['🥇', '🥈', '🥉']
 
 function PlayerPhoto({ url, name }: { url: string; name: string }) {
@@ -45,10 +31,8 @@ function Flag({ country }: { country: string }) {
 
 export function SlideArtilheiros({ scorers }: { scorers: TvScorer[] }) {
   const hasReal = scorers.some(s => s.goals > 0)
-  // Garante sempre 10 entradas: dados reais se houver, senão pré-Copa
-  const list = hasReal
-    ? [...scorers.slice(0, 10), ...PRE_COPA].slice(0, 10)
-    : PRE_COPA
+  // Servidor já garante lista de 10 com fotos
+  const list = scorers.slice(0, 10)
 
   return (
     <div style={{ height: '100%', padding: '4px 60px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>

@@ -187,18 +187,23 @@ export async function getTvData(): Promise<TvData> {
   // Groups standings
   const groups = computeTvGroups(allMatches)
 
-  // Top scorers: real data or pre-Copa list
-  const rawScorers: TvScorer[] = goalsRaw.length >= 3
-    ? goalsRaw.map(r => ({ playerName: r.playerName, country: r.country, goals: Number(r.goals) }))
-    : PRE_COPA_SCORERS
+  // Top scorers: dados reais + complemento pré-Copa até 10
+  const dbScorers: TvScorer[] = goalsRaw.map(r => ({
+    playerName: r.playerName,
+    country:    r.country,
+    goals:      Number(r.goals),
+  }))
+  const dbNames    = new Set(dbScorers.map(s => s.playerName.toLowerCase()))
+  const supplement = PRE_COPA_SCORERS.filter(p => !dbNames.has(p.playerName.toLowerCase()))
+  const fullList   = [...dbScorers, ...supplement].slice(0, 10)
 
-  // Buscar fotos via TheSportsDB (cache 24h)
+  // Buscar fotos para TODOS os 10 via Wikipedia + TheSportsDB
   let photos: Record<string, string> = {}
   try {
-    photos = await getPlayerPhotos(rawScorers.map(s => ({ name: s.playerName })))
+    photos = await getPlayerPhotos(fullList.map(s => ({ name: s.playerName })))
   } catch { /* fotos são opcionais */ }
 
-  const topScorers: TvScorer[] = rawScorers.map(s => ({
+  const topScorers: TvScorer[] = fullList.map(s => ({
     ...s,
     photoUrl: photos[s.playerName] ?? null,
   }))
