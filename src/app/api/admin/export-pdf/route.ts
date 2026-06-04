@@ -25,10 +25,10 @@ export async function GET(request: NextRequest) {
 
   const data = await getFullReportData()
 
-  // Lê logo.png do diretório public e converte para base64
+  // Lê logo2.png do diretório public e converte para base64
   let logoBase64: string | null = null
   try {
-    const logoPath = path.join(process.cwd(), 'public', 'logo.png')
+    const logoPath = path.join(process.cwd(), 'public', 'logo2.png')
     if (fs.existsSync(logoPath)) {
       logoBase64 = `data:image/png;base64,${fs.readFileSync(logoPath).toString('base64')}`
     }
