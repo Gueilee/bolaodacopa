@@ -472,16 +472,18 @@ export function RankingTable({ entries, currentUserId }: Props) {
                             background: 'none', border: 'none', padding: 0, cursor: compareMode ? 'default' : 'pointer',
                             display: 'flex', alignItems: 'center', gap: 6, textAlign: 'left',
                           }}
-                          title={compareMode ? '' : `Ver histórico de ${entry.name}`}
+                          title={compareMode ? '' : `Ver palpites de ${entry.name}`}
                         >
                           <span className="font-semibold" style={{
                             color: isSelected || isMe ? '#422c76' : '#1a1625',
-                            textDecoration: compareMode ? 'none' : undefined,
+                            textDecoration: compareMode ? 'none' : 'underline',
+                            textDecorationColor: 'rgba(66,44,118,0.25)',
+                            textUnderlineOffset: 3,
                           }}>
                             {entry.name}
                           </span>
                           {!compareMode && (
-                            <span style={{ fontSize: 10, color: '#c4bfba', opacity: 0 }} className="group-hover:opacity-100 transition-opacity">📋</span>
+                            <span style={{ fontSize: 11, color: '#c4bfba' }}>📋</span>
                           )}
                           {isMe && (
                             <span className="text-[10px] font-normal uppercase tracking-widest" style={{ color: '#9a86c4' }}>você</span>

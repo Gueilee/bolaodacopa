@@ -186,6 +186,9 @@ export function UserHistoryModal({ userId, name, position, onClose }: Props) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <UserAvatar name={name} avatarUrl={history?.avatarUrl ?? null} size={48} bgColor="rgba(255,255,255,0.15)" textColor="white" />
               <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#01E18E', letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 2px' }}>
+                  📋 Auditoria de Palpites
+                </p>
                 <p style={{ fontSize: 18, fontWeight: 900, color: 'white', margin: 0 }}>{name}</p>
                 <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', margin: '2px 0 0' }}>
                   {history?.department ?? '—'} · {position}º lugar
