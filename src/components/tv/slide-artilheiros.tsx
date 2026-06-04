@@ -20,6 +20,17 @@ const PRE_COPA: TvScorer[] = [
 
 const MEDALS = ['🥇', '🥈', '🥉']
 
+function PlayerPhoto({ url, name }: { url: string; name: string }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) return null
+  // eslint-disable-next-line @next/next/no-img-element
+  return (
+    <img src={url} alt={name} width={44} height={44}
+      style={{ objectFit: 'cover', borderRadius: '50%', flexShrink: 0, border: '2px solid rgba(255,255,255,0.2)', boxShadow: '0 2px 8px rgba(0,0,0,0.5)' }}
+      onError={() => setFailed(true)} />
+  )
+}
+
 function Flag({ country }: { country: string }) {
   const [failed, setFailed] = useState(false)
   const url = getFlagUrl(country, 80)
@@ -56,7 +67,7 @@ export function SlideArtilheiros({ scorers }: { scorers: TvScorer[] }) {
           return (
             <div key={`${s.playerName}-${i}`} style={{
               display: 'grid',
-              gridTemplateColumns: '44px 54px 1fr auto 64px',
+              gridTemplateColumns: '44px 56px 1fr 130px 64px',
               alignItems: 'center', gap: 14,
               padding: '10px 18px',
               borderRadius: 12,
@@ -74,16 +85,23 @@ export function SlideArtilheiros({ scorers }: { scorers: TvScorer[] }) {
                   : <span style={{ fontSize: 15, fontWeight: 800, color: 'rgba(255,255,255,0.3)' }}>{i + 1}º</span>}
               </div>
 
-              {/* Bandeira */}
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Flag country={s.country} />
+              {/* Foto ou bandeira */}
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {s.photoUrl ? (
+                  <PlayerPhoto url={s.photoUrl} name={s.playerName} />
+                ) : (
+                  <Flag country={s.country} />
+                )}
               </div>
 
-              {/* Nome */}
-              <p style={{ margin: 0, fontSize: 17, fontWeight: 800, color: 'rgba(255,255,255,0.9)',
-                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {s.playerName}
-              </p>
+              {/* Nome + bandeira inline */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                {s.photoUrl && <Flag country={s.country} />}
+                <p style={{ margin: 0, fontSize: 17, fontWeight: 800, color: 'rgba(255,255,255,0.9)',
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {s.playerName}
+                </p>
+              </div>
 
               {/* País */}
               <p style={{ margin: 0, fontSize: 13, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}>

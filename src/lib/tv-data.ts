@@ -2,6 +2,7 @@ import { db } from '@/lib/db'
 import { users, matches, predictions, socialPosts, matchGoals } from '@/db/schema'
 import { desc, asc, eq, and, count, sql } from 'drizzle-orm'
 import { getRanking, getManagerRanking } from '@/lib/queries'
+import { getPlayerPhotos } from '@/lib/player-photos'
 
 export type TvRankingEntry = {
   position:    number
@@ -57,7 +58,7 @@ export type TvGroupTeam = {
 }
 export type TvGroup = { name: string; teams: TvGroupTeam[] }
 
-export type TvScorer = { playerName: string; country: string; goals: number }
+export type TvScorer = { playerName: string; country: string; goals: number; photoUrl?: string | null }
 
 export type TvData = {
   ranking:         TvRankingEntry[]
@@ -187,9 +188,20 @@ export async function getTvData(): Promise<TvData> {
   const groups = computeTvGroups(allMatches)
 
   // Top scorers: real data or pre-Copa list
-  const topScorers: TvScorer[] = goalsRaw.length >= 3
+  const rawScorers: TvScorer[] = goalsRaw.length >= 3
     ? goalsRaw.map(r => ({ playerName: r.playerName, country: r.country, goals: Number(r.goals) }))
     : PRE_COPA_SCORERS
+
+  // Buscar fotos via TheSportsDB (cache 24h)
+  let photos: Record<string, string> = {}
+  try {
+    photos = await getPlayerPhotos(rawScorers.map(s => ({ name: s.playerName })))
+  } catch { /* fotos são opcionais */ }
+
+  const topScorers: TvScorer[] = rawScorers.map(s => ({
+    ...s,
+    photoUrl: photos[s.playerName] ?? null,
+  }))
 
   return {
     ranking,
