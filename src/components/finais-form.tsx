@@ -12,7 +12,7 @@ const TEAMS_2026 = [
   'Eslováquia', 'Eslovênia', 'Espanha', 'EUA', 'França', 'Gana',
   'Geórgia', 'Honduras', 'Hungria', 'Inglaterra', 'Irã', 'Iraque',
   'Jamaica', 'Japão', 'Jordânia', 'Mali', 'Marrocos', 'México',
-  'Nigéria', 'Noruega', 'Nova Zelândia', 'Países Baixos', 'Panamá', 'Paraguai',
+  'Nigéria', 'Noruega', 'Nova Zelândia', 'Holanda', 'Panamá', 'Paraguai',
   'Peru', 'Polônia', 'Portugal', 'Qatar', 'Romênia', 'Senegal',
   'Sérvia', 'Suécia', 'Suíça', 'Turquia', 'Ucrânia', 'Uruguai',
   'Uzbequistão', 'Venezuela', 'Venezuela', 'Venezuela',
@@ -53,7 +53,7 @@ const TOP_SCORERS: { name: string; country: string }[] = [
   { name: 'Erling Haaland',         country: 'Noruega'       },
   { name: 'Mohamed Salah',          country: 'Egito'         },
   { name: 'Son Heung-min',          country: 'Coreia do Sul' },
-  { name: 'Memphis Depay',          country: 'Países Baixos' },
+  { name: 'Memphis Depay',          country: 'Holanda' },
   { name: 'Lautaro Martínez',       country: 'Argentina'     },
   { name: 'Julián Álvarez',         country: 'Argentina'     },
   { name: 'Victor Osimhen',         country: 'Nigéria'       },
@@ -66,7 +66,7 @@ const TOP_SCORERS: { name: string; country: string }[] = [
   { name: 'Chris Wood',             country: 'Nova Zelândia' },
   { name: 'Yazan Al-Naimat',        country: 'Jordânia'      },
   { name: 'Ayase Ueda',             country: 'Japão'         },
-  { name: 'Cody Gakpo',             country: 'Países Baixos' },
+  { name: 'Cody Gakpo',             country: 'Holanda' },
   { name: 'Viktor Gyökeres',        country: 'Suécia'        },
   { name: 'Alexander Isak',         country: 'Suécia'        },
   { name: 'Kai Havertz',            country: 'Alemanha'      },
@@ -313,49 +313,82 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
       {/* Formulário */}
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
+        {/* ── Campeão ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
             🏆 Campeão
           </label>
-          <select value={champion} onChange={(e) => setChampion(e.target.value)}
-            required disabled={isPending} className="input-field" style={{ fontSize: 13 }}>
-            <option value="">Selecione um país...</option>
-            {TEAMS_2026.map((t) => (
-              <option key={t} value={t}>{FLAG[t] ?? '🏳'} {t}</option>
-            ))}
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 52, height: 44, borderRadius: 12, flexShrink: 0,
+              background: '#f5f2ef', border: '1.5px solid #e0dbd5',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 28, transition: 'all 0.2s',
+            }}>
+              {champion ? (FLAG[champion] ?? '🏳') : '🏆'}
+            </div>
+            <select value={champion} onChange={(e) => setChampion(e.target.value)}
+              required disabled={isPending} className="input-field" style={{ fontSize: 13, flex: 1 }}>
+              <option value="">Selecione um país...</option>
+              {TEAMS_2026.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
+        {/* ── Vice-campeão ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
             🥈 Vice-campeão
           </label>
-          <select value={runnerUp} onChange={(e) => setRunnerUp(e.target.value)}
-            required disabled={isPending} className="input-field" style={{ fontSize: 13 }}>
-            <option value="">Selecione um país...</option>
-            {TEAMS_2026.filter((t) => t !== champion).map((t) => (
-              <option key={t} value={t}>{FLAG[t] ?? '🏳'} {t}</option>
-            ))}
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 52, height: 44, borderRadius: 12, flexShrink: 0,
+              background: '#f5f2ef', border: '1.5px solid #e0dbd5',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 28, transition: 'all 0.2s',
+            }}>
+              {runnerUp ? (FLAG[runnerUp] ?? '🏳') : '🥈'}
+            </div>
+            <select value={runnerUp} onChange={(e) => setRunnerUp(e.target.value)}
+              required disabled={isPending} className="input-field" style={{ fontSize: 13, flex: 1 }}>
+              <option value="">Selecione um país...</option>
+              {TEAMS_2026.filter((t) => t !== champion).map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+          </div>
           {champion && runnerUp && champion === runnerUp && (
             <p style={{ fontSize: 12, color: '#ff2f69', margin: 0 }}>Campeão e vice não podem ser o mesmo país.</p>
           )}
         </div>
 
+        {/* ── Artilheiro ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
             ⚽ Artilheiro
           </label>
-          <select value={scorerSelect} onChange={(e) => { setScorerSelect(e.target.value); setScorerCustom('') }}
-            required disabled={isPending} className="input-field" style={{ fontSize: 13 }}>
-            <option value="">Selecione o artilheiro...</option>
-            {TOP_SCORERS.map((p) => (
-              <option key={p.name} value={p.name}>
-                {FLAG[p.country] ?? '🏳'} {p.name} ({p.country})
-              </option>
-            ))}
-            <option value="__outro__">✍️ Outro jogador (digitar)</option>
-          </select>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{
+              width: 52, height: 44, borderRadius: 12, flexShrink: 0,
+              background: '#f5f2ef', border: '1.5px solid #e0dbd5',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 28, transition: 'all 0.2s',
+            }}>
+              {scorerSelect && scorerSelect !== '__outro__'
+                ? (FLAG[TOP_SCORERS.find(p => p.name === scorerSelect)?.country ?? ''] ?? '⚽')
+                : scorerSelect === '__outro__' ? '✍️' : '⚽'}
+            </div>
+            <select value={scorerSelect} onChange={(e) => { setScorerSelect(e.target.value); setScorerCustom('') }}
+              required disabled={isPending} className="input-field" style={{ fontSize: 13, flex: 1 }}>
+              <option value="">Selecione o artilheiro...</option>
+              {TOP_SCORERS.map((p) => (
+                <option key={p.name} value={p.name}>{p.name} ({p.country})</option>
+              ))}
+              <option value="__outro__">✍️ Outro jogador (digitar)</option>
+            </select>
+          </div>
           {isOutro && (
             <input
               type="text"
