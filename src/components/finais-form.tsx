@@ -3,11 +3,94 @@
 import { useState, useTransition } from 'react'
 import { saveTournamentPrediction } from '@/app/actions/tournament'
 
+// 48 seleções da Copa do Mundo 2026 (ordem alfabética)
 const TEAMS_2026 = [
-  'Brasil', 'Argentina', 'França', 'Espanha', 'Alemanha',
-  'Portugal', 'Inglaterra', 'Países Baixos', 'EUA', 'México',
-  'Uruguai', 'Colômbia', 'Bélgica', 'Japão', 'Marrocos',
-  'Egito', 'Senegal', 'Austrália', 'Canadá', 'Coreia do Sul',
+  'África do Sul', 'Albânia', 'Alemanha', 'Arábia Saudita', 'Argentina', 'Austrália',
+  'Áustria', 'Bélgica', 'Bolívia', 'Bósnia e Herzegovina', 'Brasil', 'Camarões',
+  'Canadá', 'Chile', 'China', 'Colômbia', 'Coreia do Sul', 'Costa do Marfim',
+  'Costa Rica', 'Croácia', 'Dinamarca', 'Egito', 'Equador', 'Escócia',
+  'Eslováquia', 'Eslovênia', 'Espanha', 'EUA', 'França', 'Gana',
+  'Geórgia', 'Honduras', 'Hungria', 'Inglaterra', 'Irã', 'Iraque',
+  'Jamaica', 'Japão', 'Jordânia', 'Mali', 'Marrocos', 'México',
+  'Nigéria', 'Noruega', 'Nova Zelândia', 'Países Baixos', 'Panamá', 'Paraguai',
+  'Peru', 'Polônia', 'Portugal', 'Qatar', 'Romênia', 'Senegal',
+  'Sérvia', 'Suécia', 'Suíça', 'Turquia', 'Ucrânia', 'Uruguai',
+  'Uzbequistão', 'Venezuela', 'Venezuela', 'Venezuela',
+].filter((v, i, a) => a.indexOf(v) === i).sort()
+
+// Mapa de bandeiras por país
+const FLAG: Record<string, string> = {
+  'África do Sul': '🇿🇦', 'Albânia': '🇦🇱', 'Alemanha': '🇩🇪', 'Arábia Saudita': '🇸🇦',
+  'Argentina': '🇦🇷', 'Austrália': '🇦🇺', 'Áustria': '🇦🇹', 'Bélgica': '🇧🇪',
+  'Bolívia': '🇧🇴', 'Bósnia': '🇧🇦', 'Bósnia e Herzegovina': '🇧🇦', 'Brasil': '🇧🇷',
+  'Camarões': '🇨🇲', 'Canadá': '🇨🇦', 'Chile': '🇨🇱', 'China': '🇨🇳',
+  'Colômbia': '🇨🇴', 'Coreia do Sul': '🇰🇷', 'Costa do Marfim': '🇨🇮', 'Costa Rica': '🇨🇷',
+  'Croácia': '🇭🇷', 'Dinamarca': '🇩🇰', 'Egito': '🇪🇬', 'Equador': '🇪🇨',
+  'Escócia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿', 'Eslováquia': '🇸🇰', 'Eslovênia': '🇸🇮', 'Espanha': '🇪🇸',
+  'EUA': '🇺🇸', 'França': '🇫🇷', 'Gana': '🇬🇭', 'Geórgia': '🇬🇪',
+  'Honduras': '🇭🇳', 'Holanda': '🇳🇱', 'Hungria': '🇭🇺', 'Inglaterra': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  'Irã': '🇮🇷', 'Iraque': '🇮🇶', 'Jamaica': '🇯🇲', 'Japão': '🇯🇵',
+  'Jordânia': '🇯🇴', 'Mali': '🇲🇱', 'Marrocos': '🇲🇦', 'México': '🇲🇽',
+  'Nigéria': '🇳🇬', 'Noruega': '🇳🇴', 'Nova Zelândia': '🇳🇿', 'Países Baixos': '🇳🇱',
+  'Panamá': '🇵🇦', 'Paraguai': '🇵🇾', 'Peru': '🇵🇪', 'Polônia': '🇵🇱',
+  'Portugal': '🇵🇹', 'Qatar': '🇶🇦', 'Romênia': '🇷🇴', 'Senegal': '🇸🇳',
+  'Sérvia': '🇷🇸', 'Suécia': '🇸🇪', 'Suíça': '🇨🇭', 'Turquia': '🇹🇷',
+  'Ucrânia': '🇺🇦', 'Uruguai': '🇺🇾', 'Uzbequistão': '🇺🇿', 'Venezuela': '🇻🇪',
+  'Argélia': '🇩🇿', 'Catar': '🇶🇦',
+}
+
+// Top 50 artilheiros prováveis Copa 2026
+const TOP_SCORERS: { name: string; country: string }[] = [
+  { name: 'Cristiano Ronaldo',      country: 'Portugal'      },
+  { name: 'Lionel Messi',           country: 'Argentina'     },
+  { name: 'Romelu Lukaku',          country: 'Bélgica'       },
+  { name: 'Robert Lewandowski',     country: 'Polônia'       },
+  { name: 'Neymar',                 country: 'Brasil'        },
+  { name: 'Harry Kane',             country: 'Inglaterra'    },
+  { name: 'Edin Džeko',             country: 'Bósnia e Herzegovina' },
+  { name: 'Aleksandar Mitrović',    country: 'Sérvia'        },
+  { name: 'Kylian Mbappé',          country: 'França'        },
+  { name: 'Erling Haaland',         country: 'Noruega'       },
+  { name: 'Mohamed Salah',          country: 'Egito'         },
+  { name: 'Son Heung-min',          country: 'Coreia do Sul' },
+  { name: 'Memphis Depay',          country: 'Países Baixos' },
+  { name: 'Lautaro Martínez',       country: 'Argentina'     },
+  { name: 'Julián Álvarez',         country: 'Argentina'     },
+  { name: 'Victor Osimhen',         country: 'Nigéria'       },
+  { name: 'Mehdi Taremi',           country: 'Irã'           },
+  { name: 'Sardar Azmoun',          country: 'Irã'           },
+  { name: 'Almoez Ali',             country: 'Qatar'         },
+  { name: 'Mohamed Amoura',         country: 'Argélia'       },
+  { name: 'Aymen Hussein',          country: 'Iraque'        },
+  { name: 'Ali Olwan',              country: 'Jordânia'      },
+  { name: 'Chris Wood',             country: 'Nova Zelândia' },
+  { name: 'Yazan Al-Naimat',        country: 'Jordânia'      },
+  { name: 'Ayase Ueda',             country: 'Japão'         },
+  { name: 'Cody Gakpo',             country: 'Países Baixos' },
+  { name: 'Viktor Gyökeres',        country: 'Suécia'        },
+  { name: 'Alexander Isak',         country: 'Suécia'        },
+  { name: 'Kai Havertz',            country: 'Alemanha'      },
+  { name: 'Deniz Undav',            country: 'Alemanha'      },
+  { name: 'Florian Wirtz',          country: 'Alemanha'      },
+  { name: 'Jamal Musiala',          country: 'Alemanha'      },
+  { name: 'Vinícius Júnior',        country: 'Brasil'        },
+  { name: 'Endrick',                country: 'Brasil'        },
+  { name: 'Raphinha',               country: 'Brasil'        },
+  { name: 'Ousmane Dembélé',        country: 'França'        },
+  { name: 'Randal Kolo Muani',      country: 'França'        },
+  { name: 'Marcus Rashford',        country: 'Inglaterra'    },
+  { name: 'Bukayo Saka',            country: 'Inglaterra'    },
+  { name: 'Jude Bellingham',        country: 'Inglaterra'    },
+  { name: 'Gonçalo Ramos',          country: 'Portugal'      },
+  { name: 'Rafael Leão',            country: 'Portugal'      },
+  { name: 'Dušan Vlahović',         country: 'Sérvia'        },
+  { name: 'Jonathan David',         country: 'Canadá'        },
+  { name: 'Sadio Mané',             country: 'Senegal'       },
+  { name: 'Nicolas Jackson',        country: 'Senegal'       },
+  { name: 'Christian Pulisic',      country: 'EUA'           },
+  { name: 'Takefusa Kubo',          country: 'Japão'         },
+  { name: 'Mohammed Kudus',         country: 'Gana'          },
+  { name: 'Cole Palmer',            country: 'Inglaterra'    },
 ]
 
 type ExistingPrediction = {
@@ -42,12 +125,16 @@ function InfoBox({ children, variant }: { children: React.ReactNode; variant: 's
 }
 
 export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
-  const [champion,  setChampion]  = useState('')
-  const [runnerUp,  setRunnerUp]  = useState('')
-  const [topScorer, setTopScorer] = useState('')
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-  const [saved, setSaved] = useState(false)
+  const [champion,       setChampion]       = useState('')
+  const [runnerUp,       setRunnerUp]        = useState('')
+  const [scorerSelect,   setScorerSelect]    = useState('')   // valor do select
+  const [scorerCustom,   setScorerCustom]    = useState('')   // campo livre quando "OUTRO"
+  const [isPending,      startTransition]    = useTransition()
+  const [error,          setError]           = useState<string | null>(null)
+  const [saved,          setSaved]           = useState(false)
+
+  const isOutro   = scorerSelect === '__outro__'
+  const topScorer = isOutro ? scorerCustom.trim() : scorerSelect
 
   const isValid = champion && runnerUp && topScorer && champion !== runnerUp
 
@@ -231,9 +318,11 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
             🏆 Campeão
           </label>
           <select value={champion} onChange={(e) => setChampion(e.target.value)}
-            required disabled={isPending} className="input-field">
+            required disabled={isPending} className="input-field" style={{ fontSize: 13 }}>
             <option value="">Selecione um país...</option>
-            {TEAMS_2026.map((t) => <option key={t} value={t}>{t}</option>)}
+            {TEAMS_2026.map((t) => (
+              <option key={t} value={t}>{FLAG[t] ?? '🏳'} {t}</option>
+            ))}
           </select>
         </div>
 
@@ -242,9 +331,11 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
             🥈 Vice-campeão
           </label>
           <select value={runnerUp} onChange={(e) => setRunnerUp(e.target.value)}
-            required disabled={isPending} className="input-field">
+            required disabled={isPending} className="input-field" style={{ fontSize: 13 }}>
             <option value="">Selecione um país...</option>
-            {TEAMS_2026.filter((t) => t !== champion).map((t) => <option key={t} value={t}>{t}</option>)}
+            {TEAMS_2026.filter((t) => t !== champion).map((t) => (
+              <option key={t} value={t}>{FLAG[t] ?? '🏳'} {t}</option>
+            ))}
           </select>
           {champion && runnerUp && champion === runnerUp && (
             <p style={{ fontSize: 12, color: '#ff2f69', margin: 0 }}>Campeão e vice não podem ser o mesmo país.</p>
@@ -255,10 +346,31 @@ export function FinaisForm({ existing, isPastDeadline, cupStartISO }: Props) {
           <label style={{ fontSize: 13, fontWeight: 700, color: '#4a4555', display: 'flex', alignItems: 'center', gap: 6 }}>
             ⚽ Artilheiro
           </label>
-          <input type="text" value={topScorer} onChange={(e) => setTopScorer(e.target.value)}
-            required disabled={isPending} placeholder="Nome completo do jogador" className="input-field" />
+          <select value={scorerSelect} onChange={(e) => { setScorerSelect(e.target.value); setScorerCustom('') }}
+            required disabled={isPending} className="input-field" style={{ fontSize: 13 }}>
+            <option value="">Selecione o artilheiro...</option>
+            {TOP_SCORERS.map((p) => (
+              <option key={p.name} value={p.name}>
+                {FLAG[p.country] ?? '🏳'} {p.name} ({p.country})
+              </option>
+            ))}
+            <option value="__outro__">✍️ Outro jogador (digitar)</option>
+          </select>
+          {isOutro && (
+            <input
+              type="text"
+              value={scorerCustom}
+              onChange={(e) => setScorerCustom(e.target.value)}
+              required
+              disabled={isPending}
+              placeholder="Digite o nome completo do jogador"
+              className="input-field"
+              style={{ fontSize: 13 }}
+              autoFocus
+            />
+          )}
           <p style={{ fontSize: 11, color: '#8a8490', margin: 0 }}>
-            Ex: Vinicius Jr., Kylian Mbappé, Lionel Messi
+            Top 50 prováveis artilheiros da Copa 2026 · Selecione &quot;Outro&quot; para digitar livremente
           </p>
         </div>
 
