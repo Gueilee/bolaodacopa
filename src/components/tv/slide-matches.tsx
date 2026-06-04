@@ -1,17 +1,21 @@
 'use client'
 
+import { useState } from 'react'
 import type { TvMatch } from '@/lib/tv-data'
 import { getFlagUrl } from '@/lib/flags'
 import { phaseLabels } from '@/lib/utils'
 
 function Flag({ team, size = 72 }: { team: string; size?: number }) {
-  const url = getFlagUrl(team, size)
-  if (!url) return <span style={{ fontSize: size * 0.6, lineHeight: 1 }}>🏳</span>
+  const [failed, setFailed] = useState(false)
+  const url = getFlagUrl(team, 80) // w80 para TV — tamanho grande e confiável
+  if (!url || failed) return <span style={{ fontSize: Math.round(size * 0.7), lineHeight: 1 }}>🏳</span>
   // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
       src={url} alt={team}
-      style={{ width: size, height: Math.round(size * 0.67), objectFit: 'cover', borderRadius: 6, boxShadow: '0 4px 16px rgba(0,0,0,0.5)' }}
+      width={size} height={Math.round(size * 0.67)}
+      style={{ objectFit: 'cover', borderRadius: 6, boxShadow: '0 4px 16px rgba(0,0,0,0.5)', display: 'block' }}
+      onError={() => setFailed(true)}
     />
   )
 }
