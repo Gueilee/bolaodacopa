@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { TvData } from '@/lib/tv-data'
-import { MatchCenterWidget } from './match-center-widget'
 import { SlideWelcome }      from './slide-welcome'
 import { SlideRanking }      from './slide-ranking'
 import { SlideDepartments }  from './slide-departments'
@@ -231,12 +230,6 @@ export function TvSlideshow({ data }: { data: TvData }) {
         </>
       )}
 
-      {/* ── Match Center (overlay sempre visível) ── */}
-      <MatchCenterWidget
-        liveMatches={data.todayMatches.filter(m => m.status === 'live' || m.status === 'inprogress')}
-        todayMatches={data.todayMatches.filter(m => m.status === 'upcoming')}
-        recentResults={data.recentResults}
-      />
 
       {/* ── Fullscreen button (aparece ao mover o mouse) ── */}
       <button

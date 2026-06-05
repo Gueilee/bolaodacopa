@@ -7,17 +7,65 @@ import type { PostWithUser, CommentItem } from '@/app/actions/social'
 import { UserAvatar } from '@/components/user-avatar'
 
 function MediaImage({ src }: { src: string }) {
-  const [broken, setBroken] = useState(false)
+  const [broken,    setBroken]    = useState(false)
+  const [lightbox,  setLightbox]  = useState(false)
+
   if (broken) return null
   return (
-    <div style={{ borderRadius: 16, overflow: 'hidden', background: '#0a0616' }}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src} alt="Post"
-        onError={() => setBroken(true)}
-        style={{ width: '100%', maxHeight: 480, objectFit: 'cover', display: 'block' }}
-      />
-    </div>
+    <>
+      {/* ── Thumbnail clicável ── */}
+      <div
+        onClick={() => setLightbox(true)}
+        style={{ borderRadius: 16, overflow: 'hidden', background: '#0a0616', cursor: 'zoom-in' }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src} alt="Post"
+          onError={() => setBroken(true)}
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
+
+      {/* ── Lightbox ── */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(false)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.92)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'zoom-out',
+            padding: 16,
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={src} alt="Post ampliado"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '100%', maxHeight: '100%',
+              width: 'auto', height: 'auto',
+              borderRadius: 12,
+              boxShadow: '0 8px 64px rgba(0,0,0,0.8)',
+              cursor: 'default',
+            }}
+          />
+          <button
+            onClick={() => setLightbox(false)}
+            style={{
+              position: 'fixed', top: 20, right: 20,
+              width: 40, height: 40, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.12)',
+              border: '1px solid rgba(255,255,255,0.25)',
+              color: 'white', fontSize: 20, lineHeight: '1',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+    </>
   )
 }
 
