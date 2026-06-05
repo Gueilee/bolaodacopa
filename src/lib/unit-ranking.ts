@@ -5,7 +5,11 @@
 
 import { db } from '@/lib/db'
 import { users } from '@/db/schema'
-import { eq, desc, sql } from 'drizzle-orm'
+import { eq, and, desc, sql, inArray } from 'drizzle-orm'
+
+// Exclui admins de todos os rankings (user + rh participam, admin não)
+const RANKED_ROLES = ['user', 'rh'] as const
+const activeRanked = () => and(eq(users.isActive, true), inArray(users.role, RANKED_ROLES))
 
 // ─── Ícone / cor por unidade ──────────────────────────────────────────────────
 
@@ -62,7 +66,7 @@ export async function getUnitRanking(): Promise<UnitRankEntry[]> {
       totalPoints:   sql<number>`cast(sum(${users.totalPoints}) as integer)`,
     })
     .from(users)
-    .where(eq(users.isActive, true))
+    .where(activeRanked())
     .groupBy(sql`coalesce(${users.unit}, 'Sem Unidade')`)
     .orderBy(
       desc(sql`round(avg(${users.totalPoints}), 2)`),
@@ -77,7 +81,7 @@ export async function getUnitRanking(): Promise<UnitRankEntry[]> {
       points: users.totalPoints,
     })
     .from(users)
-    .where(eq(users.isActive, true))
+    .where(activeRanked())
     .orderBy(desc(users.totalPoints))
 
   const leaderMap = new Map<string, { name: string; points: number }>()

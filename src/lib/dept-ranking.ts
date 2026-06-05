@@ -13,7 +13,10 @@
 
 import { db } from '@/lib/db'
 import { users } from '@/db/schema'
-import { eq, desc, sql } from 'drizzle-orm'
+import { eq, and, desc, sql, inArray } from 'drizzle-orm'
+
+const RANKED_ROLES = ['user', 'rh'] as const
+const activeRanked = () => and(eq(users.isActive, true), inArray(users.role, RANKED_ROLES))
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -59,7 +62,7 @@ export async function getDeptRanking(): Promise<DeptRankEntry[]> {
       minActivePoints: sql<number>`cast(min(case when ${users.totalPoints} > 0 then ${users.totalPoints} end) as integer)`,
     })
     .from(users)
-    .where(eq(users.isActive, true))
+    .where(activeRanked())
     .groupBy(sql`coalesce(${users.department}, 'Sem Departamento')`)
     .orderBy(
       desc(sql`round(avg(${users.totalPoints}), 2)`),
@@ -75,7 +78,7 @@ export async function getDeptRanking(): Promise<DeptRankEntry[]> {
       points:     users.totalPoints,
     })
     .from(users)
-    .where(eq(users.isActive, true))
+    .where(activeRanked())
     .orderBy(desc(users.totalPoints))
 
   // Mapa: departamento → melhor usuário
