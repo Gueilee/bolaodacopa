@@ -20,6 +20,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard/finais',        label: 'Palpite Final',        icon: '🌟' },
   { href: '/dashboard/copa-ao-vivo',  label: 'Copa ao Vivo',         icon: '⚽' },
   { href: '/dashboard',               label: 'Ranking Individual',   icon: '🏆', section: 'Ranking' },
+  { href: '/dashboard/unidades',      label: 'Por Unidade',          icon: '📍' },
   { href: '/dashboard/departamentos', label: 'Por Departamento',     icon: '🏢' },
   { href: '/dashboard/mural',         label: 'Central da Torcida',  icon: '💬', section: 'Comunidade' },
   { href: '/dashboard/perfil',        label: 'Meu Perfil',           icon: '👤' },

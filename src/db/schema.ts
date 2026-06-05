@@ -18,6 +18,7 @@ export const users = sqliteTable(
       .default('user'),
     avatarUrl:         text('avatar_url'),
     department:        text('department'),
+    unit:              text('unit'),
     // WhatsApp: número no formato 5511999999999 (sem + ou espaços)
     phone:             text('phone'),
     whatsappOptIn:     integer('whatsapp_opt_in', { mode: 'boolean' }).notNull().default(false),
