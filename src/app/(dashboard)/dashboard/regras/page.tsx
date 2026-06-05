@@ -1,4 +1,4 @@
-export const metadata = { title: 'Regras do Bolão | Copa 2026' }
+export const metadata = { title: 'Regras e Prêmios | Bolão Copa 2026' }
 
 type ExampleRow = {
   palpite:   string
@@ -32,11 +32,213 @@ export default function RegrasPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>📋 Regras do Bolão</h1>
+        <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>🏆 Regras e Prêmios</h1>
         <p className="text-sm mt-1" style={{ color: '#8a8490' }}>
-          Entenda como os pontos são calculados a cada jogo da Copa 2026
+          Prêmios, pontuação e regras do Bolão Copa do Mundo 2026 · Vendemmia
         </p>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════════════════
+          SEÇÃO DE PRÊMIOS
+      ═══════════════════════════════════════════════════════════════════════ */}
+
+      {/* Hero dos prêmios */}
+      <section style={{ borderRadius: 24, overflow: 'hidden', boxShadow: '0 8px 40px rgba(66,44,118,0.25)' }}>
+
+        {/* Cabeçalho escuro */}
+        <div style={{
+          background: 'linear-gradient(135deg, #06020f 0%, #150830 50%, #0a1520 100%)',
+          padding: '32px 28px 24px',
+          position: 'relative', overflow: 'hidden',
+        }}>
+          {/* Luzes decorativas */}
+          <div style={{ position:'absolute', top:-40, right:-20, width:220, height:220, borderRadius:'50%', background:'radial-gradient(circle, rgba(255,215,0,0.12) 0%, transparent 70%)', pointerEvents:'none' }} />
+          <div style={{ position:'absolute', bottom:-30, left:40, width:160, height:160, borderRadius:'50%', background:'radial-gradient(circle, rgba(1,225,142,0.1) 0%, transparent 70%)', pointerEvents:'none' }} />
+
+          <div style={{ position:'relative', zIndex:1, textAlign:'center' }}>
+            <div style={{ fontSize:52, marginBottom:10 }}>🏆</div>
+            <h2 style={{ margin:'0 0 6px', fontSize:'1.6rem', fontWeight:900, color:'#faf9f5', letterSpacing:'-0.02em' }}>
+              Prêmios do Bolão Copa 2026
+            </h2>
+            <p style={{ margin:0, fontSize:14, color:'rgba(255,255,255,0.45)', lineHeight:1.5 }}>
+              Participe, acerte os palpites e concorra a prêmios incríveis!
+            </p>
+          </div>
+        </div>
+
+        {/* ── PRÊMIO SEMANAL ── */}
+        <div style={{
+          background: 'linear-gradient(135deg, #1a0d36 0%, #0d1a30 100%)',
+          padding: '24px 28px',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
+            <div style={{
+              padding:'4px 14px', borderRadius:20,
+              background:'rgba(255,193,7,0.15)', border:'1px solid rgba(255,193,7,0.3)',
+            }}>
+              <span style={{ fontSize:12, fontWeight:800, color:'#ffc107', letterSpacing:'0.1em', textTransform:'uppercase' }}>
+                🔁 Prêmio Semanal
+              </span>
+            </div>
+            <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)' }}>toda sexta-feira · 19/06 a 17/07</span>
+          </div>
+
+          <div style={{
+            borderRadius:16, padding:'18px 20px',
+            background:'rgba(255,193,7,0.07)', border:'1px solid rgba(255,193,7,0.2)',
+            display:'flex', alignItems:'center', gap:16,
+          }}>
+            <div style={{ fontSize:48, flexShrink:0 }}>🔊</div>
+            <div>
+              <p style={{ margin:'0 0 4px', fontSize:17, fontWeight:900, color:'#ffc107' }}>
+                Caixa de Som
+              </p>
+              <p style={{ margin:0, fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.5 }}>
+                O <strong style={{ color:'#fff' }}>1º lugar do ranking</strong> toda sexta-feira leva uma caixa de som para casa.
+                São <strong style={{ color:'#ffc107' }}>5 premiações semanais</strong> — uma chance a cada semana!
+              </p>
+            </div>
+          </div>
+
+          {/* Datas das sextas */}
+          <div style={{ display:'flex', gap:8, marginTop:12, flexWrap:'wrap' }}>
+            {['Sex, 19/06','Sex, 26/06','Sex, 03/07','Sex, 10/07','Sex, 17/07'].map(d => (
+              <span key={d} style={{
+                fontSize:11, fontWeight:700, padding:'4px 12px', borderRadius:20,
+                background:'rgba(255,193,7,0.1)', color:'#ffc107',
+                border:'1px solid rgba(255,193,7,0.2)',
+              }}>{d}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* ── PRÊMIO FINAL ── */}
+        <div style={{ background:'linear-gradient(135deg, #0d0a20 0%, #0a1520 100%)', padding:'24px 28px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:18 }}>
+            <div style={{
+              padding:'4px 14px', borderRadius:20,
+              background:'rgba(1,225,142,0.12)', border:'1px solid rgba(1,225,142,0.3)',
+            }}>
+              <span style={{ fontSize:12, fontWeight:800, color:'#01E18E', letterSpacing:'0.1em', textTransform:'uppercase' }}>
+                🏅 Prêmio Final da Copa
+              </span>
+            </div>
+            <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)' }}>após o encerramento · julho/2026</span>
+          </div>
+
+          {/* Top 3 cards */}
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
+
+            {/* 1º Lugar */}
+            <div style={{
+              borderRadius:16, overflow:'hidden',
+              boxShadow:'0 0 0 1px rgba(255,215,0,0.3), 0 8px 32px rgba(255,215,0,0.15)',
+              background:'linear-gradient(160deg, rgba(255,215,0,0.12) 0%, rgba(20,12,40,0.95) 60%)',
+              border:'1px solid rgba(255,215,0,0.25)',
+            }}>
+              <div style={{ padding:'14px 14px 4px', textAlign:'center' }}>
+                <div style={{ fontSize:36, marginBottom:4 }}>🥇</div>
+                <p style={{ margin:'0 0 2px', fontSize:11, fontWeight:800, color:'rgba(255,215,0,0.7)', textTransform:'uppercase', letterSpacing:'0.12em' }}>1° Lugar</p>
+              </div>
+              <div style={{ padding:'0 14px 16px', display:'flex', flexDirection:'column', gap:8 }}>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,215,0,0.08)', border:'1px solid rgba(255,215,0,0.15)', textAlign:'center' }}>
+                  <div style={{ fontSize:24 }}>🔊</div>
+                  <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#ffd700', lineHeight:1.3 }}>Caixa de Som</p>
+                </div>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,107,0,0.1)', border:'1px solid rgba(255,107,0,0.2)', textAlign:'center' }}>
+                  <p style={{ margin:0, fontSize:20, fontWeight:900, color:'#ff6b00' }}>R$1.000</p>
+                  <p style={{ margin:'2px 0 0', fontSize:11, fontWeight:700, color:'rgba(255,107,0,0.7)' }}>Vale Centauro</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 2º Lugar */}
+            <div style={{
+              borderRadius:16, overflow:'hidden',
+              background:'linear-gradient(160deg, rgba(192,192,192,0.1) 0%, rgba(15,10,30,0.95) 60%)',
+              border:'1px solid rgba(192,192,192,0.2)',
+            }}>
+              <div style={{ padding:'14px 14px 4px', textAlign:'center' }}>
+                <div style={{ fontSize:36, marginBottom:4 }}>🥈</div>
+                <p style={{ margin:'0 0 2px', fontSize:11, fontWeight:800, color:'rgba(192,192,192,0.7)', textTransform:'uppercase', letterSpacing:'0.12em' }}>2° Lugar</p>
+              </div>
+              <div style={{ padding:'0 14px 16px', display:'flex', flexDirection:'column', gap:8 }}>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(192,192,192,0.06)', border:'1px solid rgba(192,192,192,0.15)', textAlign:'center' }}>
+                  <div style={{ fontSize:24 }}>🔊</div>
+                  <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#c0c0c0', lineHeight:1.3 }}>Caixa de Som</p>
+                </div>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,107,0,0.08)', border:'1px solid rgba(255,107,0,0.15)', textAlign:'center' }}>
+                  <p style={{ margin:0, fontSize:20, fontWeight:900, color:'#ff8c40' }}>R$500</p>
+                  <p style={{ margin:'2px 0 0', fontSize:11, fontWeight:700, color:'rgba(255,107,0,0.6)' }}>Vale Centauro</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 3º Lugar */}
+            <div style={{
+              borderRadius:16, overflow:'hidden',
+              background:'linear-gradient(160deg, rgba(205,127,50,0.1) 0%, rgba(15,10,30,0.95) 60%)',
+              border:'1px solid rgba(205,127,50,0.2)',
+            }}>
+              <div style={{ padding:'14px 14px 4px', textAlign:'center' }}>
+                <div style={{ fontSize:36, marginBottom:4 }}>🥉</div>
+                <p style={{ margin:'0 0 2px', fontSize:11, fontWeight:800, color:'rgba(205,127,50,0.7)', textTransform:'uppercase', letterSpacing:'0.12em' }}>3° Lugar</p>
+              </div>
+              <div style={{ padding:'0 14px 16px', display:'flex', flexDirection:'column', gap:8 }}>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(205,127,50,0.06)', border:'1px solid rgba(205,127,50,0.15)', textAlign:'center' }}>
+                  <div style={{ fontSize:24 }}>🔊</div>
+                  <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#cd7f32', lineHeight:1.3 }}>Caixa de Som</p>
+                </div>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,107,0,0.08)', border:'1px solid rgba(255,107,0,0.15)', textAlign:'center' }}>
+                  <p style={{ margin:0, fontSize:20, fontWeight:900, color:'#ff8c40' }}>R$500</p>
+                  <p style={{ margin:'2px 0 0', fontSize:11, fontWeight:700, color:'rgba(255,107,0,0.6)' }}>Vale Centauro</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── PRÊMIO POR UNIDADE ── */}
+        <div style={{ background:'linear-gradient(135deg, #061a10 0%, #0d0a20 100%)', padding:'24px 28px' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
+            <div style={{
+              padding:'4px 14px', borderRadius:20,
+              background:'rgba(1,168,102,0.15)', border:'1px solid rgba(1,168,102,0.3)',
+            }}>
+              <span style={{ fontSize:12, fontWeight:800, color:'#01a866', letterSpacing:'0.1em', textTransform:'uppercase' }}>
+                📍 Prêmio por Unidade
+              </span>
+            </div>
+          </div>
+
+          <div style={{
+            borderRadius:16, padding:'20px 22px',
+            background:'rgba(1,168,102,0.07)', border:'1px solid rgba(1,168,102,0.2)',
+            display:'flex', alignItems:'center', gap:18,
+          }}>
+            <div style={{ fontSize:52, flexShrink:0 }}>🌴</div>
+            <div>
+              <p style={{ margin:'0 0 6px', fontSize:19, fontWeight:900, color:'#01E18E', lineHeight:1.2 }}>
+                5 Dias de Folga
+              </p>
+              <p style={{ margin:'0 0 8px', fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.6 }}>
+                A <strong style={{ color:'#fff' }}>unidade com mais pontos</strong> ao final da Copa ganha
+                <strong style={{ color:'#01E18E' }}> 5 folgas para sortear</strong> entre os membros que participaram do bolão.
+              </p>
+              <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+                {['Garuva','Itapevi','Navegantes CD01','Navegantes CD02','Vila Olímpia'].map(u => (
+                  <span key={u} style={{
+                    fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:20,
+                    background:'rgba(1,168,102,0.12)', color:'#01a866',
+                    border:'1px solid rgba(1,168,102,0.2)',
+                  }}>{u}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ── REGRA CRÍTICA: Prazo e Imutabilidade ── */}
       <section style={{
