@@ -39,6 +39,20 @@ export default async function MeusPalpitesPage() {
 
   const isLocked = lockStatus?.isPredictionLocked ?? false
 
+  // Jogos já encerrados sem palpite do usuário (exibe aviso informativo)
+  const finishedWithoutBet = allMatches.filter(
+    m => m.status === 'finished' && m.predictions.length === 0
+  ).length
+
+  // Jogos disponíveis para palpitar (futuros, prazo aberto, sem palpite ainda)
+  const now = new Date()
+  const availableToPredict = allMatches.filter(m => {
+    if (m.status === 'finished') return false
+    if (m.predictions.length > 0) return false
+    const cutoff = new Date(new Date(m.matchDate).getTime() - 30 * 60 * 1000)
+    return now < cutoff
+  }).length
+
   // ── Calcular classificação dos grupos e projeção do chaveamento ──────────────
   const matchData: MatchData[] = allMatches.map(m => ({
     id:                  m.id,
@@ -76,6 +90,32 @@ export default async function MeusPalpitesPage() {
         <h1 className="text-2xl font-bold" style={{ color: '#1a1625' }}>Meus Palpites</h1>
         <p className="text-sm mt-1" style={{ color: '#6b6672' }}>Registro único · Copa do Mundo 2026</p>
       </div>
+
+      {/* ── Aviso: jogos encerrados sem palpite ── */}
+      {finishedWithoutBet > 0 && !isLocked && (
+        <div style={{
+          background: 'linear-gradient(135deg, #fff8f0, #fff3e8)',
+          border: '1.5px solid #f59e0b33',
+          borderRadius: 14,
+          padding: '14px 18px',
+          display: 'flex',
+          gap: 12,
+          alignItems: 'flex-start',
+        }}>
+          <span style={{ fontSize: 20, flexShrink: 0 }}>⏰</span>
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 700, color: '#92400e', margin: '0 0 3px' }}>
+              {finishedWithoutBet} jogo{finishedWithoutBet > 1 ? 's' : ''} já encerrado{finishedWithoutBet > 1 ? 's' : ''}
+            </p>
+            <p style={{ fontSize: 12, color: '#b45309', margin: 0, lineHeight: 1.5 }}>
+              Os placares em cinza exibem o resultado oficial — você não palpitou nesses jogos antes do prazo.
+              {availableToPredict > 0
+                ? ` Ainda há ${availableToPredict} jogo${availableToPredict > 1 ? 's' : ''} disponível${availableToPredict > 1 ? 'is' : ''} para palpitar.`
+                : ''}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── Lock status / CTA ── */}
       <LockPredictionsButton

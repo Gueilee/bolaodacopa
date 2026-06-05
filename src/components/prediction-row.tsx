@@ -66,19 +66,21 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
   const hasBet          = prediction !== null
 
   // Regra: palpites fecham 30 minutos antes da partida começar
-  const matchStart  = new Date(match.matchDate)
-  const cutoffTime  = new Date(matchStart.getTime() - 30 * 60 * 1000)
+  const matchStart   = new Date(match.matchDate)
+  const cutoffTime   = new Date(matchStart.getTime() - 30 * 60 * 1000)
   const isPastCutoff = new Date() >= cutoffTime
 
-  // Pode editar APENAS se: não está globalmente locked, jogo não encerrou,
-  // ainda não salvou palpite nesse jogo E o prazo não encerrou
-  const canEdit = !isUserLocked && !isFinished && !hasBet && !isPastCutoff
-
-  const [home, setHome]           = useState(prediction?.homeScore?.toString() ?? '')
-  const [away, setAway]           = useState(prediction?.awayScore?.toString() ?? '')
+  const [home, setHome]             = useState(prediction?.homeScore?.toString() ?? '')
+  const [away, setAway]             = useState(prediction?.awayScore?.toString() ?? '')
   const [isPending, startTransition] = useTransition()
-  const [saved, setSaved]         = useState(false)
-  const [error, setError]         = useState<string | null>(null)
+  const [saved, setSaved]           = useState(false)
+  const [savedHome, setSavedHome]   = useState<number | null>(null)
+  const [savedAway, setSavedAway]   = useState<number | null>(null)
+  const [error, setError]           = useState<string | null>(null)
+
+  // Pode editar APENAS se: não está globalmente locked, jogo não encerrou,
+  // ainda não salvou palpite nesse jogo, prazo não encerrou, E não acabou de salvar
+  const canEdit = !isUserLocked && !isFinished && !hasBet && !isPastCutoff && !saved
 
   const isDirty    = home !== '' || away !== ''
   const isComplete = home !== '' && away !== ''
@@ -89,6 +91,8 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
       const result = await savePrediction(match.id, Number(home), Number(away))
       if (result.success) {
         setSaved(true)
+        setSavedHome(Number(home))
+        setSavedAway(Number(away))
       } else {
         setError(result.error ?? 'Erro ao salvar.')
       }
@@ -165,12 +169,22 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
           ) : (
             <>
               <ScoreBox
-                value={isFinished ? (match.homeScore ?? '–') : (hasBet ? prediction!.homeScore : '–')}
+                value={
+                  isFinished   ? (match.homeScore ?? '–') :
+                  saved        ? savedHome :
+                  hasBet       ? prediction!.homeScore :
+                  '–'
+                }
                 highlight={isFinished}
               />
               <span className="text-sm font-light" style={{ color: '#c4bfba' }}>×</span>
               <ScoreBox
-                value={isFinished ? (match.awayScore ?? '–') : (hasBet ? prediction!.awayScore : '–')}
+                value={
+                  isFinished   ? (match.awayScore ?? '–') :
+                  saved        ? savedAway :
+                  hasBet       ? prediction!.awayScore :
+                  '–'
+                }
                 highlight={isFinished}
               />
             </>
@@ -190,7 +204,10 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
           {isFinished && prediction?.isScored ? (
             <PointsPill points={prediction.points} />
           ) : isFinished && !hasBet ? (
-            <span className="text-[11px]" style={{ color: '#c4bfba' }}>sem palpite</span>
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded"
+              style={{ background: '#fce8ee', color: '#e05a7a' }}>
+              sem palpite
+            </span>
           ) : isFinished && hasBet ? (
             <span className="text-[11px]" style={{ color: '#aaa8b0' }}>aguardando</span>
           ) : hasBet ? (

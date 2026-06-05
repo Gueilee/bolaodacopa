@@ -91,14 +91,17 @@ export async function scoreTournamentBonuses(
   const session = await getSession()
   if (!session || session.role !== 'admin') return { success: false, scored: 0, error: 'Acesso negado.' }
 
-  await db
-    .insert(settings)
-    .values([
-      { key: 'champion',   value: actual.champion,  label: 'Campeão',      updatedAt: new Date() },
-      { key: 'runner_up',  value: actual.runnerUp,  label: 'Vice-Campeão', updatedAt: new Date() },
-      { key: 'top_scorer', value: actual.topScorer, label: 'Artilheiro',   updatedAt: new Date() },
-    ])
-    .onConflictDoUpdate({ target: settings.key, set: { value: actual.champion, updatedAt: new Date() } })
+  // Upsert individual para garantir que cada chave receba seu próprio valor
+  for (const row of [
+    { key: 'champion',   value: actual.champion,  label: 'Campeão' },
+    { key: 'runner_up',  value: actual.runnerUp,  label: 'Vice-Campeão' },
+    { key: 'top_scorer', value: actual.topScorer, label: 'Artilheiro' },
+  ] as const) {
+    await db
+      .insert(settings)
+      .values({ key: row.key, value: row.value, label: row.label, updatedAt: new Date() })
+      .onConflictDoUpdate({ target: settings.key, set: { value: row.value, updatedAt: new Date() } })
+  }
 
   const allTournamentPreds = await db.query.tournamentPredictions.findMany({
     where: eq(tournamentPredictions.isScored, false),
