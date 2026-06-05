@@ -1,5 +1,6 @@
 import type { MyDeptStatus } from '@/lib/dept-ranking'
 import Link from 'next/link'
+import { Trophy, Medal, Award, Building2 } from 'lucide-react'
 
 type Props = { status: MyDeptStatus }
 
@@ -39,13 +40,20 @@ export function MyDeptBanner({ status }: Props) {
     pos === 3 ? { borderColor: 'rgba(205,127,50,0.2)', background: 'rgba(205,127,50,0.04)' } :
     { borderColor: 'rgba(111,63,251,0.2)', background: 'rgba(111,63,251,0.03)' }
 
-  const medal = pos === 1 ? '🥇' : pos === 2 ? '🥈' : pos === 3 ? '🥉' : '🏢'
+  const MedalIcon = pos === 1 ? Trophy : pos === 2 ? Medal : pos === 3 ? Award : Building2
+  const iconColor = pos === 1 ? '#D97706' : pos === 2 ? '#64748B' : pos === 3 ? '#A0522D' : '#422c76'
 
   return (
     <div className="card p-4 transition-colors" style={bgStyle}>
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="text-2xl shrink-0">{medal}</span>
+          <div style={{
+            width: 40, height: 40, borderRadius: 12, flexShrink: 0,
+            background: `${iconColor}18`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <MedalIcon size={20} color={iconColor} strokeWidth={1.75} />
+          </div>
           <div>
             <div className="flex items-center gap-2">
               <span className={`text-xl font-black tabular-nums ${posColor}`}>{posLabel}</span>

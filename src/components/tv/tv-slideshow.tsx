@@ -16,15 +16,15 @@ type SlideConfig = { id: string; duration: number; label: string }
 
 const SLIDES: SlideConfig[] = [
   { id: 'cover',        duration: 8000,  label: '' },
-  { id: 'welcome',      duration: 10000, label: '🏆 Bolão Copa 2026' },
-  { id: 'ranking',      duration: 14000, label: '🥇 Ranking Individual' },
-  { id: 'departments',  duration: 12000, label: '🏢 Por Departamento' },
-  { id: 'managers',     duration: 12000, label: '👔 Por Gestor' },
-  { id: 'matches',      duration: 14000, label: '⚽ Jogos do Dia' },
-  { id: 'results',      duration: 14000, label: '📊 Últimos Resultados' },
-  { id: 'groups',       duration: 18000, label: '🏆 Grupos' },
-  { id: 'artilheiros',  duration: 16000, label: '⚽ Artilheiros' },
-  { id: 'mural',        duration: 22000, label: '💬 Central da Torcida' },
+  { id: 'welcome',      duration: 10000, label: 'Bolão Copa 2026' },
+  { id: 'ranking',      duration: 14000, label: 'Ranking Individual' },
+  { id: 'departments',  duration: 12000, label: 'Por Departamento' },
+  { id: 'managers',     duration: 12000, label: 'Por Gestor' },
+  { id: 'matches',      duration: 14000, label: 'Jogos do Dia' },
+  { id: 'results',      duration: 14000, label: 'Últimos Resultados' },
+  { id: 'groups',       duration: 18000, label: 'Grupos' },
+  { id: 'artilheiros',  duration: 16000, label: 'Artilheiros' },
+  { id: 'mural',        duration: 22000, label: 'Central da Torcida' },
 ]
 
 export function TvSlideshow({ data }: { data: TvData }) {
@@ -170,8 +170,9 @@ export function TvSlideshow({ data }: { data: TvData }) {
 
             {/* Current slide name */}
             <span style={{
-              fontSize: 18, fontWeight: 700, color: '#01E18E',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
+              fontFamily: 'var(--font-barlow), sans-serif',
+              fontSize: 16, fontWeight: 700, color: '#01E18E',
+              letterSpacing: '0.14em', textTransform: 'uppercase',
             }}>
               {slide.label}
             </span>
@@ -280,11 +281,20 @@ function TvClock({ participants }: { participants: number }) {
 
   return (
     <div style={{ textAlign: 'right' }}>
-      <p style={{ fontSize: 28, fontWeight: 900, color: 'white', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+      <p style={{
+        fontFamily: 'var(--font-anton), sans-serif',
+        fontSize: 32, color: 'white', lineHeight: 1,
+        fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em',
+      }}>
         {h}:{m}
       </p>
-      <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>
-        {participants} participante{participants !== 1 ? 's' : ''}
+      <p style={{
+        fontFamily: 'var(--font-barlow), sans-serif',
+        fontSize: 11, fontWeight: 600,
+        color: 'rgba(255,255,255,0.4)', marginTop: 3,
+        letterSpacing: '0.1em', textTransform: 'uppercase',
+      }}>
+        {participants} participantes
       </p>
     </div>
   )

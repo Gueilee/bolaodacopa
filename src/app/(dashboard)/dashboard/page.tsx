@@ -6,6 +6,7 @@ import { RankingTable }    from '@/components/ranking-table'
 import { MyDeptBanner }    from '@/components/my-dept-banner'
 import { redirect }        from 'next/navigation'
 import Link                from 'next/link'
+import { Users, Crown, Zap } from 'lucide-react'
 
 export const revalidate = 60
 
@@ -39,8 +40,10 @@ export default async function DashboardPage() {
 
           <div style={{ position: 'relative', zIndex: 1 }}>
             <p style={{ margin: '0 0 16px', fontSize: 11, fontWeight: 700, letterSpacing: '0.15em',
-              textTransform: 'uppercase', color: '#01E18E', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span>🏆</span> Sua Posição no Ranking
+              textTransform: 'uppercase', color: '#01E18E', display: 'flex', alignItems: 'center', gap: 6,
+              fontFamily: 'var(--font-barlow), sans-serif',
+            }}>
+              Sua Posição no Ranking
             </p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
@@ -78,14 +81,20 @@ export default async function DashboardPage() {
 
       {/* ── Stats ──────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
-        {[
-          { label: 'Participantes',  value: ranking.length,                   icon: '👥' },
-          { label: 'Líder atual',    value: leader?.name.split(' ')[0] ?? '—', icon: '🥇' },
-          { label: 'Maior pontuação',value: `${leader?.totalPoints ?? 0} pts`, icon: '⭐' },
-        ].map((stat) => (
+        {([
+          { label: 'Participantes',   value: ranking.length,                    Icon: Users,  color: '#422c76' },
+          { label: 'Líder atual',     value: leader?.name.split(' ')[0] ?? '—', Icon: Crown,  color: '#D97706' },
+          { label: 'Maior pontuação', value: `${leader?.totalPoints ?? 0} pts`, Icon: Zap,    color: '#01E18E' },
+        ] as const).map((stat) => (
           <div key={stat.label} className="card" style={{ padding: '16px', textAlign: 'center' }}>
-            <span style={{ fontSize: 22 }}>{stat.icon}</span>
-            <p style={{ margin: '6px 0 2px', fontWeight: 800, fontSize: 17, color: '#1a1625',
+            <div style={{
+              width: 36, height: 36, borderRadius: 10, margin: '0 auto 8px',
+              background: `${stat.color}18`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <stat.Icon size={17} color={stat.color} strokeWidth={2} />
+            </div>
+            <p style={{ margin: '0 0 2px', fontWeight: 800, fontSize: 17, color: '#1a1625',
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {stat.value}
             </p>

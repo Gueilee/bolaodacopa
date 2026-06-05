@@ -4,6 +4,7 @@ import { useState, useRef, useTransition } from 'react'
 import { createPost } from '@/app/actions/social'
 import { useRouter } from 'next/navigation'
 import { UserAvatar } from '@/components/user-avatar'
+import { ImagePlus, SendHorizonal, AlertTriangle } from 'lucide-react'
 
 export function MuralCreatePost({ userName, userAvatar }: { userName: string; userAvatar?: string | null }) {
   const [content, setContent]     = useState('')
@@ -143,8 +144,8 @@ export function MuralCreatePost({ userName, userAvatar }: { userName: string; us
       {/* Error */}
       {error && (
         <div style={{ padding: '0 20px 10px' }}>
-          <p style={{ fontSize: 12, color: '#ff2f69', background: '#fff0f3', padding: '8px 12px', borderRadius: 10, margin: 0, border: '1px solid rgba(255,47,105,0.2)' }}>
-            ⚠ {error}
+          <p style={{ fontSize: 12, color: '#ff2f69', background: '#fff0f3', padding: '8px 12px', borderRadius: 10, margin: 0, border: '1px solid rgba(255,47,105,0.2)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <AlertTriangle size={13} strokeWidth={2.5} /> {error}
           </p>
         </div>
       )}
@@ -163,7 +164,7 @@ export function MuralCreatePost({ userName, userAvatar }: { userName: string; us
             fontSize: 13, fontWeight: 600, border: '1px solid rgba(66,44,118,0.15)',
             transition: 'all 0.15s',
           }}>
-            📷 Foto/Vídeo
+            <ImagePlus size={14} strokeWidth={2} /> Foto/Vídeo
             <input ref={fileRef} type="file"
               accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"
               onChange={handleFile} disabled={isLoading} style={{ display: 'none' }} />
@@ -200,7 +201,9 @@ export function MuralCreatePost({ userName, userAvatar }: { userName: string; us
               </svg>
               Publicando…
             </>
-          ) : '🚀 Publicar'}
+          ) : (
+            <><SendHorizonal size={14} strokeWidth={2} /> Publicar</>
+          )}
         </button>
       </div>
 

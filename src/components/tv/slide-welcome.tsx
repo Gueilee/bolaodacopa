@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import type { TvData } from '@/lib/tv-data'
+import { Crown } from 'lucide-react'
 
 const CUP_DATE = new Date('2026-06-11T20:00:00Z')
 
@@ -37,28 +38,41 @@ export function SlideWelcome({ data }: { data: TvData }) {
       {/* Main title */}
       <div>
         <h1 style={{
-          fontSize: 72, fontWeight: 900, color: 'white',
-          lineHeight: 1, letterSpacing: '-0.02em', margin: 0,
+          fontFamily: 'var(--font-anton), sans-serif',
+          fontSize: 'clamp(60px, 10vw, 96px)', color: 'white',
+          lineHeight: .92, letterSpacing: '0.02em', margin: 0,
           textShadow: '0 0 60px rgba(1,225,142,0.4)',
         }}>
           BOLÃO
         </h1>
         <h1 style={{
-          fontSize: 72, fontWeight: 900, margin: 0, lineHeight: 1,
+          fontFamily: 'var(--font-anton), sans-serif',
+          fontSize: 'clamp(60px, 10vw, 96px)', margin: 0, lineHeight: .92,
           background: 'linear-gradient(135deg, #01E18E 0%, #00b872 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+          letterSpacing: '0.02em',
         }}>
           COPA 2026
         </h1>
-        <p style={{ fontSize: 22, color: 'rgba(255,255,255,0.5)', marginTop: 12, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+        <p style={{
+          fontFamily: 'var(--font-barlow), sans-serif',
+          fontSize: 20, fontWeight: 600,
+          color: 'rgba(255,255,255,0.4)', marginTop: 14,
+          letterSpacing: '0.22em', textTransform: 'uppercase',
+        }}>
           Vendemmia Logística Integrada
         </p>
       </div>
 
       {/* Countdown */}
       <div>
-        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 20 }}>
-          ⚽ Faltam para a Copa do Mundo 2026
+        <p style={{
+          fontFamily: 'var(--font-barlow), sans-serif',
+          fontSize: 12, fontWeight: 700,
+          color: 'rgba(255,255,255,0.35)', letterSpacing: '0.28em',
+          textTransform: 'uppercase', marginBottom: 20,
+        }}>
+          Faltam para a Copa do Mundo 2026
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, justifyContent: 'center' }}>
           {[
@@ -73,7 +87,8 @@ export function SlideWelcome({ data }: { data: TvData }) {
                   background: 'rgba(1,225,142,0.12)',
                   border: '2px solid rgba(1,225,142,0.4)',
                   borderRadius: 16, padding: '16px 24px',
-                  fontSize: 56, fontWeight: 900, color: '#01E18E',
+                  fontFamily: 'var(--font-anton), sans-serif',
+                  fontSize: 56, color: '#01E18E',
                   fontVariantNumeric: 'tabular-nums', lineHeight: 1,
                   minWidth: 110,
                   boxShadow: '0 0 30px rgba(1,225,142,0.15)',
@@ -100,7 +115,13 @@ export function SlideWelcome({ data }: { data: TvData }) {
           border: '1px solid rgba(255,255,255,0.12)',
           borderRadius: 50, padding: '12px 28px',
         }}>
-          <span style={{ fontSize: 24 }}>🥇</span>
+          <div style={{
+            width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+            background: 'rgba(245,158,11,0.2)', border: '1px solid rgba(245,158,11,0.4)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Crown size={22} color="#F59E0B" strokeWidth={1.75} />
+          </div>
           <div style={{ textAlign: 'left' }}>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>LÍDER DO BOLÃO</p>
             <p style={{ fontSize: 20, fontWeight: 800, color: 'white' }}>

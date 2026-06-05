@@ -5,6 +5,7 @@ import { savePrediction } from '@/app/actions/scoring'
 import { formatMatchTime, phaseLabels } from '@/lib/utils'
 import { TeamFlag } from '@/components/team-flag'
 import type { MatchWithPrediction } from '@/lib/queries'
+import { Zap, Target, Check, Lock } from 'lucide-react'
 
 type Props = {
   match:        MatchWithPrediction
@@ -13,9 +14,21 @@ type Props = {
 
 // ── Points result pill ────────────────────────────────────────────────────────
 function PointsPill({ points }: { points: number }) {
-  if (points === 10) return <span className="points-badge">⚡ {points} pts — Placar exato</span>
-  if (points === 7)  return <span className="points-badge text-yellow-400 bg-yellow-400/10 border-yellow-400/20">🎯 {points} pts</span>
-  if (points === 5)  return <span className="points-badge text-blue-400 bg-blue-400/10 border-blue-400/20">✓ {points} pts</span>
+  if (points === 10) return (
+    <span className="points-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <Zap size={11} strokeWidth={2.5} /> {points} pts — Placar exato
+    </span>
+  )
+  if (points === 7) return (
+    <span className="points-badge text-yellow-400 bg-yellow-400/10 border-yellow-400/20" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <Target size={11} strokeWidth={2.5} /> {points} pts
+    </span>
+  )
+  if (points === 5) return (
+    <span className="points-badge text-blue-400 bg-blue-400/10 border-blue-400/20" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <Check size={11} strokeWidth={3} /> {points} pts
+    </span>
+  )
   return <span className="text-xs" style={{ color: '#8a8490' }}>0 pts</span>
 }
 
@@ -202,7 +215,7 @@ export function MatchCard({ match, isUserLocked }: Props) {
           <div className="text-xs">
             {isUserLocked ? (
               <span className="flex items-center gap-1" style={{ color: '#8a8490' }}>
-                🔒 Palpites bloqueados
+                <Lock size={12} strokeWidth={2.5} /> Palpites bloqueados
               </span>
             ) : hasPrediction ? (
               <span style={{ color: '#8a8490' }}>Palpite registrado</span>

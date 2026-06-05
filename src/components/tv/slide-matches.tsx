@@ -4,11 +4,12 @@ import { useState } from 'react'
 import type { TvMatch } from '@/lib/tv-data'
 import { getFlagUrl } from '@/lib/flags'
 import { phaseLabels } from '@/lib/utils'
+import { Timer, MapPin } from 'lucide-react'
 
 function Flag({ team, size = 72 }: { team: string; size?: number }) {
   const [failed, setFailed] = useState(false)
   const url = getFlagUrl(team, 80) // w80 para TV — tamanho grande e confiável
-  if (!url || failed) return <span style={{ fontSize: Math.round(size * 0.7), lineHeight: 1 }}>🏳</span>
+  if (!url || failed) return <span style={{ width: size, height: Math.round(size * 0.67), display: 'inline-block', background: 'rgba(255,255,255,0.1)', borderRadius: 4 }} />
   // eslint-disable-next-line @next/next/no-img-element
   return (
     <img
@@ -34,8 +35,17 @@ export function SlideMatches({ matches }: { matches: TvMatch[] }) {
   if (matches.length === 0) {
     return (
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-        <span style={{ fontSize: 90 }}>⏳</span>
-        <p style={{ color: 'white', fontSize: 32, fontWeight: 800, margin: 0 }}>Copa começa em 11/06/2026</p>
+        <div style={{
+          width: 100, height: 100, borderRadius: '50%',
+          background: 'rgba(1,225,142,0.1)', border: '2px solid rgba(1,225,142,0.3)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <Timer size={48} color="#01E18E" strokeWidth={1.5} />
+        </div>
+        <p style={{
+          fontFamily: 'var(--font-anton), sans-serif',
+          color: 'white', fontSize: 42, margin: 0, letterSpacing: '0.02em',
+        }}>Copa começa em 11/06/2026</p>
         <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 20, margin: 0 }}>17h00 · Estádio Azteca · México × África do Sul</p>
       </div>
     )
@@ -89,7 +99,7 @@ export function SlideMatches({ matches }: { matches: TvMatch[] }) {
                     background: 'rgba(255,47,105,0.2)', padding: '3px 12px', borderRadius: 20,
                     letterSpacing: '0.1em',
                   }}>
-                    🔴 AO VIVO
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#ff2f69', display: 'inline-block', boxShadow: '0 0 8px #ff2f69' }} /> AO VIVO
                   </span>
                 ) : isFinished ? (
                   <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em' }}>
@@ -167,8 +177,8 @@ export function SlideMatches({ matches }: { matches: TvMatch[] }) {
                   borderTop: '1px solid rgba(255,255,255,0.06)',
                   textAlign: 'center',
                 }}>
-                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
-                    📍 {match.venue}
+                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontWeight: 500, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                    <MapPin size={11} strokeWidth={2} /> {match.venue}
                   </span>
                 </div>
               )}

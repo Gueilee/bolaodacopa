@@ -5,6 +5,7 @@ import { savePrediction } from '@/app/actions/scoring'
 import { formatMatchTime, formatMatchDate } from '@/lib/utils'
 import { TeamFlag } from '@/components/team-flag'
 import type { MatchWithPrediction } from '@/lib/queries'
+import { Zap, Target, Check, Lock, MapPin, Clock } from 'lucide-react'
 
 type Props = {
   match:               MatchWithPrediction
@@ -15,10 +16,22 @@ type Props = {
 }
 
 function PointsPill({ points }: { points: number }) {
-  if (points === 10) return <span className="points-badge text-[11px]">⚡ {points}</span>
-  if (points === 7)  return <span className="text-[11px] font-bold" style={{ color: '#d4a017' }}>🎯 {points}</span>
-  if (points === 5)  return <span className="text-[11px] font-bold" style={{ color: '#2563eb' }}>✓ {points}</span>
-  if (points === 0)  return <span className="text-[11px]" style={{ color: '#c4bfba' }}>0 pts</span>
+  if (points === 10) return (
+    <span className="points-badge text-[11px]" style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+      <Zap size={10} strokeWidth={2.5} /> {points}
+    </span>
+  )
+  if (points === 7) return (
+    <span className="text-[11px] font-bold" style={{ color: '#d4a017', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+      <Target size={10} strokeWidth={2.5} /> {points}
+    </span>
+  )
+  if (points === 5) return (
+    <span className="text-[11px] font-bold" style={{ color: '#2563eb', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+      <Check size={10} strokeWidth={3} /> {points}
+    </span>
+  )
+  if (points === 0) return <span className="text-[11px]" style={{ color: '#c4bfba' }}>0 pts</span>
   return null
 }
 
@@ -128,21 +141,21 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
             )}
             {!isFinished && isPastCutoff && !hasBet && (
               <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-                style={{ background: '#fff3e0', color: '#e65100' }}>
-                ⏰ Prazo encerrado
+                style={{ background: '#fff3e0', color: '#e65100', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <Clock size={8} strokeWidth={2.5} /> Prazo encerrado
               </span>
             )}
             {showCutoffWarning && (
               <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded"
-                style={{ background: '#fff8e1', color: '#f59e0b' }}>
-                ⚡ {minutesUntilCutoff}min restantes
+                style={{ background: '#fff8e1', color: '#f59e0b', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <Clock size={8} strokeWidth={2.5} /> {minutesUntilCutoff}min restantes
               </span>
             )}
           </div>
         </div>
         {match.venue && (
-          <p className="text-[10px] mt-0.5" style={{ color: '#aaa8b0' }}>
-            📍 {match.venue}
+          <p className="text-[10px] mt-0.5" style={{ color: '#aaa8b0', display: 'flex', alignItems: 'center', gap: 3 }}>
+            <MapPin size={9} strokeWidth={2} /> {match.venue}
           </p>
         )}
       </div>
@@ -211,14 +224,17 @@ export function PredictionRow({ match, isUserLocked, projectedHomeTeam, projecte
           ) : isFinished && hasBet ? (
             <span className="text-[11px]" style={{ color: '#aaa8b0' }}>aguardando</span>
           ) : hasBet ? (
-            // Palpite salvo — bloqueado permanentemente
-            <span className="text-[11px] font-bold" style={{ color: '#01a866' }}>🔒 salvo</span>
+            <span className="text-[11px] font-bold" style={{ color: '#01a866', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              <Lock size={10} strokeWidth={2.5} /> salvo
+            </span>
           ) : isPastCutoff ? (
             <span className="text-[10px] font-semibold" style={{ color: '#e65100' }}>sem palpite</span>
           ) : isUserLocked ? (
-            <span className="text-[11px]" style={{ color: '#c4bfba' }}>🔒</span>
+            <Lock size={12} strokeWidth={2} style={{ color: '#c4bfba' }} />
           ) : saved ? (
-            <span className="text-[11px] font-bold" style={{ color: '#01a866' }}>✓ salvo</span>
+            <span className="text-[11px] font-bold" style={{ color: '#01a866', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+              <Check size={10} strokeWidth={3} /> salvo
+            </span>
           ) : canEdit && isDirty && isComplete ? (
             <button
               onClick={handleSave}

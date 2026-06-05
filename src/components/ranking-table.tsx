@@ -5,6 +5,7 @@ import { initials, positionBadge } from '@/lib/utils'
 import type { RankingEntry } from '@/lib/queries'
 import { UserHistoryModal } from '@/components/user-history-modal'
 import { UserAvatar } from '@/components/user-avatar'
+import { Search, MapPin, Scale, Zap, FileText, Check, X, Trophy } from 'lucide-react'
 
 // ─── Comparação ───────────────────────────────────────────────────────────────
 
@@ -31,7 +32,7 @@ function ComparePanel({
       winnerB: b.totalPoints > a.totalPoints,
     },
     {
-      label:   'Placares exatos ⚡',
+      label:   'Placares exatos',
       va:      String(a.exactCount),
       vb:      String(b.exactCount),
       winnerA: a.exactCount > b.exactCount,
@@ -79,8 +80,8 @@ function ComparePanel({
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#01E18E', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
-              ⚖️ Comparação
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#01E18E', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Scale size={12} strokeWidth={2.5} /> Comparação
             </p>
             <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', margin: '4px 0 0' }}>
               Clique fora para fechar
@@ -124,8 +125,9 @@ function ComparePanel({
                   <span style={{
                     fontSize: 10, fontWeight: 700, color: '#01a866',
                     background: 'rgba(1,168,102,0.1)', padding: '2px 8px', borderRadius: 10,
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
                   }}>
-                    🏆 Na frente
+                    <Trophy size={10} strokeWidth={2.5} /> Na frente
                   </span>
                 )}
               </div>
@@ -157,7 +159,7 @@ function ComparePanel({
                 color: s.winnerA ? '#01a866' : '#6b6672',
                 display: 'flex', alignItems: 'center', gap: 4,
               }}>
-                {s.winnerA && <span style={{ fontSize: 12 }}>✓</span>}
+                {s.winnerA && <Check size={12} strokeWidth={3} />}
                 {s.va}
               </span>
 
@@ -176,7 +178,7 @@ function ComparePanel({
                 display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4,
               }}>
                 {s.vb}
-                {s.winnerB && <span style={{ fontSize: 12 }}>✓</span>}
+                {s.winnerB && <Check size={12} strokeWidth={3} />}
               </span>
             </div>
           ))}
@@ -291,7 +293,7 @@ export function RankingTable({ entries, currentUserId }: Props) {
 
         {/* Busca */}
         <div style={{ flex: '1 1 200px', position: 'relative', minWidth: 180 }}>
-          <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontSize: 14, color: '#aaa8b0' }}>🔍</span>
+          <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: '#aaa8b0', display: 'flex' }}><Search size={14} strokeWidth={2} /></span>
           <input
             type="text"
             value={search}
@@ -330,7 +332,8 @@ export function RankingTable({ entries, currentUserId }: Props) {
               whiteSpace: 'nowrap',
             }}
           >
-            📍 {myEntry.position}º lugar
+            <MapPin size={13} strokeWidth={2.5} />
+            {myEntry.position}º lugar
           </button>
         )}
 
@@ -347,7 +350,8 @@ export function RankingTable({ entries, currentUserId }: Props) {
             whiteSpace: 'nowrap',
           }}
         >
-          ⚖️ {compareMode ? 'Cancelar' : 'Comparar'}
+          <Scale size={13} strokeWidth={2.5} />
+          {compareMode ? 'Cancelar' : 'Comparar'}
         </button>
       </div>
 
@@ -444,7 +448,20 @@ export function RankingTable({ entries, currentUserId }: Props) {
                   {/* Position */}
                   <td className="px-5 py-4 font-bold">
                     {isTop3 ? (
-                      <span className="text-lg">{positionBadge(entry.position)}</span>
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        width: 28, height: 28, borderRadius: 8, fontSize: 13, fontWeight: 900,
+                        background: entry.position === 1 ? 'linear-gradient(135deg,#F59E0B,#D97706)' :
+                                    entry.position === 2 ? 'linear-gradient(135deg,#94A3B8,#64748B)' :
+                                                           'linear-gradient(135deg,#CD7F32,#A0522D)',
+                        color: '#fff',
+                        boxShadow: entry.position === 1 ? '0 2px 8px rgba(245,158,11,0.45)' :
+                                   entry.position === 2 ? '0 2px 8px rgba(148,163,184,0.35)' :
+                                                          '0 2px 8px rgba(205,127,50,0.35)',
+                        fontFamily: 'var(--font-anton), sans-serif',
+                      }}>
+                        {entry.position}
+                      </span>
                     ) : (
                       <span className="text-xs font-semibold" style={{ color: '#aaa8b0' }}>{entry.position}º</span>
                     )}
@@ -483,13 +500,13 @@ export function RankingTable({ entries, currentUserId }: Props) {
                             {entry.name}
                           </span>
                           {!compareMode && (
-                            <span style={{ fontSize: 11, color: '#c4bfba' }}>📋</span>
+                            <FileText size={11} strokeWidth={2} style={{ color: '#c4bfba', flexShrink: 0 }} />
                           )}
                           {isMe && (
                             <span className="text-[10px] font-normal uppercase tracking-widest" style={{ color: '#9a86c4' }}>você</span>
                           )}
                           {isSelected && !isMe && (
-                            <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#422c76' }}>✓</span>
+                            <Check size={11} strokeWidth={3} style={{ color: '#422c76', flexShrink: 0 }} />
                           )}
                         </button>
                         <p className="text-xs" style={{ color: '#aaa8b0' }}>{entry.department ?? entry.email}</p>
@@ -513,7 +530,9 @@ export function RankingTable({ entries, currentUserId }: Props) {
                   {/* Exact scores */}
                   <td className="px-5 py-4 text-right hidden md:table-cell">
                     {entry.exactCount > 0 ? (
-                      <span className="points-badge">⚡ {entry.exactCount}</span>
+                      <span className="points-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                        <Zap size={11} strokeWidth={2.5} /> {entry.exactCount}
+                      </span>
                     ) : (
                       <span style={{ color: '#c4bfba' }}>—</span>
                     )}
@@ -526,8 +545,10 @@ export function RankingTable({ entries, currentUserId }: Props) {
 
         {filtered.length === 0 && search && (
           <div style={{ textAlign: 'center', padding: '32px 0' }}>
-            <p style={{ fontSize: 32, margin: '0 0 8px' }}>🔍</p>
-            <p style={{ color: '#8a8490', fontSize: 14 }}>Nenhum participante encontrado para "<strong>{search}</strong>"</p>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
+              <Search size={32} strokeWidth={1.5} style={{ color: '#c4bfba' }} />
+            </div>
+            <p style={{ color: '#8a8490', fontSize: 14 }}>Nenhum participante encontrado para &quot;<strong>{search}</strong>&quot;</p>
           </div>
         )}
       </div>

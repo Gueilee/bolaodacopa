@@ -1,9 +1,10 @@
 'use client'
 
 import type { TvRankingEntry } from '@/lib/tv-data'
+import { Zap } from 'lucide-react'
 
-const MEDALS = ['🥇', '🥈', '🥉']
-const PODIUM_COLORS = ['#FFD700', '#C0C0C0', '#CD7F32']
+const PODIUM_COLORS = ['#F59E0B', '#94A3B8', '#CD7F32']
+const PODIUM_BG     = ['linear-gradient(135deg,#F59E0B,#D97706)', 'linear-gradient(135deg,#94A3B8,#64748B)', 'linear-gradient(135deg,#CD7F32,#A0522D)']
 
 export function SlideRanking({ entries }: { entries: TvRankingEntry[] }) {
   const top3  = entries.slice(0, 3)
@@ -29,7 +30,17 @@ export function SlideRanking({ entries }: { entries: TvRankingEntry[] }) {
               border: `2px solid rgba(${i === 0 ? '255,215,0' : i === 1 ? '192,192,192' : '205,127,50'},0.3)`,
               borderRadius: 16, padding: '16px 20px',
             }}>
-              <span style={{ fontSize: 32 }}>{MEDALS[i]}</span>
+              <div style={{
+                width: 44, height: 44, borderRadius: 12, flexShrink: 0,
+                background: PODIUM_BG[i],
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: `0 4px 16px ${PODIUM_COLORS[i]}55`,
+              }}>
+                <span style={{
+                  fontFamily: 'var(--font-anton), sans-serif',
+                  fontSize: 22, color: 'rgba(255,255,255,0.95)',
+                }}>{i + 1}</span>
+              </div>
               <div style={{
                 width: 52, height: 52, borderRadius: '50%',
                 background: `rgba(${i === 0 ? '255,215,0' : i === 1 ? '192,192,192' : '205,127,50'},0.2)`,
@@ -81,7 +92,9 @@ export function SlideRanking({ entries }: { entries: TvRankingEntry[] }) {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                 {entry.exactCount > 0 && (
-                  <span style={{ fontSize: 12, color: '#01E18E' }}>⚡ {entry.exactCount}</span>
+                  <span style={{ fontSize: 12, color: '#01E18E', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                    <Zap size={11} strokeWidth={2.5} /> {entry.exactCount}
+                  </span>
                 )}
                 <span style={{ fontSize: 20, fontWeight: 800, color: 'rgba(255,255,255,0.9)' }}>
                   {entry.totalPoints}

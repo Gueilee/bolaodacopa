@@ -2,6 +2,7 @@
 
 import { logoutAction } from '@/app/actions/auth'
 import type { SessionPayload } from '@/lib/session'
+import { LogOut } from 'lucide-react'
 
 type Props = { user: SessionPayload; compact?: boolean }
 
@@ -83,7 +84,7 @@ export function UserMenu({ user, compact = false }: Props) {
             e.currentTarget.style.color = 'rgba(255,255,255,0.35)'
           }}
         >
-          ⏻
+          <LogOut size={13} strokeWidth={2} />
         </button>
       </form>
     </div>

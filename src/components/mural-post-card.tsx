@@ -5,6 +5,7 @@ import { toggleLike, deletePost, getPostComments, createComment, deleteComment, 
 import { useRouter } from 'next/navigation'
 import type { PostWithUser, CommentItem, LikeItem } from '@/app/actions/social'
 import { UserAvatar } from '@/components/user-avatar'
+import { Heart, MessageCircle, Trash2, AlertTriangle, X } from 'lucide-react'
 
 function MediaImage({ src }: { src: string }) {
   const [broken,    setBroken]    = useState(false)
@@ -197,7 +198,13 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
             border: 'none', cursor: 'pointer', transition: 'all 0.15s', fontWeight: 600,
             boxShadow: confirmDelete ? '0 2px 8px rgba(255,47,105,0.35)' : 'none',
           }}>
-            {confirmDelete ? '⚠ Confirmar?' : '🗑'}
+            {confirmDelete ? (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <AlertTriangle size={12} strokeWidth={2.5} /> Confirmar?
+              </span>
+            ) : (
+              <Trash2 size={14} strokeWidth={2} />
+            )}
           </button>
         )}
       </div>
@@ -239,11 +246,11 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
                 fontSize: 12, background: 'none', border: 'none', cursor: 'pointer',
                 padding: 0, color: showLikes ? '#ff2f69' : '#aaa8b0',
                 fontWeight: showLikes ? 700 : 400,
-                textDecoration: showLikes ? 'none' : 'underline',
-                textUnderlineOffset: 2,
+                display: 'inline-flex', alignItems: 'center', gap: 4,
               }}
             >
-              ❤️ {likesCount} curtida{likesCount !== 1 ? 's' : ''}
+              <Heart size={12} strokeWidth={2} fill={showLikes ? '#ff2f69' : 'none'} color={showLikes ? '#ff2f69' : '#aaa8b0'} />
+              {likesCount} curtida{likesCount !== 1 ? 's' : ''}
             </button>
           ) : <span />}
           {commentsCount > 0 && (
@@ -273,7 +280,7 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
           disabled={isPending}
           active={liked}
           activeColor="#ff2f69"
-          icon={liked ? '❤️' : '🤍'}
+          icon={<Heart size={16} strokeWidth={2} fill={liked ? '#ff2f69' : 'none'} />}
           label={liked ? 'Curtiu' : 'Curtir'}
         />
         <ActionBtn
@@ -281,7 +288,7 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
           disabled={loadingComments}
           active={showComments}
           activeColor="#422c76"
-          icon="💬"
+          icon={<MessageCircle size={16} strokeWidth={2} />}
           label={loadingComments ? 'Carregando…' : 'Comentar'}
         />
       </div>
@@ -345,8 +352,10 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
                   <span style={{ fontSize: 11, color: '#c4bfba', marginLeft: 'auto' }}>{timeAgo(c.createdAt)}</span>
                   {(c.isMe || isAdmin) && (
                     <button onClick={() => handleDeleteComment(c.id)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14, color: '#ddd', lineHeight: 1, padding: '0 2px' }}
-                      title="Excluir">×</button>
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ddd', lineHeight: 1, padding: '0 2px', display: 'flex' }}
+                      title="Excluir">
+                      <X size={13} strokeWidth={2} />
+                    </button>
                   )}
                 </div>
                 <p style={{ fontSize: 13, color: '#3d3847', lineHeight: 1.55, margin: 0, whiteSpace: 'pre-wrap' }}>
@@ -399,7 +408,7 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
 
 function ActionBtn({ onClick, disabled, active, activeColor, icon, label }: {
   onClick: () => void; disabled: boolean; active: boolean
-  activeColor: string; icon: string; label: string
+  activeColor: string; icon: React.ReactNode; label: string
 }) {
   return (
     <button onClick={onClick} disabled={disabled} style={{
@@ -410,7 +419,7 @@ function ActionBtn({ onClick, disabled, active, activeColor, icon, label }: {
       color: active ? activeColor : '#8a8490',
       transition: 'all 0.15s',
     }}>
-      <span style={{ fontSize: 17 }}>{icon}</span>
+      {icon}
       <span>{label}</span>
     </button>
   )

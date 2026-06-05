@@ -5,6 +5,7 @@ import Image          from 'next/image'
 import { SidebarNav }           from '@/components/sidebar-nav'
 import { SidebarScrollWrapper } from '@/components/sidebar-scroll-wrapper'
 import { UserMenu }             from '@/components/user-menu'
+import { Zap }                  from 'lucide-react'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession()
@@ -91,7 +92,7 @@ function CountdownStrip() {
   return (
     <div style={{
       margin: '10px 12px',
-      padding: '10px 14px',
+      padding: '11px 14px',
       borderRadius: 12,
       background: 'rgba(1,225,142,0.07)',
       border: '1px solid rgba(1,225,142,0.18)',
@@ -99,12 +100,26 @@ function CountdownStrip() {
       alignItems: 'center',
       gap: 10,
     }}>
-      <span style={{ fontSize: 18 }}>⚽</span>
-      <div>
-        <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', margin: 0 }}>
+      <div style={{
+        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+        background: 'rgba(1,225,142,0.15)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <Zap size={14} color="#01E18E" strokeWidth={2.5} />
+      </div>
+      <div style={{ minWidth: 0 }}>
+        <p style={{
+          fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
+          color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', margin: 0,
+          fontFamily: 'var(--font-barlow), sans-serif',
+        }}>
           Copa 2026
         </p>
-        <p style={{ fontSize: 13, fontWeight: 800, color: '#01E18E', margin: 0, letterSpacing: '-0.01em' }}>
+        <p style={{
+          fontSize: 14, fontWeight: 400, color: '#01E18E', margin: 0,
+          fontFamily: 'var(--font-anton), sans-serif',
+          letterSpacing: '0.02em',
+        }}>
           {days}d {hours}h restantes
         </p>
       </div>

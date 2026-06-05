@@ -6,8 +6,7 @@ type Props = { top3: DeptRankEntry[] }
 
 const CFG = {
   1: {
-    emoji:      '🥇',
-    pos:        '1º',
+    pos:        '1',
     cardBg:     '#FFFBEB',
     cardBorder: '#FCD34D',
     stepBg:     'linear-gradient(160deg, #F59E0B 0%, #D97706 100%)',
@@ -22,8 +21,7 @@ const CFG = {
     shadow:     '0 8px 32px rgba(245,158,11,0.25), 0 2px 8px rgba(0,0,0,0.08)',
   },
   2: {
-    emoji:      '🥈',
-    pos:        '2º',
+    pos:        '2',
     cardBg:     '#F8FAFC',
     cardBorder: '#CBD5E1',
     stepBg:     'linear-gradient(160deg, #94A3B8 0%, #64748B 100%)',
@@ -38,8 +36,7 @@ const CFG = {
     shadow:     '0 4px 16px rgba(0,0,0,0.08)',
   },
   3: {
-    emoji:      '🥉',
-    pos:        '3º',
+    pos:        '3',
     cardBg:     '#FFFAF5',
     cardBorder: '#FED7AA',
     stepBg:     'linear-gradient(160deg, #CD7F32 0%, #A0522D 100%)',
@@ -87,8 +84,18 @@ function PodiumCard({ entry }: { entry: DeptRankEntry }) {
           zIndex: 1,
         }}
       >
-        {/* Medalha */}
-        <div style={{ fontSize: 28, lineHeight: 1, marginBottom: 6 }}>{cfg.emoji}</div>
+        {/* Badge de posição */}
+        <div style={{
+          width: 44, height: 44, borderRadius: '50%', margin: '0 auto 10px',
+          background: cfg.stepBg,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: `0 4px 14px ${cfg.badgeBg}66`,
+        }}>
+          <span style={{
+            fontFamily: 'var(--font-anton), sans-serif',
+            fontSize: 20, color: 'rgba(255,255,255,0.95)', letterSpacing: '-0.01em',
+          }}>{cfg.pos}</span>
+        </div>
 
         {/* Nome do departamento */}
         <p
@@ -164,13 +171,13 @@ function PodiumCard({ entry }: { entry: DeptRankEntry }) {
       >
         <span
           style={{
-            fontSize: 13,
-            fontWeight: 900,
+            fontFamily: 'var(--font-anton), sans-serif',
+            fontSize: 22,
             color: 'rgba(255,255,255,0.9)',
-            letterSpacing: '0.06em',
+            letterSpacing: '0.02em',
           }}
         >
-          {cfg.pos}
+          {cfg.pos}º
         </span>
       </div>
     </div>
