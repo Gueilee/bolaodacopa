@@ -176,9 +176,26 @@ export default async function AuditoriaPage({ searchParams }: Props) {
 
     return (
       <div className="max-w-3xl mx-auto space-y-6 animate-fade-in" style={{ paddingBottom: 40 }}>
-        <a href="/admin/auditoria?view=users" style={{ fontSize: 13, color: '#8a8490', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-          ← Voltar à lista de colaboradores
-        </a>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+          <a href="/admin/auditoria?view=users" style={{ fontSize: 13, color: '#8a8490', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            ← Voltar à lista de colaboradores
+          </a>
+          <a
+            href={`/api/admin/audit-pdf?userId=${userId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 20px', borderRadius: 12, textDecoration: 'none',
+              background: 'linear-gradient(135deg, #422c76, #5a3e94)',
+              color: 'white', fontSize: 13, fontWeight: 700,
+              boxShadow: '0 4px 14px rgba(66,44,118,0.35)',
+            }}
+          >
+            <span style={{ fontSize: 16 }}>⬇️</span>
+            Exportar PDF de Auditoria
+          </a>
+        </div>
 
         <div className="card p-5">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, flexWrap: 'wrap', gap: 8 }}>
