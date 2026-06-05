@@ -420,11 +420,82 @@ function RankingPages({ data }: { data: FullReportData }) {
   return <>{pages}</>
 }
 
+// ─── Ranking por Unidade ──────────────────────────────────────────────────────
+
+function UnitRankingPage({ data }: { data: FullReportData }) {
+  const { unitRanking, generatedAt, ranking } = data
+  const rankPages = Math.ceil(ranking.length / ROWS_PER_PAGE)
+  const pageNum   = rankPages + 2
+
+  return (
+    <Page size="A4" style={S.page}>
+      <PageHeader title="Ranking por Unidade" />
+      <Text style={S.sectionTitle}>Classificação por Unidade</Text>
+
+      <View style={S.tableHeader}>
+        <Text style={[S.th, { width: '6%'  }]}>#</Text>
+        <Text style={[S.th, { width: '28%' }]}>Unidade</Text>
+        <Text style={[S.th, { width: '12%', textAlign: 'center' }]}>Membros</Text>
+        <Text style={[S.th, { width: '14%', textAlign: 'center' }]}>Finalizados</Text>
+        <Text style={[S.th, { width: '12%', textAlign: 'center' }]}>Adesão</Text>
+        <Text style={[S.th, { width: '12%', textAlign: 'right'  }]}>Média pts</Text>
+        <Text style={[S.th, { width: '16%' }]}>Líder</Text>
+      </View>
+
+      {unitRanking.map((unit, idx) => {
+        const isTop3      = unit.position <= 3
+        const isEven      = idx % 2 === 0
+        const rateColor   = unit.participationRate >= 80 ? C.neon :
+                            unit.participationRate >= 50 ? '#d4a300' : C.pink
+
+        return (
+          <View
+            key={unit.unit}
+            style={[S.tableRow, isEven ? {} : S.tableRowAlt,
+              isTop3 ? { borderLeftWidth: 2, borderLeftColor: C.neon } : {}]}
+          >
+            <Text style={[isTop3 ? S.neonText : S.td, { width: '6%' }]}>
+              {unit.position}º
+            </Text>
+            <Text style={[isTop3 ? S.tdBold : S.td, { width: '28%' }]}>
+              {unit.unit}
+            </Text>
+            <Text style={[S.td, { width: '12%', textAlign: 'center' }]}>
+              {unit.totalMembers}
+            </Text>
+            <Text style={[S.td, { width: '14%', textAlign: 'center' }]}>
+              {unit.lockedMembers}
+            </Text>
+            <Text style={[S.td, { width: '12%', textAlign: 'center', color: rateColor, fontFamily: 'Helvetica-Bold' }]}>
+              {unit.participationRate}%
+            </Text>
+            <Text style={[S.tdBold, { width: '12%', textAlign: 'right' }]}>
+              {unit.avgPoints.toFixed(1)}
+            </Text>
+            <Text style={[S.td, S.mutedText, { width: '16%' }]}>
+              {unit.leader ? unit.leader.split(' ')[0] : '—'}
+            </Text>
+          </View>
+        )
+      })}
+
+      <View style={{ marginTop: 12, padding: 10, backgroundColor: C.white, borderRadius: 4, borderLeftWidth: 3, borderLeftColor: C.purple }}>
+        <Text style={{ fontSize: 7, color: C.muted }}>
+          Classificação por média de pontos de todos os membros da unidade (incluindo 0 pts para não participantes).
+          Desempate: taxa de adesão → pontuação máxima individual.
+        </Text>
+      </View>
+
+      <PageFooter pageNum={String(pageNum)} generatedAt={generatedAt} />
+    </Page>
+  )
+}
+
 // ─── Ranking por Departamento ─────────────────────────────────────────────────
 
 function DeptRankingPage({ data }: { data: FullReportData }) {
   const { deptRanking, generatedAt, ranking } = data
-  const totalPages = Math.ceil(ranking.length / ROWS_PER_PAGE) + 2
+  const totalPages = Math.ceil(ranking.length / ROWS_PER_PAGE) + 3
 
   return (
     <Page size="A4" style={S.page}>
@@ -501,8 +572,9 @@ export function BolaoReport({ data, logoBase64 }: { data: FullReportData; logoBa
       creator="Bolão Copa 2026 System"
     >
       <CoverPage data={data} logoBase64={logoBase64} />
-      <RankingPages data={data} />
+      <UnitRankingPage data={data} />
       <DeptRankingPage data={data} />
+      <RankingPages data={data} />
     </Document>
   )
 }

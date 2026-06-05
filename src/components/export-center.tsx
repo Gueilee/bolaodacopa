@@ -163,12 +163,13 @@ export function ExportCenter({ stats }: Props) {
 
             {/* Preview conteúdo (PDF apenas) */}
             {item.isPdf && (
-              <div className="grid grid-cols-4 gap-2 py-2 border-y" style={{ borderColor: '#e8e4df' }}>
+              <div className="grid grid-cols-5 gap-2 py-2 border-y" style={{ borderColor: '#e8e4df' }}>
                 {[
-                  { label: 'Capa',                  icon: '📋' },
-                  { label: 'Ranking individual',    icon: '🏆' },
-                  { label: 'Ranking por dept.',     icon: '🏢' },
-                  { label: 'Branding Vendemmia',    icon: '🎨' },
+                  { label: 'Capa',               icon: '📋' },
+                  { label: 'Ranking unidades',   icon: '📍' },
+                  { label: 'Ranking dept.',      icon: '🏢' },
+                  { label: 'Ranking individual', icon: '🏆' },
+                  { label: 'Branding',           icon: '🎨' },
                 ].map((f) => (
                   <div key={f.label} className="text-center">
                     <p className="text-base mb-1">{f.icon}</p>

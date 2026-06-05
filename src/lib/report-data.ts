@@ -6,9 +6,11 @@
 import { db }            from '@/lib/db'
 import { users, predictions, matches, settings } from '@/db/schema'
 import { eq, and, desc, count, sql, isNotNull } from 'drizzle-orm'
-import { getRanking }     from '@/lib/queries'
-import { getDeptRanking } from '@/lib/dept-ranking'
-import { getHrOverview }  from '@/lib/hr-analytics'
+import { getRanking }        from '@/lib/queries'
+import { getDeptRanking }    from '@/lib/dept-ranking'
+import { getUnitRanking }    from '@/lib/unit-ranking'
+import type { UnitRankEntry } from '@/lib/unit-ranking'
+import { getHrOverview }     from '@/lib/hr-analytics'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -45,6 +47,7 @@ export type FullReportData = {
   generatedAt:    Date
   overview:       Awaited<ReturnType<typeof getHrOverview>>
   ranking:        ReportUser[]
+  unitRanking:    UnitRankEntry[]
   deptRanking:    ReportDept[]
   tournament:     TournamentSettings
   pendingUsers:   { name: string; email: string; department: string | null; betCount: number }[]
@@ -53,8 +56,9 @@ export type FullReportData = {
 // ─── Relatório completo ───────────────────────────────────────────────────────
 
 export async function getFullReportData(): Promise<FullReportData> {
-  const [rawRanking, deptRaw, overview, tournamentRows] = await Promise.all([
+  const [rawRanking, unitRaw, deptRaw, overview, tournamentRows] = await Promise.all([
     getRanking(),
+    getUnitRanking(),
     getDeptRanking(),
     getHrOverview(),
     db.select().from(settings).where(
@@ -140,6 +144,7 @@ export async function getFullReportData(): Promise<FullReportData> {
     generatedAt: new Date(),
     overview,
     ranking,
+    unitRanking: unitRaw,
     deptRanking,
     tournament,
     pendingUsers,
