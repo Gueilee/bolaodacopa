@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 import { users, matches, predictions } from '@/db/schema'
-import { desc, asc, eq, and, count, sql } from 'drizzle-orm'
+import { desc, asc, eq, and, ne, count, sql } from 'drizzle-orm'
 
 // ─── Ranking ────────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ export async function getRanking(): Promise<RankingEntry[]> {
         eq(predictions.isScored, true),
       ),
     )
-    .where(and(eq(users.isActive, true), eq(users.role, 'user')))
+    .where(and(eq(users.isActive, true), ne(users.role, 'admin')))
     .groupBy(users.id)
     .orderBy(desc(users.totalPoints), asc(users.name))
 
@@ -122,7 +122,7 @@ export async function getManagerRanking(): Promise<ManagerRankingEntry[]> {
   const rows = await db
     .select({ name: users.name, manager: users.manager, totalPoints: users.totalPoints })
     .from(users)
-    .where(and(eq(users.isActive, true), eq(users.role, 'user')))
+    .where(and(eq(users.isActive, true), ne(users.role, 'admin')))
 
   const map = new Map<string, { pts: number; count: number; leader: string; leaderPts: number }>()
 
@@ -217,7 +217,7 @@ export type AuditMatchSummary = {
 
 export async function getAuditMatchSummaries(): Promise<AuditMatchSummary[]> {
   const [allUsers, finishedMatches] = await Promise.all([
-    db.select({ count: count() }).from(users).where(and(eq(users.isActive, true), eq(users.role, 'user'))),
+    db.select({ count: count() }).from(users).where(and(eq(users.isActive, true), ne(users.role, 'admin'))),
     db.query.matches.findMany({
       where: eq(matches.status, 'finished'),
       orderBy: [asc(matches.matchDate)],
@@ -360,7 +360,7 @@ export async function getAuditUsers(): Promise<AuditUser[]> {
     })
     .from(users)
     .leftJoin(predictions, and(eq(predictions.userId, users.id), eq(predictions.isScored, true)))
-    .where(and(eq(users.isActive, true), eq(users.role, 'user')))
+    .where(and(eq(users.isActive, true), ne(users.role, 'admin')))
     .groupBy(users.id)
     .orderBy(desc(users.totalPoints), asc(users.name))
 
