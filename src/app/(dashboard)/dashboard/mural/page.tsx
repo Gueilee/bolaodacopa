@@ -42,7 +42,7 @@ export default async function MuralPage() {
               Central da Torcida
             </h1>
           </div>
-          <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.45)', maxWidth: 340 }}>
+          <p style={{ margin: 0, fontSize: 14, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap' }}>
             Compartilhe momentos, torça junto, celebre — <span style={{ color: '#01E18E' }}>sua voz na copa!</span>
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginTop: 16 }}>
