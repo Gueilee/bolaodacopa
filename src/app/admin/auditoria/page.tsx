@@ -57,7 +57,7 @@ type Props = { searchParams: Promise<Record<string, string | undefined>> }
 
 export default async function AuditoriaPage({ searchParams }: Props) {
   const session = await getSession()
-  if (!session || session.role !== 'admin') redirect('/login')
+  if (!session || (session.role !== 'admin' && session.role !== 'rh')) redirect('/login')
 
   const params  = await searchParams
   const view    = params.view ?? 'matches'

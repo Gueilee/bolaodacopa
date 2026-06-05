@@ -17,8 +17,8 @@ const items: NavItem[] = [
   { href: '/admin',          label: 'Painel Admin',   icon: '🏠', roles: ['admin'], section: 'Administração' },
   { href: '/admin/usuarios', label: 'Colaboradores',  icon: '👥', roles: ['admin'] },
   { href: '/admin/convites', label: 'Convites',       icon: '✉️', roles: ['admin'] },
-  { href: '/admin/auditoria', label: 'Auditoria',      icon: '🔍', roles: ['admin'] },
-  { href: '/admin/exportar', label: 'Exportar',       icon: '⬇️', roles: ['admin'] },
+  { href: '/admin/auditoria', label: 'Auditoria',      icon: '🔍', roles: ['admin', 'rh'] },
+  { href: '/admin/exportar', label: 'Exportar',       icon: '⬇️', roles: ['admin', 'rh'] },
   { href: '/admin/notificacoes', label: 'Notificações', icon: '🔔', roles: ['admin'] },
   { href: '/admin/rh',       label: 'Dashboard RH',  icon: '📊', section: 'Relatórios' },
 ]

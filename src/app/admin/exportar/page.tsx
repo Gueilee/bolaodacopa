@@ -8,7 +8,7 @@ export const metadata   = { title: 'Exportar Relatórios | Bolão Copa 2026' }
 
 export default async function ExportarPage() {
   const session = await getSession()
-  if (!session || session.role !== 'admin') redirect('/dashboard')
+  if (!session || (session.role !== 'admin' && session.role !== 'rh')) redirect('/dashboard')
 
   const data = await getFullReportData()
 
