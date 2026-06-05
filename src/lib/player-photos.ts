@@ -77,6 +77,12 @@ type SportsDbResponse = {
   player?: Array<{ strThumb?: string; strCutout?: string }>
 }
 
+// Fotos hardcoded para jogadores com problemas de carregamento via API
+// Usamos URLs do Wikimedia Commons que são estáveis e livres de direitos
+const STATIC_PHOTOS: Record<string, string> = {
+  'Raphinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Raphinha_2023.jpg/440px-Raphinha_2023.jpg',
+}
+
 // Cache em memória (reset a cada deploy)
 const cache = new Map<string, string | null>()
 
@@ -119,6 +125,12 @@ async function fetchSportsDbPhoto(playerName: string): Promise<string | null> {
 
 export async function getPlayerPhoto(playerName: string): Promise<string | null> {
   if (cache.has(playerName)) return cache.get(playerName) ?? null
+
+  // 0. Foto hardcoded (prioridade máxima para jogadores com API inconsistente)
+  if (STATIC_PHOTOS[playerName]) {
+    cache.set(playerName, STATIC_PHOTOS[playerName])
+    return STATIC_PHOTOS[playerName]
+  }
 
   // 1. Tenta Wikipedia (melhor qualidade)
   let url = await fetchWikipediaPhoto(playerName)

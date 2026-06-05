@@ -24,6 +24,12 @@ function formatTime(date: Date | string): string {
   return new Date(date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
 }
 
+function formatDate(date: Date | string): string {
+  return new Date(date).toLocaleDateString('pt-BR', {
+    weekday: 'short', day: '2-digit', month: '2-digit', timeZone: 'America/Sao_Paulo',
+  })
+}
+
 export function SlideMatches({ matches }: { matches: TvMatch[] }) {
   if (matches.length === 0) {
     return (
@@ -90,9 +96,14 @@ export function SlideMatches({ matches }: { matches: TvMatch[] }) {
                     ENCERRADO
                   </span>
                 ) : (
-                  <span style={{ fontSize: 16, fontWeight: 800, color: '#01E18E' }}>
-                    {formatTime(match.matchDate)}
-                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+                    <span style={{ fontSize: 16, fontWeight: 900, color: '#01E18E', lineHeight: 1 }}>
+                      {formatTime(match.matchDate)}
+                    </span>
+                    <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em' }}>
+                      {formatDate(match.matchDate)}
+                    </span>
+                  </div>
                 )}
               </div>
 
