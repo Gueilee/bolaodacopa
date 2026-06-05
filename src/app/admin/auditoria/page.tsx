@@ -7,6 +7,7 @@ import {
   getAuditUsers,
   getAuditByUser,
 } from '@/lib/queries'
+import { AuditUsersList } from './users-list'
 import { db }       from '@/lib/db'
 import { matches, users } from '@/db/schema'
 import { eq }       from 'drizzle-orm'
@@ -289,38 +290,7 @@ export default async function AuditoriaPage({ searchParams }: Props) {
       <div className="max-w-3xl mx-auto space-y-6 animate-fade-in" style={{ paddingBottom: 40 }}>
         <AuditHeader view="users" />
 
-        <div className="card overflow-hidden" style={{ padding: 0 }}>
-          <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0ede8', display: 'grid', gridTemplateColumns: '2fr 70px 60px 60px 60px 70px', gap: 8 }}>
-            {['Colaborador', 'Pontos', '⚡ Exato', '✓ Venc.', '✗ Erro', ''].map((h, i) => (
-              <span key={i} style={{ fontSize: 10, fontWeight: 700, color: '#8a8490', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</span>
-            ))}
-          </div>
-          {auditUsers.map((u, idx) => (
-            <div key={u.id} style={{
-              display: 'grid', gridTemplateColumns: '2fr 70px 60px 60px 60px 70px',
-              gap: 8, padding: '11px 16px', borderBottom: '1px solid #f0ede8', alignItems: 'center',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: '#aaa8b0', minWidth: 20 }}>#{idx + 1}</span>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: 13, color: '#1a1625' }}>{u.name}</div>
-                  {u.department && <div style={{ fontSize: 11, color: '#aaa8b0' }}>{u.department}</div>}
-                </div>
-              </div>
-              <span style={{ fontWeight: 800, fontSize: 15, color: '#422c76', fontVariantNumeric: 'tabular-nums' }}>{u.totalPoints}</span>
-              <span style={{ fontWeight: 700, fontSize: 13, color: '#065f46' }}>{u.exactCount}</span>
-              <span style={{ fontWeight: 700, fontSize: 13, color: '#1e40af' }}>{u.winnerCount}</span>
-              <span style={{ fontWeight: 700, fontSize: 13, color: '#991b1b' }}>{u.missCount}</span>
-              <a href={`/admin/auditoria?userId=${u.id}`} style={{
-                display: 'inline-block', padding: '5px 12px', borderRadius: 20,
-                fontSize: 11, fontWeight: 700, background: '#f0ede8', color: '#422c76',
-                textDecoration: 'none', textAlign: 'center',
-              }}>
-                Ver →
-              </a>
-            </div>
-          ))}
-        </div>
+        <AuditUsersList users={auditUsers} />
       </div>
     )
   }
