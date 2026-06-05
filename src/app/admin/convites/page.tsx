@@ -2,7 +2,7 @@ import { getSession }   from '@/lib/session'
 import { redirect }     from 'next/navigation'
 import { db }           from '@/lib/db'
 import { users }        from '@/db/schema'
-import { eq, and, isNull, isNotNull } from 'drizzle-orm'
+import { eq, and, isNull, isNotNull, inArray } from 'drizzle-orm'
 import { BulkInviteButton } from './bulk-invite-button'
 import { PendingList }      from './pending-list'
 import { AccessedList }     from './accessed-list'
@@ -16,17 +16,20 @@ export default async function ConvitesPage() {
   const session = await getSession()
   if (!session || session.role !== 'admin') redirect('/dashboard')
 
+  // Inclui 'user' e 'rh' — exclui apenas 'admin'
+  const ROLES = ['user', 'rh'] as const
+
   const [pending, accessed, total] = await Promise.all([
     db.select({ id: users.id, name: users.name, email: users.email, department: users.department, manager: users.manager })
       .from(users)
-      .where(and(eq(users.isActive, true), eq(users.role, 'user'), isNull(users.firstAccessAt))),
+      .where(and(eq(users.isActive, true), inArray(users.role, ROLES), isNull(users.firstAccessAt))),
     db.select({ id: users.id, name: users.name, email: users.email, department: users.department, firstAccessAt: users.firstAccessAt })
       .from(users)
-      .where(and(eq(users.isActive, true), eq(users.role, 'user'), isNotNull(users.firstAccessAt)))
+      .where(and(eq(users.isActive, true), inArray(users.role, ROLES), isNotNull(users.firstAccessAt)))
       .orderBy(users.firstAccessAt),
     db.select({ id: users.id })
       .from(users)
-      .where(and(eq(users.isActive, true), eq(users.role, 'user'))),
+      .where(and(eq(users.isActive, true), inArray(users.role, ROLES))),
   ])
 
   const accessedPct = total.length > 0 ? Math.round((accessed.length / total.length) * 100) : 0
@@ -71,6 +74,28 @@ export default async function ConvitesPage() {
           </div>
         </div>
       </div>
+
+      {/* ── Quem já se cadastrou ── */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
+          <div>
+            <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#1a1625' }}>
+              Quem já se cadastrou
+            </p>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#8a8490' }}>
+              Colaboradores que criaram senha e acessaram o sistema
+            </p>
+          </div>
+          <span style={{
+            fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20,
+            background: 'rgba(1,168,102,0.1)', color: '#01a866',
+            border: '1px solid rgba(1,168,102,0.25)',
+          }}>
+            ✓ {accessed.length} cadastrados
+          </span>
+        </div>
+        <AccessedList users={accessed} />
+      </section>
 
       {/* Envio por e-mail — qualquer conta */}
       <InviteByEmail />
@@ -150,27 +175,6 @@ export default async function ConvitesPage() {
         </>
       )}
 
-      {/* ── Quem já se cadastrou ── */}
-      <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
-          <div>
-            <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#1a1625' }}>
-              Quem já se cadastrou
-            </p>
-            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#8a8490' }}>
-              Colaboradores que criaram senha e acessaram o sistema
-            </p>
-          </div>
-          <span style={{
-            fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20,
-            background: 'rgba(1,168,102,0.1)', color: '#01a866',
-            border: '1px solid rgba(1,168,102,0.25)',
-          }}>
-            ✓ {accessed.length} cadastrados
-          </span>
-        </div>
-        <AccessedList users={accessed} />
-      </section>
     </div>
   )
 }
