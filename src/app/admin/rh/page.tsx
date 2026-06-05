@@ -8,6 +8,7 @@ import {
   getPointsDistribution,
   getPendingUsers,
   getTopPerformers,
+  getAccessedUsers,
 } from '@/lib/hr-analytics'
 
 import { HrKpiCards }          from '@/components/hr/kpi-cards'
@@ -17,6 +18,7 @@ import { HrPointsDistribution }from '@/components/hr/points-distribution'
 import { HrPendingUsers }      from '@/components/hr/pending-users'
 import { HrTopPerformers }     from '@/components/hr/top-performers'
 import { HrExportButton }      from '@/components/hr/export-button'
+import { HrAccessedUsers }     from '@/components/hr/accessed-users'
 
 export const revalidate = 0
 export const metadata   = { title: 'Dashboard RH | Bolão Copa 2026' }
@@ -60,7 +62,7 @@ export default async function HrDashboardPage() {
   const session = await getSession()
   if (!session || (session.role !== 'admin' && session.role !== 'rh')) redirect('/dashboard')
 
-  const [overview, depts, timeline, distribution, pending, topPerformers] =
+  const [overview, depts, timeline, distribution, pending, topPerformers, accessedData] =
     await Promise.all([
       getHrOverview(),
       getDeptEngagement(),
@@ -68,6 +70,7 @@ export default async function HrDashboardPage() {
       getPointsDistribution(),
       getPendingUsers(),
       getTopPerformers(10),
+      getAccessedUsers(),
     ])
 
   return (
@@ -100,6 +103,17 @@ export default async function HrDashboardPage() {
       <Suspense fallback={<Skeleton h="h-28" />}>
         <HrKpiCards data={overview} />
       </Suspense>
+
+      {/* ── Adesão: Quem já se cadastrou ── */}
+      <Section
+        title={`Adesão ao Sistema · ${accessedData.accessed.length} de ${accessedData.totalEligible} cadastrados`}
+        subtitle="Colaboradores que criaram senha e acessaram o bolão pela primeira vez"
+      >
+        <HrAccessedUsers
+          accessed={accessedData.accessed}
+          totalEligible={accessedData.totalEligible}
+        />
+      </Section>
 
       {/* ── Engajamento por Departamento — full width para caber os nomes ── */}
       <Section

@@ -5,7 +5,7 @@
 
 import { db } from '@/lib/db'
 import { users, predictions, matches } from '@/db/schema'
-import { eq, and, count, sql, desc, isNull, isNotNull } from 'drizzle-orm'
+import { eq, and, count, sql, desc, isNull, isNotNull, inArray } from 'drizzle-orm'
 
 // ─── KPIs Gerais ─────────────────────────────────────────────────────────────
 
@@ -309,4 +309,41 @@ export async function getCsvExportData(): Promise<CsvRow[]> {
     pontosAtuais:  r.points,
     placarExatos:  Number(r.exactCount),
   }))
+}
+
+// ─── Quem já acessou o sistema ───────────────────────────────────────────────
+
+export type AccessedUser = {
+  id:            string
+  name:          string
+  email:         string
+  department:    string | null
+  firstAccessAt: Date
+}
+
+export async function getAccessedUsers(): Promise<{ accessed: AccessedUser[]; totalEligible: number }> {
+  const ROLES = ['user', 'rh'] as const
+
+  const [accessed, total] = await Promise.all([
+    db
+      .select({
+        id:            users.id,
+        name:          users.name,
+        email:         users.email,
+        department:    users.department,
+        firstAccessAt: users.firstAccessAt,
+      })
+      .from(users)
+      .where(and(eq(users.isActive, true), inArray(users.role, ROLES), isNotNull(users.firstAccessAt)))
+      .orderBy(users.firstAccessAt),
+    db
+      .select({ count: count() })
+      .from(users)
+      .where(and(eq(users.isActive, true), inArray(users.role, ROLES))),
+  ])
+
+  return {
+    accessed:      accessed.map(u => ({ ...u, firstAccessAt: u.firstAccessAt! })),
+    totalEligible: Number(total[0].count),
+  }
 }
