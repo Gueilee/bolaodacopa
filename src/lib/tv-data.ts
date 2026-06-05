@@ -13,18 +13,22 @@ export type TvRankingEntry = {
 }
 
 export type TvMatch = {
-  id:        string
-  homeTeam:  string
-  awayTeam:  string
-  homeScore: number | null
-  awayScore: number | null
-  matchDate: Date
-  status:    string
-  phase:     string
-  groupName: string | null
-  venue:     string | null
-  city:      string | null
-  elapsed:   number | null
+  id:           string
+  homeTeam:     string
+  awayTeam:     string
+  homeScore:    number | null
+  awayScore:    number | null
+  matchDate:    Date
+  status:       string
+  phase:        string
+  groupName:    string | null
+  venue:        string | null
+  city:         string | null
+  elapsed:      number | null
+  matchResult:  string | null
+  goalsJson:    string | null
+  bookingsJson: string | null
+  subsJson:     string | null
 }
 
 export type TvDept = {
@@ -65,6 +69,7 @@ export type TvData = {
   ranking:         TvRankingEntry[]
   todayMatches:    TvMatch[]
   recentResults:   TvMatch[]
+  lastMatch:       TvMatch | null   // último jogo encerrado (para slide de destaques)
   departments:     TvDept[]
   managers:        TvManager[]
   posts:           TvPost[]
@@ -209,10 +214,13 @@ export async function getTvData(): Promise<TvData> {
     photoUrl: photos[s.playerName] ?? null,
   }))
 
+  const lastMatch = recentResults[0] ?? null
+
   return {
     ranking,
     todayMatches,
     recentResults,
+    lastMatch,
     departments,
     managers,
     posts,
@@ -257,17 +265,21 @@ function computeTvGroups(allMatches: (typeof matches.$inferSelect)[]): TvGroup[]
 
 function toTvMatch(m: typeof matches.$inferSelect): TvMatch {
   return {
-    id:        m.id,
-    homeTeam:  m.homeTeam,
-    awayTeam:  m.awayTeam,
-    homeScore: m.homeScore,
-    awayScore: m.awayScore,
-    matchDate: m.matchDate,
-    status:    m.status,
-    phase:     m.phase,
-    groupName: m.groupName,
-    venue:     m.venue,
-    city:      m.city,
-    elapsed:   m.elapsed ?? null,
+    id:           m.id,
+    homeTeam:     m.homeTeam,
+    awayTeam:     m.awayTeam,
+    homeScore:    m.homeScore,
+    awayScore:    m.awayScore,
+    matchDate:    m.matchDate,
+    status:       m.status,
+    phase:        m.phase,
+    groupName:    m.groupName,
+    venue:        m.venue,
+    city:         m.city,
+    elapsed:      m.elapsed ?? null,
+    matchResult:  m.matchResult ?? null,
+    goalsJson:    m.goalsJson ?? null,
+    bookingsJson: m.bookingsJson ?? null,
+    subsJson:     m.subsJson ?? null,
   }
 }

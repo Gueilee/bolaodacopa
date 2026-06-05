@@ -3,18 +3,22 @@ import { matches } from '@/db/schema'
 import { asc, eq } from 'drizzle-orm'
 
 export type LiveMatch = {
-  id:        string
-  homeTeam:  string
-  awayTeam:  string
-  homeScore: number | null
-  awayScore: number | null
-  matchDate: Date
-  status:    string
-  elapsed:   number | null
-  phase:     string
-  groupName: string | null
-  venue:     string | null
-  city:      string | null
+  id:           string
+  homeTeam:     string
+  awayTeam:     string
+  homeScore:    number | null
+  awayScore:    number | null
+  matchDate:    Date
+  status:       string
+  elapsed:      number | null
+  phase:        string
+  groupName:    string | null
+  venue:        string | null
+  city:         string | null
+  matchResult:  string | null
+  goalsJson:    string | null
+  bookingsJson: string | null
+  subsJson:     string | null
 }
 
 export type GroupTeam = {
@@ -55,18 +59,22 @@ export async function getCopaLiveData(): Promise<CopaLiveData> {
   const tmr    = new Date(today.getTime() + 86400000)
 
   const toL = (m: typeof matches.$inferSelect): LiveMatch => ({
-    id:        m.id,
-    homeTeam:  m.homeTeam,
-    awayTeam:  m.awayTeam,
-    homeScore: m.homeScore,
-    awayScore: m.awayScore,
-    matchDate: m.matchDate,
-    status:    m.status,
-    elapsed:   m.elapsed,
-    phase:     m.phase,
-    groupName: m.groupName,
-    venue:     m.venue,
-    city:      m.city,
+    id:           m.id,
+    homeTeam:     m.homeTeam,
+    awayTeam:     m.awayTeam,
+    homeScore:    m.homeScore,
+    awayScore:    m.awayScore,
+    matchDate:    m.matchDate,
+    status:       m.status,
+    elapsed:      m.elapsed,
+    phase:        m.phase,
+    groupName:    m.groupName,
+    venue:        m.venue,
+    city:         m.city,
+    matchResult:  m.matchResult ?? null,
+    goalsJson:    m.goalsJson ?? null,
+    bookingsJson: m.bookingsJson ?? null,
+    subsJson:     m.subsJson ?? null,
   })
 
   const liveMatches   = allMatches.filter(m => m.status === 'live').map(toL)

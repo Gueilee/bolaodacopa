@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   ClipboardList, Target, Star, Radio, MapPin, Building2,
   Trophy, MessageCircle, User, LayoutDashboard, Monitor,
-  Settings, Users, Mail, Search, Download, Award, ExternalLink,
+  Settings, Users, Mail, Search, Download, Award, ExternalLink, History,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -25,6 +25,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard/palpites',      label: 'Meus Palpites',       icon: Target },
   { href: '/dashboard/finais',        label: 'Palpite Final',       icon: Star },
   { href: '/dashboard/copa-ao-vivo',  label: 'Copa ao Vivo',        icon: Radio },
+  { href: '/dashboard/resultados',    label: 'Histórico de Jogos',  icon: History },
   { href: '/dashboard/unidades',      label: 'Por Unidade',         icon: MapPin,          section: 'Ranking' },
   { href: '/dashboard/departamentos', label: 'Por Departamento',    icon: Building2 },
   { href: '/dashboard',               label: 'Individual',          icon: Trophy },
