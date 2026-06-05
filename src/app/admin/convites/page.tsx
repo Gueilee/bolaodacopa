@@ -23,7 +23,7 @@ export default async function ConvitesPage() {
     db.select({ id: users.id, name: users.name, email: users.email, department: users.department, manager: users.manager })
       .from(users)
       .where(and(eq(users.isActive, true), inArray(users.role, ROLES), isNull(users.firstAccessAt))),
-    db.select({ id: users.id, name: users.name, email: users.email, department: users.department, firstAccessAt: users.firstAccessAt })
+    db.select({ id: users.id, name: users.name, email: users.email, department: users.department, avatarUrl: users.avatarUrl, firstAccessAt: users.firstAccessAt })
       .from(users)
       .where(and(eq(users.isActive, true), inArray(users.role, ROLES), isNotNull(users.firstAccessAt)))
       .orderBy(users.firstAccessAt),

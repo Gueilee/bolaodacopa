@@ -1,12 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import { UserAvatar } from '@/components/user-avatar'
 
 type User = {
   id:            string
   name:          string
   email:         string
   department:    string | null
+  avatarUrl:     string | null
   firstAccessAt: Date | null
 }
 
@@ -111,14 +113,13 @@ export function AccessedList({ users }: { users: User[] }) {
               {/* Nome + email */}
               <div style={{ minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{
-                    width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
-                    background: 'linear-gradient(135deg, #01a866, #01E18E)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 11, fontWeight: 800, color: '#fff',
-                  }}>
-                    {u.name.charAt(0).toUpperCase()}
-                  </div>
+                  <UserAvatar
+                    name={u.name}
+                    avatarUrl={u.avatarUrl}
+                    size={28}
+                    bgColor="#01a866"
+                    textColor="#fff"
+                  />
                   <div style={{ minWidth: 0 }}>
                     <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#1a1625',
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
