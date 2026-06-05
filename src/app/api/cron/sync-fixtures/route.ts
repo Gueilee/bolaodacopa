@@ -6,10 +6,10 @@
  *
  * Pode também ser invocada manualmente pelo painel admin via POST /api/admin/sync.
  *
- * Consumo de API:
- *  - 1 request por invocação (GET /fixtures?league=1&season=2026)
- *  - A cada 15 min = 96 req/dia → dentro do plano free (100 req/dia)
- *  - Verificação de rate limit: header x-ratelimit-requests-remaining
+ * Consumo de API (football-data.org — gratuito):
+ *  - 1 request por invocação (GET /competitions/WC/matches?season=2026)
+ *  - A cada 15 min = 96 req/dia | Free tier: 10 req/min — sem problemas
+ *  - Retorna gols, cartões e substituições em tempo real (unfold headers)
  */
 
 import { NextRequest, NextResponse } from 'next/server'

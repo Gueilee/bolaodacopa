@@ -83,8 +83,12 @@ export const matches = sqliteTable(
     // Live match elapsed minutes (from API)
     elapsed: integer('elapsed'),
     isScored: integer('is_scored', { mode: 'boolean' }).notNull().default(false),
-    // API-Football fixture ID — set on first sync, used for fast lookups
+    // football-data.org match ID — set on first sync, used for fast lookups
     apiFixtureId: integer('api_fixture_id'),
+    // Event data from football-data.org (JSON arrays)
+    goalsJson:    text('goals_json'),     // MatchGoal[]
+    bookingsJson: text('bookings_json'),  // MatchBooking[]
+    subsJson:     text('subs_json'),      // MatchSub[]
     createdAt: integer('created_at', { mode: 'timestamp' })
       .notNull()
       .default(sql`(unixepoch())`),
