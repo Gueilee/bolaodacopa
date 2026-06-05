@@ -5,7 +5,10 @@
  */
 
 import React from 'react'
-import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer'
+import { Document, Page, Text, View, Image, StyleSheet, Font } from '@react-pdf/renderer'
+
+// Desabilita hifenização automática globalmente para este documento
+Font.registerHyphenationCallback((word) => [word])
 import type { AuditUserPrediction } from '@/lib/queries'
 
 // ─── Paleta ───────────────────────────────────────────────────────────────────
@@ -92,10 +95,10 @@ function ptsBg(pts: number, isScored: boolean) {
 }
 function ptsLabel(pts: number, isScored: boolean) {
   if (!isScored) return 'pendente'
-  if (pts === 10) return '⚡ 10 pts'
-  if (pts === 7)  return '◎ 7 pts'
-  if (pts === 5)  return '✓ 5 pts'
-  return '✗ 0 pts'
+  if (pts === 10) return 'Exato  10 pts'
+  if (pts === 7)  return 'Saldo   7 pts'
+  if (pts === 5)  return 'Venc.   5 pts'
+  return 'Erro    0 pts'
 }
 
 const PHASE_LABELS: Record<string, string> = {
@@ -233,14 +236,14 @@ function CoverPage({ data }: { data: AuditPdfData }) {
       </View>
 
       {/* KPIs */}
-      <View style={{ flexDirection: 'row', gap: 10, width: '80%', marginBottom: 24 }}>
+      <View style={{ flexDirection: 'row', gap: 8, width: '80%', marginBottom: 24 }}>
         {[
-          { label: 'Pontos Totais',    value: String(user.totalPoints), color: C.purple },
-          { label: '⚡ Exatos',        value: String(exact),            color: C.green  },
-          { label: '✓ Vencedor Certo', value: String(winner),           color: C.blue   },
-          { label: '✗ Erros',          value: String(miss),             color: C.red    },
-          { label: '⏳ Pendentes',     value: String(pending),          color: C.gold   },
-          { label: 'Total Palpites',   value: String(total),            color: C.gray   },
+          { label: 'Pontos',    value: String(user.totalPoints), color: C.purple },
+          { label: 'Exatos',   value: String(exact),            color: C.green  },
+          { label: 'Vencedor', value: String(winner),           color: C.blue   },
+          { label: 'Erros',    value: String(miss),             color: C.red    },
+          { label: 'Pendentes',value: String(pending),          color: C.gold   },
+          { label: 'Palpites', value: String(total),            color: C.gray   },
         ].map(k => (
           <View key={k.label} style={{
             flex: 1, backgroundColor: C.white, borderRadius: 6, padding: 10,
@@ -250,7 +253,7 @@ function CoverPage({ data }: { data: AuditPdfData }) {
             <Text style={{ fontSize: 16, fontFamily: 'Helvetica-Bold', color: k.color, marginBottom: 3 }}>
               {k.value}
             </Text>
-            <Text style={{ fontSize: 6.5, color: C.muted, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 7, color: C.muted, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 0.4 }}>
               {k.label}
             </Text>
           </View>
@@ -270,20 +273,20 @@ function CoverPage({ data }: { data: AuditPdfData }) {
           </Text>
           <View style={{ flexDirection: 'row', gap: 16 }}>
             {[
-              { label: '🏆 Campeão',    pred: tournament.userChampion,  real: tournament.realChampion  },
-              { label: '🥈 Vice',       pred: tournament.userRunnerUp,  real: tournament.realRunnerUp  },
-              { label: '⚽ Artilheiro', pred: tournament.userTopScorer, real: tournament.realTopScorer },
+              { label: 'Campeao',    pred: tournament.userChampion,  real: tournament.realChampion  },
+              { label: 'Vice',       pred: tournament.userRunnerUp,  real: tournament.realRunnerUp  },
+              { label: 'Artilheiro', pred: tournament.userTopScorer, real: tournament.realTopScorer },
             ].map(item => {
               const hit = item.real && item.pred?.trim().toLowerCase() === item.real?.trim().toLowerCase()
               return (
                 <View key={item.label} style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 7, color: C.muted, marginBottom: 2 }}>{item.label}</Text>
+                  <Text style={{ fontSize: 7, color: C.muted, marginBottom: 2, textTransform: 'uppercase', letterSpacing: 0.5 }}>{item.label}</Text>
                   <Text style={{ fontSize: 9, fontFamily: 'Helvetica-Bold', color: C.purple }}>
                     {item.pred ?? '—'}
                   </Text>
                   {item.real && (
                     <Text style={{ fontSize: 7, color: hit ? C.green : C.muted, marginTop: 2 }}>
-                      {hit ? '✓ Acertou' : `Real: ${item.real}`}
+                      {hit ? 'Acertou!' : `Real: ${item.real}`}
                     </Text>
                   )}
                 </View>
@@ -443,9 +446,9 @@ function TournamentPage({ data }: { data: AuditPdfData }) {
   const matchPts = scored.reduce((s, p) => s + p.points, 0)
 
   const tournamentItems = [
-    { label: '🏆 Campeão',    pred: tournament.userChampion,  real: tournament.realChampion,  pts: 50 },
-    { label: '🥈 Vice-Campeão',pred: tournament.userRunnerUp, real: tournament.realRunnerUp,  pts: 25 },
-    { label: '⚽ Artilheiro', pred: tournament.userTopScorer, real: tournament.realTopScorer, pts: 50 },
+    { label: 'Campeao',       pred: tournament.userChampion,  real: tournament.realChampion,  pts: 50 },
+    { label: 'Vice-Campeao',  pred: tournament.userRunnerUp,  real: tournament.realRunnerUp,  pts: 25 },
+    { label: 'Artilheiro',    pred: tournament.userTopScorer, real: tournament.realTopScorer, pts: 50 },
   ]
 
   const lastPage = Math.max(2, Math.ceil(predictions.length / ROWS_PER_PAGE) + 1) + 1
@@ -479,7 +482,7 @@ function TournamentPage({ data }: { data: AuditPdfData }) {
               {applicable ? (
                 <View style={{ backgroundColor: hit ? C.greenBg : C.redBg, borderRadius: 10, paddingVertical: 2, paddingHorizontal: 6 }}>
                   <Text style={{ fontSize: 7, fontFamily: 'Helvetica-Bold', color: hit ? C.green : C.red }}>
-                    {hit ? '✓ Acertou' : '✗ Errou'}
+                    {hit ? 'Acertou' : 'Errou'}
                   </Text>
                 </View>
               ) : (
@@ -510,37 +513,22 @@ function TournamentPage({ data }: { data: AuditPdfData }) {
 
       <View style={{ flexDirection: 'row', gap: 10, marginBottom: 12 }}>
         {[
-          { label: 'Pontos de Partidas',       value: matchPts,                         color: C.purple },
-          { label: 'Bônus do Torneio',         value: tournament.isScored ? tournament.bonusPoints : '–', color: C.neon },
-          { label: 'TOTAL GERAL',              value: user.totalPoints,                 color: C.purple, big: true },
+          { label: 'Pts Partidas', value: matchPts,                                              color: C.purple },
+          { label: 'Bonus Torneio',value: tournament.isScored ? tournament.bonusPoints : '–',   color: C.neon   },
+          { label: 'TOTAL GERAL',  value: user.totalPoints,                                      color: C.purple, big: true },
+          { label: 'Exatos',       value: exact,                                                 color: C.green  },
+          { label: 'Vencedores',   value: winner,                                                color: C.blue   },
+          { label: 'Erros',        value: miss,                                                  color: C.red    },
         ].map(k => (
           <View key={k.label} style={{
-            flex: 1, backgroundColor: C.white, borderRadius: 6, padding: 12,
-            alignItems: 'center', borderTopWidth: k.big ? 4 : 2, borderTopColor: k.color,
+            flex: 1, backgroundColor: C.white, borderRadius: 6, padding: 10,
+            alignItems: 'center', borderTopWidth: (k as {big?: boolean}).big ? 4 : 2, borderTopColor: k.color,
             borderWidth: 1, borderColor: C.border,
           }}>
-            <Text style={{ fontSize: k.big ? 20 : 16, fontFamily: 'Helvetica-Bold', color: k.color, marginBottom: 3 }}>
+            <Text style={{ fontSize: (k as {big?: boolean}).big ? 20 : 16, fontFamily: 'Helvetica-Bold', color: k.color, marginBottom: 3 }}>
               {k.value}
             </Text>
-            <Text style={{ fontSize: 7, color: C.muted, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 0.5 }}>
-              {k.label}
-            </Text>
-          </View>
-        ))}
-        {[
-          { label: '⚡ Placares Exatos', value: exact,  color: C.green },
-          { label: '✓ Vencedores',       value: winner, color: C.blue  },
-          { label: '✗ Erros',            value: miss,   color: C.red   },
-        ].map(k => (
-          <View key={k.label} style={{
-            flex: 1, backgroundColor: C.white, borderRadius: 6, padding: 12,
-            alignItems: 'center', borderTopWidth: 2, borderTopColor: k.color,
-            borderWidth: 1, borderColor: C.border,
-          }}>
-            <Text style={{ fontSize: 16, fontFamily: 'Helvetica-Bold', color: k.color, marginBottom: 3 }}>
-              {k.value}
-            </Text>
-            <Text style={{ fontSize: 7, color: C.muted, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            <Text style={{ fontSize: 7, color: C.muted, textAlign: 'center', textTransform: 'uppercase', letterSpacing: 0.4 }}>
               {k.label}
             </Text>
           </View>
