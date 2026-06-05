@@ -318,6 +318,7 @@ export type AccessedUser = {
   name:          string
   email:         string
   department:    string | null
+  avatarUrl:     string | null
   firstAccessAt: Date
 }
 
@@ -331,6 +332,7 @@ export async function getAccessedUsers(): Promise<{ accessed: AccessedUser[]; to
         name:          users.name,
         email:         users.email,
         department:    users.department,
+        avatarUrl:     users.avatarUrl,
         firstAccessAt: users.firstAccessAt,
       })
       .from(users)
@@ -343,7 +345,7 @@ export async function getAccessedUsers(): Promise<{ accessed: AccessedUser[]; to
   ])
 
   return {
-    accessed:      accessed.map(u => ({ ...u, firstAccessAt: u.firstAccessAt! })),
+    accessed:      accessed.map(u => ({ ...u, avatarUrl: u.avatarUrl ?? null, firstAccessAt: u.firstAccessAt! })),
     totalEligible: Number(total[0].count),
   }
 }

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { AccessedUser } from '@/lib/hr-analytics'
+import { UserAvatar } from '@/components/user-avatar'
 
 function fmtDate(d: Date) {
   return new Date(d).toLocaleString('pt-BR', {
@@ -164,13 +165,13 @@ export function HrAccessedUsers({ accessed, totalEligible }: Props) {
                 }}>
                   {/* Nome */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 9, minWidth: 0 }}>
-                    <div style={{
-                      width: 30, height: 30, borderRadius: '50%', flexShrink: 0,
-                      background: color, display: 'flex', alignItems: 'center',
-                      justifyContent: 'center', fontSize: 12, fontWeight: 800, color: '#fff',
-                    }}>
-                      {u.name.charAt(0).toUpperCase()}
-                    </div>
+                    <UserAvatar
+                      name={u.name}
+                      avatarUrl={u.avatarUrl}
+                      size={30}
+                      bgColor={color}
+                      textColor="#fff"
+                    />
                     <div style={{ minWidth: 0 }}>
                       <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#1a1625',
                         overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
