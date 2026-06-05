@@ -146,9 +146,11 @@ export default function RegrasPage() {
                   <div style={{ fontSize:24 }}>🔊</div>
                   <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#ffd700', lineHeight:1.3 }}>Caixa de Som</p>
                 </div>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,107,0,0.1)', border:'1px solid rgba(255,107,0,0.2)', textAlign:'center' }}>
-                  <p style={{ margin:0, fontSize:20, fontWeight:900, color:'#ff6b00' }}>R$1.000</p>
-                  <p style={{ margin:'2px 0 0', fontSize:11, fontWeight:700, color:'rgba(255,107,0,0.7)' }}>Vale Centauro</p>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', textAlign:'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/centauro.png" alt="Centauro" style={{ height:28, objectFit:'contain', display:'block', margin:'0 auto 6px' }} />
+                  <p style={{ margin:0, fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>R$1.000</p>
+                  <p style={{ margin:'3px 0 0', fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em' }}>Vale-Compras</p>
                 </div>
               </div>
             </div>
@@ -168,9 +170,11 @@ export default function RegrasPage() {
                   <div style={{ fontSize:24 }}>🔊</div>
                   <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#c0c0c0', lineHeight:1.3 }}>Caixa de Som</p>
                 </div>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,107,0,0.08)', border:'1px solid rgba(255,107,0,0.15)', textAlign:'center' }}>
-                  <p style={{ margin:0, fontSize:20, fontWeight:900, color:'#ff8c40' }}>R$500</p>
-                  <p style={{ margin:'2px 0 0', fontSize:11, fontWeight:700, color:'rgba(255,107,0,0.6)' }}>Vale Centauro</p>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', textAlign:'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/centauro.png" alt="Centauro" style={{ height:28, objectFit:'contain', display:'block', margin:'0 auto 6px' }} />
+                  <p style={{ margin:0, fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>R$500</p>
+                  <p style={{ margin:'3px 0 0', fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em' }}>Vale-Compras</p>
                 </div>
               </div>
             </div>
@@ -190,9 +194,11 @@ export default function RegrasPage() {
                   <div style={{ fontSize:24 }}>🔊</div>
                   <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#cd7f32', lineHeight:1.3 }}>Caixa de Som</p>
                 </div>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,107,0,0.08)', border:'1px solid rgba(255,107,0,0.15)', textAlign:'center' }}>
-                  <p style={{ margin:0, fontSize:20, fontWeight:900, color:'#ff8c40' }}>R$500</p>
-                  <p style={{ margin:'2px 0 0', fontSize:11, fontWeight:700, color:'rgba(255,107,0,0.6)' }}>Vale Centauro</p>
+                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', textAlign:'center' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/centauro.png" alt="Centauro" style={{ height:28, objectFit:'contain', display:'block', margin:'0 auto 6px' }} />
+                  <p style={{ margin:0, fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>R$500</p>
+                  <p style={{ margin:'3px 0 0', fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em' }}>Vale-Compras</p>
                 </div>
               </div>
             </div>
