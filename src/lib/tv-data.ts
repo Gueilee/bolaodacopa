@@ -24,6 +24,7 @@ export type TvMatch = {
   groupName: string | null
   venue:     string | null
   city:      string | null
+  elapsed:   number | null
 }
 
 export type TvDept = {
@@ -267,5 +268,6 @@ function toTvMatch(m: typeof matches.$inferSelect): TvMatch {
     groupName: m.groupName,
     venue:     m.venue,
     city:      m.city,
+    elapsed:   m.elapsed ?? null,
   }
 }
