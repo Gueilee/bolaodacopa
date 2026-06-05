@@ -196,7 +196,7 @@ export async function getTvData(): Promise<TvData> {
   }))
   const dbNames    = new Set(dbScorers.map(s => s.playerName.toLowerCase()))
   const supplement = PRE_COPA_SCORERS.filter(p => !dbNames.has(p.playerName.toLowerCase()))
-  const fullList   = [...dbScorers, ...supplement].slice(0, 10)
+  const fullList   = [...dbScorers, ...supplement].slice(0, 8)
 
   // Buscar fotos para TODOS os 10 via Wikipedia + TheSportsDB
   let photos: Record<string, string> = {}

@@ -31,8 +31,7 @@ function Flag({ country }: { country: string }) {
 
 export function SlideArtilheiros({ scorers }: { scorers: TvScorer[] }) {
   const hasReal = scorers.some(s => s.goals > 0)
-  // Servidor já garante lista de 10 com fotos
-  const list = scorers.slice(0, 10)
+  const list = scorers.slice(0, 8)
 
   return (
     <div style={{ height: '100%', padding: '4px 60px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -44,7 +43,7 @@ export function SlideArtilheiros({ scorers }: { scorers: TvScorer[] }) {
         </p>
       )}
 
-      {/* Lista única de 10 */}
+      {/* Lista de 8 */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 6 }}>
         {list.map((s, i) => {
           const isTop3 = i < 3

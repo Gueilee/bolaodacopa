@@ -80,7 +80,7 @@ type SportsDbResponse = {
 // Fotos hardcoded para jogadores com problemas de carregamento via API
 // Usamos URLs do Wikimedia Commons que são estáveis e livres de direitos
 const STATIC_PHOTOS: Record<string, string> = {
-  'Raphinha': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Raphinha_2023.jpg/440px-Raphinha_2023.jpg',
+  'Raphinha': 'https://upload.wikimedia.org/wikipedia/commons/c/c6/RaphinhaBenfica_%28cropped%29.png',
 }
 
 // Cache em memória (reset a cada deploy)
