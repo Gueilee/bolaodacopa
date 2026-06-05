@@ -199,6 +199,27 @@ export async function createComment(
   }
 }
 
+// ─── Listar quem curtiu um post ───────────────────────────────────────────────
+
+export type LikeItem = {
+  userId:    string
+  userName:  string
+  userAvatar: string | null
+}
+
+export async function getPostLikes(postId: string): Promise<LikeItem[]> {
+  const rows = await db.query.socialLikes.findMany({
+    where: eq(socialLikes.postId, postId),
+    orderBy: [asc(socialLikes.createdAt)],
+    with: { user: { columns: { name: true, avatarUrl: true } } },
+  })
+  return rows.map(r => ({
+    userId:    r.userId,
+    userName:  r.user.name,
+    userAvatar: r.user.avatarUrl ?? null,
+  }))
+}
+
 // ─── Deletar comentário ───────────────────────────────────────────────────────
 
 export async function deleteComment(commentId: string): Promise<{ success: boolean }> {

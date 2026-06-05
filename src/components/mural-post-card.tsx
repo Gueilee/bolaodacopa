@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useTransition, useRef } from 'react'
-import { toggleLike, deletePost, getPostComments, createComment, deleteComment } from '@/app/actions/social'
+import { toggleLike, deletePost, getPostComments, createComment, deleteComment, getPostLikes } from '@/app/actions/social'
 import { useRouter } from 'next/navigation'
-import type { PostWithUser, CommentItem } from '@/app/actions/social'
+import type { PostWithUser, CommentItem, LikeItem } from '@/app/actions/social'
 import { UserAvatar } from '@/components/user-avatar'
 
 function MediaImage({ src }: { src: string }) {
@@ -90,6 +90,10 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
   const [comments, setComments]               = useState<CommentItem[]>([])
   const [commentsLoaded, setLoaded]           = useState(false)
   const [loadingComments, setLoadingComments] = useState(false)
+  const [showLikes, setShowLikes]             = useState(false)
+  const [likes, setLikes]                     = useState<LikeItem[]>([])
+  const [likesLoaded, setLikesLoaded]         = useState(false)
+  const [loadingLikes, setLoadingLikes]       = useState(false)
   const [newComment, setNewComment]           = useState('')
   const [confirmDelete, setConfirm]           = useState(false)
   const [isPending, start]                    = useTransition()
@@ -108,6 +112,17 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
     if (!confirmDelete) { setConfirm(true); setTimeout(() => setConfirm(false), 3000); return }
     await deletePost(post.id)
     router.refresh()
+  }
+
+  async function toggleLikes() {
+    if (!showLikes && !likesLoaded) {
+      setLoadingLikes(true)
+      const data = await getPostLikes(post.id)
+      setLikes(data)
+      setLikesLoaded(true)
+      setLoadingLikes(false)
+    }
+    setShowLikes(v => !v)
   }
 
   async function toggleComments() {
@@ -218,9 +233,18 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
           borderTop: '1px solid #f5f2ef',
         }}>
           {likesCount > 0 ? (
-            <span style={{ fontSize: 12, color: '#aaa8b0' }}>
+            <button
+              onClick={toggleLikes}
+              style={{
+                fontSize: 12, background: 'none', border: 'none', cursor: 'pointer',
+                padding: 0, color: showLikes ? '#ff2f69' : '#aaa8b0',
+                fontWeight: showLikes ? 700 : 400,
+                textDecoration: showLikes ? 'none' : 'underline',
+                textUnderlineOffset: 2,
+              }}
+            >
               ❤️ {likesCount} curtida{likesCount !== 1 ? 's' : ''}
-            </span>
+            </button>
           ) : <span />}
           {commentsCount > 0 && (
             <button
@@ -261,6 +285,33 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
           label={loadingComments ? 'Carregando…' : 'Comentar'}
         />
       </div>
+
+      {/* ── Quem curtiu ── */}
+      {showLikes && (
+        <div style={{
+          background: '#fdf8ff',
+          borderTop: '1px solid #f0ede8',
+          padding: '12px 20px',
+        }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: '#8a8490', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 10px' }}>
+            Curtidas
+          </p>
+          {loadingLikes ? (
+            <p style={{ fontSize: 13, color: '#aaa8b0' }}>Carregando…</p>
+          ) : likes.length === 0 ? (
+            <p style={{ fontSize: 13, color: '#aaa8b0' }}>Nenhuma curtida ainda.</p>
+          ) : (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {likes.map(l => (
+                <div key={l.userId} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 10px', borderRadius: 20, background: '#fff', border: '1px solid #ede9e4' }}>
+                  <UserAvatar name={l.userName} avatarUrl={l.userAvatar} size={22} bgColor="#ff2f6933" textColor="#ff2f69" />
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#2d2737' }}>{l.userName}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Comentários ── */}
       {showComments && (
