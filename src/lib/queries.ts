@@ -194,3 +194,181 @@ export async function getUserLockStatus(userId: string) {
     },
   })
 }
+
+// ─── Auditoria: partidas encerradas com resumo de palpites ──────────────────
+
+export type AuditMatchSummary = {
+  id:         string
+  matchNumber: number
+  phase:      string
+  groupName:  string | null
+  homeTeam:   string
+  awayTeam:   string
+  homeScore:  number
+  awayScore:  number
+  matchDate:  Date
+  total:      number   // palpites registrados
+  exact:      number   // placar exato (10 pts)
+  winner:     number   // vencedor certo (5 ou 7 pts)
+  miss:       number   // errou (0 pts)
+  noBet:      number   // sem palpite
+  totalUsers: number
+}
+
+export async function getAuditMatchSummaries(): Promise<AuditMatchSummary[]> {
+  const [allUsers, finishedMatches] = await Promise.all([
+    db.select({ count: count() }).from(users).where(and(eq(users.isActive, true), eq(users.role, 'user'))),
+    db.query.matches.findMany({
+      where: eq(matches.status, 'finished'),
+      orderBy: [asc(matches.matchDate)],
+      with: {
+        predictions: {
+          columns: { points: true, isScored: true },
+        },
+      },
+    }),
+  ])
+  const totalUsers = Number(allUsers[0].count)
+
+  return finishedMatches
+    .filter(m => m.homeScore !== null && m.awayScore !== null)
+    .map(m => {
+      const scored = m.predictions.filter(p => p.isScored)
+      const exact  = scored.filter(p => p.points === 10).length
+      const winner = scored.filter(p => p.points === 5 || p.points === 7).length
+      const miss   = scored.filter(p => p.points === 0).length
+      return {
+        id:          m.id,
+        matchNumber: m.matchNumber,
+        phase:       m.phase,
+        groupName:   m.groupName,
+        homeTeam:    m.homeTeam,
+        awayTeam:    m.awayTeam,
+        homeScore:   m.homeScore!,
+        awayScore:   m.awayScore!,
+        matchDate:   m.matchDate,
+        total:       scored.length,
+        exact,
+        winner,
+        miss,
+        noBet:       totalUsers - scored.length,
+        totalUsers,
+      }
+    })
+}
+
+// ─── Auditoria: palpites de todos os usuários para uma partida ───────────────
+
+export type AuditMatchDetail = {
+  userId:     string
+  userName:   string
+  department: string | null
+  predHome:   number
+  predAway:   number
+  points:     number
+  isScored:   boolean
+}
+
+export async function getAuditByMatch(matchId: string): Promise<AuditMatchDetail[]> {
+  const rows = await db
+    .select({
+      userId:     predictions.userId,
+      userName:   users.name,
+      department: users.department,
+      predHome:   predictions.homeScore,
+      predAway:   predictions.awayScore,
+      points:     predictions.points,
+      isScored:   predictions.isScored,
+    })
+    .from(predictions)
+    .innerJoin(users, eq(predictions.userId, users.id))
+    .where(eq(predictions.matchId, matchId))
+    .orderBy(desc(predictions.points), asc(users.name))
+
+  return rows
+}
+
+// ─── Auditoria: todos os palpites de um usuário com resultado real ───────────
+
+export type AuditUserPrediction = {
+  matchId:   string
+  matchNumber: number
+  phase:     string
+  groupName: string | null
+  homeTeam:  string
+  awayTeam:  string
+  homeScore: number | null
+  awayScore: number | null
+  matchDate: Date
+  status:    string
+  predHome:  number
+  predAway:  number
+  points:    number
+  isScored:  boolean
+}
+
+export async function getAuditByUser(userId: string): Promise<AuditUserPrediction[]> {
+  const rows = await db
+    .select({
+      matchId:     predictions.matchId,
+      matchNumber: matches.matchNumber,
+      phase:       matches.phase,
+      groupName:   matches.groupName,
+      homeTeam:    matches.homeTeam,
+      awayTeam:    matches.awayTeam,
+      homeScore:   matches.homeScore,
+      awayScore:   matches.awayScore,
+      matchDate:   matches.matchDate,
+      status:      matches.status,
+      predHome:    predictions.homeScore,
+      predAway:    predictions.awayScore,
+      points:      predictions.points,
+      isScored:    predictions.isScored,
+    })
+    .from(predictions)
+    .innerJoin(matches, eq(predictions.matchId, matches.id))
+    .where(eq(predictions.userId, userId))
+    .orderBy(asc(matches.matchDate))
+
+  return rows
+}
+
+// ─── Auditoria: lista de usuários com resumo de pontos ───────────────────────
+
+export type AuditUser = {
+  id:         string
+  name:       string
+  department: string | null
+  totalPoints: number
+  predCount:  number
+  exactCount: number
+  winnerCount: number
+  missCount:  number
+}
+
+export async function getAuditUsers(): Promise<AuditUser[]> {
+  const rows = await db
+    .select({
+      id:          users.id,
+      name:        users.name,
+      department:  users.department,
+      totalPoints: users.totalPoints,
+      predCount:   count(predictions.id),
+      exactCount:  sql<number>`cast(sum(case when ${predictions.points} = 10 then 1 else 0 end) as integer)`,
+      winnerCount: sql<number>`cast(sum(case when ${predictions.points} in (5,7) then 1 else 0 end) as integer)`,
+      missCount:   sql<number>`cast(sum(case when ${predictions.points} = 0 and ${predictions.isScored} = 1 then 1 else 0 end) as integer)`,
+    })
+    .from(users)
+    .leftJoin(predictions, and(eq(predictions.userId, users.id), eq(predictions.isScored, true)))
+    .where(and(eq(users.isActive, true), eq(users.role, 'user')))
+    .groupBy(users.id)
+    .orderBy(desc(users.totalPoints), asc(users.name))
+
+  return rows.map(r => ({
+    ...r,
+    predCount:   Number(r.predCount),
+    exactCount:  Number(r.exactCount),
+    winnerCount: Number(r.winnerCount),
+    missCount:   Number(r.missCount),
+  }))
+}

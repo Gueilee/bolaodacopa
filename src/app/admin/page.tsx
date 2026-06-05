@@ -109,9 +109,10 @@ export default async function AdminPage() {
       {/* ── Atalhos rápidos ── */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { href: '/admin/convites', icon: '✉️', label: 'Convites',     sub: 'Enviar links de acesso',   color: '#422c76' },
-          { href: '/admin/rh',       icon: '📊', label: 'Dashboard RH', sub: 'Engajamento por depto',    color: '#01a866' },
-          { href: '/admin/exportar', icon: '⬇️', label: 'Exportar',     sub: 'PDF e CSVs do bolão',      color: '#1a6aff' },
+          { href: '/admin/convites',  icon: '✉️', label: 'Convites',     sub: 'Enviar links de acesso',         color: '#422c76' },
+          { href: '/admin/auditoria',icon: '🔍', label: 'Auditoria',    sub: 'Palpites vs resultados reais',  color: '#0891b2' },
+          { href: '/admin/rh',       icon: '📊', label: 'Dashboard RH', sub: 'Engajamento por depto',         color: '#01a866' },
+          { href: '/admin/exportar', icon: '⬇️', label: 'Exportar',     sub: 'PDF e CSVs do bolão',           color: '#1a6aff' },
         ].map(link => (
           <a key={link.href} href={link.href} style={{
             display: 'flex', alignItems: 'center', gap: 14,
