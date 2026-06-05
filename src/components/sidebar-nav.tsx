@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
   { href: '/dashboard/palpites',      label: 'Meus Palpites',       icon: Target },
   { href: '/dashboard/finais',        label: 'Palpite Final',       icon: Star },
   { href: '/dashboard/copa-ao-vivo',  label: 'Copa ao Vivo',        icon: Radio },
-  { href: '/resultados',              label: 'Histórico de Jogos',  icon: History, newTab: true },
+  { href: '/dashboard/resultados',    label: 'Histórico de Jogos',  icon: History },
   { href: '/dashboard/unidades',      label: 'Por Unidade',         icon: MapPin,          section: 'Ranking' },
   { href: '/dashboard/departamentos', label: 'Por Departamento',    icon: Building2 },
   { href: '/dashboard',               label: 'Individual',          icon: Trophy },
