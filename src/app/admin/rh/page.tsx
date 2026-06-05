@@ -10,9 +10,11 @@ import {
   getTopPerformers,
   getAccessedUsers,
 } from '@/lib/hr-analytics'
+import { getUnitRanking }      from '@/lib/unit-ranking'
 
 import { HrKpiCards }          from '@/components/hr/kpi-cards'
 import { HrDeptChart }         from '@/components/hr/dept-chart'
+import { HrUnitStats }         from '@/components/hr/unit-stats'
 import { HrLockTimeline }      from '@/components/hr/lock-timeline'
 import { HrPointsDistribution }from '@/components/hr/points-distribution'
 import { HrPendingUsers }      from '@/components/hr/pending-users'
@@ -62,10 +64,11 @@ export default async function HrDashboardPage() {
   const session = await getSession()
   if (!session || (session.role !== 'admin' && session.role !== 'rh')) redirect('/dashboard')
 
-  const [overview, depts, timeline, distribution, pending, topPerformers, accessedData] =
+  const [overview, depts, unitRanking, timeline, distribution, pending, topPerformers, accessedData] =
     await Promise.all([
       getHrOverview(),
       getDeptEngagement(),
+      getUnitRanking(),
       getLockTimeline(),
       getPointsDistribution(),
       getPendingUsers(),
@@ -122,6 +125,16 @@ export default async function HrDashboardPage() {
       >
         <Suspense fallback={<Skeleton />}>
           <HrDeptChart data={depts} />
+        </Suspense>
+      </Section>
+
+      {/* ── Ranking por Unidade ── */}
+      <Section
+        title="Ranking por Unidade"
+        subtitle="Comparativo de adesão, pontuação média e líderes entre as 5 unidades"
+      >
+        <Suspense fallback={<Skeleton />}>
+          <HrUnitStats data={unitRanking} />
         </Suspense>
       </Section>
 
