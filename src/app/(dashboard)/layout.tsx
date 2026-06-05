@@ -5,7 +5,7 @@ import Image          from 'next/image'
 import { SidebarNav }           from '@/components/sidebar-nav'
 import { SidebarScrollWrapper } from '@/components/sidebar-scroll-wrapper'
 import { UserMenu }             from '@/components/user-menu'
-import { Zap }                  from 'lucide-react'
+import { SidebarCountdown }      from '@/components/sidebar-countdown'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession()
@@ -37,7 +37,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
 
         {/* Countdown strip */}
-        <CountdownStrip />
+        <SidebarCountdown />
 
         {/* Navigation */}
         <SidebarScrollWrapper>
@@ -76,52 +76,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <main className="flex-1 overflow-y-auto px-4 md:px-8 py-6 md:py-8">
           {children}
         </main>
-      </div>
-    </div>
-  )
-}
-
-/* Mini countdown no sidebar */
-function CountdownStrip() {
-  const target = new Date('2026-06-11T20:00:00Z').getTime()
-  const now    = Date.now()
-  const diff   = Math.max(0, target - now)
-  const days   = Math.floor(diff / 86400000)
-  const hours  = Math.floor((diff % 86400000) / 3600000)
-
-  return (
-    <div style={{
-      margin: '10px 12px',
-      padding: '11px 14px',
-      borderRadius: 12,
-      background: 'rgba(1,225,142,0.07)',
-      border: '1px solid rgba(1,225,142,0.18)',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10,
-    }}>
-      <div style={{
-        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-        background: 'rgba(1,225,142,0.15)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
-        <Zap size={14} color="#01E18E" strokeWidth={2.5} />
-      </div>
-      <div style={{ minWidth: 0 }}>
-        <p style={{
-          fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
-          color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', margin: 0,
-          fontFamily: 'var(--font-barlow), sans-serif',
-        }}>
-          Copa 2026
-        </p>
-        <p style={{
-          fontSize: 14, fontWeight: 400, color: '#01E18E', margin: 0,
-          fontFamily: 'var(--font-anton), sans-serif',
-          letterSpacing: '0.02em',
-        }}>
-          {days}d {hours}h restantes
-        </p>
       </div>
     </div>
   )
