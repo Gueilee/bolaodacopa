@@ -5,6 +5,7 @@ import { users }        from '@/db/schema'
 import { eq, and, isNull, isNotNull } from 'drizzle-orm'
 import { BulkInviteButton } from './bulk-invite-button'
 import { PendingList }      from './pending-list'
+import { AccessedList }     from './accessed-list'
 import { InviteByEmail }   from './invite-by-email'
 
 export const revalidate  = 0
@@ -19,9 +20,10 @@ export default async function ConvitesPage() {
     db.select({ id: users.id, name: users.name, email: users.email, department: users.department, manager: users.manager })
       .from(users)
       .where(and(eq(users.isActive, true), eq(users.role, 'user'), isNull(users.firstAccessAt))),
-    db.select({ id: users.id, name: users.name, email: users.email, firstAccessAt: users.firstAccessAt })
+    db.select({ id: users.id, name: users.name, email: users.email, department: users.department, firstAccessAt: users.firstAccessAt })
       .from(users)
-      .where(and(eq(users.isActive, true), eq(users.role, 'user'), isNotNull(users.firstAccessAt))),
+      .where(and(eq(users.isActive, true), eq(users.role, 'user'), isNotNull(users.firstAccessAt)))
+      .orderBy(users.firstAccessAt),
     db.select({ id: users.id })
       .from(users)
       .where(and(eq(users.isActive, true), eq(users.role, 'user'))),
@@ -148,41 +150,27 @@ export default async function ConvitesPage() {
         </>
       )}
 
-      {/* ── Já acessaram ── */}
-      {accessed.length > 0 && (
-        <section>
-          <details style={{ background: '#fff', borderRadius: 16, border: '1px solid rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-            <summary style={{
-              padding: '16px 20px', cursor: 'pointer', userSelect: 'none',
-              fontSize: 14, fontWeight: 700, color: '#1a1625',
-              display: 'flex', alignItems: 'center', gap: 8, listStyle: 'none',
-            }}>
-              <span style={{ fontSize: 13, padding: '2px 10px', borderRadius: 20,
-                background: 'rgba(1,168,102,0.1)', color: '#01a866',
-                border: '1px solid rgba(1,168,102,0.2)', fontWeight: 700 }}>
-                ✓ {accessed.length}
-              </span>
-              Colaboradores que já acessaram
-            </summary>
-            <div style={{ borderTop: '1px solid #f0ede8' }}>
-              {accessed.map((u, i) => (
-                <div key={u.id} style={{
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '11px 20px',
-                  borderBottom: i < accessed.length - 1 ? '1px solid #f5f2ef' : 'none',
-                }}>
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#1a1625',
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</p>
-                    <p style={{ margin: 0, fontSize: 11, color: '#8a8490' }}>{u.email}</p>
-                  </div>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: '#01a866', flexShrink: 0 }}>✓ Acessou</span>
-                </div>
-              ))}
-            </div>
-          </details>
-        </section>
-      )}
+      {/* ── Quem já se cadastrou ── */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
+          <div>
+            <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: '#1a1625' }}>
+              Quem já se cadastrou
+            </p>
+            <p style={{ margin: '2px 0 0', fontSize: 12, color: '#8a8490' }}>
+              Colaboradores que criaram senha e acessaram o sistema
+            </p>
+          </div>
+          <span style={{
+            fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20,
+            background: 'rgba(1,168,102,0.1)', color: '#01a866',
+            border: '1px solid rgba(1,168,102,0.25)',
+          }}>
+            ✓ {accessed.length} cadastrados
+          </span>
+        </div>
+        <AccessedList users={accessed} />
+      </section>
     </div>
   )
 }
