@@ -223,9 +223,17 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
             </span>
           ) : <span />}
           {commentsCount > 0 && (
-            <span style={{ fontSize: 12, color: '#aaa8b0' }}>
+            <button
+              onClick={toggleComments}
+              style={{
+                fontSize: 12, color: '#7c6aaa', background: 'none', border: 'none',
+                cursor: 'pointer', padding: 0, fontWeight: 600,
+                textDecoration: showComments ? 'none' : 'underline',
+                textUnderlineOffset: 2,
+              }}
+            >
               {commentsCount} comentário{commentsCount !== 1 ? 's' : ''}
-            </span>
+            </button>
           )}
         </div>
       )}
