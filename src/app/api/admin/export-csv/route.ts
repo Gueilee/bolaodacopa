@@ -109,7 +109,7 @@ function buildPendentesCsv(data: Awaited<ReturnType<typeof getFullReportData>>):
 
 export async function GET(request: NextRequest) {
   const session = await getSession()
-  if (!session || session.role !== 'admin') {
+  if (!session || (session.role !== 'admin' && session.role !== 'rh')) {
     return new NextResponse('Acesso negado', { status: 403 })
   }
 

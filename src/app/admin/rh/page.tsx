@@ -58,7 +58,7 @@ function Skeleton({ h = 'h-32' }: { h?: string }) {
 
 export default async function HrDashboardPage() {
   const session = await getSession()
-  if (!session || session.role !== 'admin') redirect('/dashboard')
+  if (!session || (session.role !== 'admin' && session.role !== 'rh')) redirect('/dashboard')
 
   const [overview, depts, timeline, distribution, pending, topPerformers] =
     await Promise.all([
