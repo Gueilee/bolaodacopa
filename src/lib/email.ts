@@ -1,4 +1,7 @@
 import nodemailer from 'nodemailer'
+import { db }                   from '@/lib/db'
+import { users, predictions }   from '@/db/schema'
+import { eq, and }              from 'drizzle-orm'
 
 const MAILER_DSN  = process.env.MAILER_DSN  || ''
 const MAILER_FROM = process.env.MAILER_FROM || ''
@@ -598,10 +601,6 @@ export type MatchResultPayload = {
 }
 
 export async function sendResultEmailsForMatch(payload: MatchResultPayload): Promise<void> {
-
-  const { db }         = await import('@/lib/db')
-  const { users, predictions } = await import('@/db/schema')
-  const { eq, and }    = await import('drizzle-orm')
 
   // Busca todos os palpites pontuados do jogo + usuários com emailOptIn
   const rows = await db

@@ -185,8 +185,8 @@ async function processMatch(
     if (ftScore2) {
       sendResultEmailsForMatch({
         matchId:   dbMatch.id,
-        homeTeam:  fdMatch.homeTeam.name,
-        awayTeam:  fdMatch.awayTeam.name,
+        homeTeam:  translateTeamName(fdMatch.homeTeam.name),
+        awayTeam:  translateTeamName(fdMatch.awayTeam.name),
         homeScore: ftScore2.home,
         awayScore: ftScore2.away,
       }).catch(e => console.error('[email] Falha ao enviar e-mails de resultado:', e))
