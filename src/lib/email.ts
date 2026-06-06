@@ -58,20 +58,7 @@ function makeTransport() {
   })
 }
 
-const RESEND_KEY = process.env.RESEND_API_KEY ?? ''
-
 async function sendMail(to: string, subject: string, html: string) {
-  // Prefere Resend API (mais simples, chave já configurada)
-  if (RESEND_KEY) {
-    const res = await fetch('https://api.resend.com/emails', {
-      method:  'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ from: FROM, to, subject, html }),
-    })
-    if (!res.ok) throw new Error(`Resend HTTP ${res.status}: ${await res.text()}`)
-    return
-  }
-  // Fallback nodemailer (SMTP)
   const transport = makeTransport()
   if (!transport) {
     console.log(`\n📧 [DEV] E-mail para ${to}\n   Assunto: ${subject}\n`)
@@ -382,6 +369,32 @@ export async function sendInviteEmail(
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e)
     return { success: false, error: msg }
+  }
+}
+
+// ─── E-mail de resultado direto (para testes) ────────────────────────────────
+
+export async function sendDirectResultEmail(data: {
+  to:        string
+  name:      string
+  homeTeam:  string
+  awayTeam:  string
+  homeScore: number
+  awayScore: number
+  predHome:  number
+  predAway:  number
+  points:    number
+  total:     number
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    await sendMail(
+      data.to,
+      `⚽ ${data.homeTeam} ${data.homeScore}×${data.awayScore} ${data.awayTeam} — Resultado do Bolão`,
+      resultTemplate({ ...data, rankUrl: `${BASE_URL}/dashboard` }),
+    )
+    return { success: true }
+  } catch (e: unknown) {
+    return { success: false, error: e instanceof Error ? e.message : String(e) }
   }
 }
 

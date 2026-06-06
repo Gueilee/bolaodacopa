@@ -6,6 +6,7 @@ import { getNotificationStats,
          getRecentNotifications }  from '@/lib/notifications'
 import { NotificationsAdminPanel } from '@/components/notifications-admin-panel'
 import { NotifHistoryTable }       from '@/components/notif-history-table'
+import { EmailTestPanel }          from '@/components/email-test-panel'
 
 export const revalidate = 0
 export const metadata   = { title: 'Notificações WhatsApp | Bolão Copa 2026' }
@@ -53,6 +54,9 @@ export default async function NotificacoesPage() {
           </div>
         </div>
       </div>
+
+      {/* E-mail de resultado */}
+      <EmailTestPanel />
 
       <NotificationsAdminPanel status={status} stats={stats} />
 

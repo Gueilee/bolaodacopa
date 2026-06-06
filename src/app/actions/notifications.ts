@@ -109,6 +109,29 @@ export async function savePhoneAction(
   return { success: true }
 }
 
+// ─── Admin: e-mail de resultado de teste ─────────────────────────────────────
+
+export async function sendTestResultEmailAction(
+  to: string,
+): Promise<{ success: boolean; error?: string }> {
+  const session = await getSession()
+  if (!session || session.role !== 'admin') return { success: false, error: 'Acesso negado.' }
+
+  const { sendDirectResultEmail } = await import('@/lib/email')
+  return sendDirectResultEmail({
+    to,
+    name:      to.split('@')[0],
+    homeTeam:  'Brasil',
+    awayTeam:  'Argentina',
+    homeScore: 3,
+    awayScore: 1,
+    predHome:  2,
+    predAway:  1,
+    points:    7,
+    total:     142,
+  })
+}
+
 // ─── Usuário: ativar/desativar e-mail ─────────────────────────────────────────
 
 export async function saveEmailOptInAction(
