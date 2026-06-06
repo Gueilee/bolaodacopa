@@ -21,7 +21,7 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { href: '/dashboard/regras',        label: 'Regras',              icon: ClipboardList,   section: 'Bolão' },
+  { href: '/dashboard/regras',        label: 'Regras e Prêmios',    icon: ClipboardList,   section: 'Bolão' },
   { href: '/dashboard/palpites',      label: 'Meus Palpites',       icon: Target },
   { href: '/dashboard/finais',        label: 'Palpite Final',       icon: Star },
   { href: '/dashboard/copa-ao-vivo',  label: 'Copa ao Vivo',        icon: Radio },

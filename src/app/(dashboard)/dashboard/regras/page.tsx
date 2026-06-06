@@ -42,163 +42,201 @@ export default function RegrasPage() {
           SEÇÃO DE PRÊMIOS
       ═══════════════════════════════════════════════════════════════════════ */}
 
-      {/* Hero dos prêmios */}
-      <section style={{ borderRadius: 24, overflow: 'hidden', boxShadow: '0 8px 40px rgba(66,44,118,0.25)' }}>
+      {/* ══ SEÇÃO DE PRÊMIOS ══ */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-        {/* Cabeçalho escuro */}
-        <div style={{
-          background: 'linear-gradient(135deg, #06020f 0%, #150830 50%, #0a1520 100%)',
-          padding: '32px 28px 24px',
-          position: 'relative', overflow: 'hidden',
-        }}>
-          {/* Luzes decorativas */}
-          <div style={{ position:'absolute', top:-40, right:-20, width:220, height:220, borderRadius:'50%', background:'radial-gradient(circle, rgba(255,215,0,0.12) 0%, transparent 70%)', pointerEvents:'none' }} />
-          <div style={{ position:'absolute', bottom:-30, left:40, width:160, height:160, borderRadius:'50%', background:'radial-gradient(circle, rgba(1,225,142,0.1) 0%, transparent 70%)', pointerEvents:'none' }} />
-
-          <div style={{ position:'relative', zIndex:1, textAlign:'center' }}>
-            <div style={{ fontSize:52, marginBottom:10 }}>🏆</div>
-            <h2 style={{ margin:'0 0 6px', fontSize:'1.6rem', fontWeight:900, color:'#faf9f5', letterSpacing:'-0.02em' }}>
+        {/* Header da seção */}
+        <div className="card" style={{ padding: '22px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{
+            width: 52, height: 52, borderRadius: 16, flexShrink: 0,
+            background: 'linear-gradient(135deg, #422c76, #7c3aed)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26,
+            boxShadow: '0 4px 16px rgba(66,44,118,0.3)',
+          }}>🏆</div>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: '#1a1625' }}>
               Prêmios do Bolão Copa 2026
             </h2>
-            <p style={{ margin:0, fontSize:14, color:'rgba(255,255,255,0.45)', lineHeight:1.5 }}>
+            <p style={{ margin: '3px 0 0', fontSize: 13, color: '#8a8490', lineHeight: 1.4 }}>
               Participe, acerte os palpites e concorra a prêmios incríveis!
             </p>
           </div>
         </div>
 
         {/* ── PRÊMIO SEMANAL ── */}
-        <div style={{
-          background: 'linear-gradient(135deg, #1a0d36 0%, #0d1a30 100%)',
-          padding: '24px 28px',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
-            <div style={{
-              padding:'4px 14px', borderRadius:20,
-              background:'rgba(255,193,7,0.15)', border:'1px solid rgba(255,193,7,0.3)',
-            }}>
-              <span style={{ fontSize:12, fontWeight:800, color:'#ffc107', letterSpacing:'0.1em', textTransform:'uppercase' }}>
-                🔁 Prêmio Semanal
+        <div className="card" style={{ overflow: 'hidden' }}>
+          {/* Faixa de título */}
+          <div style={{
+            padding: '12px 20px',
+            background: 'linear-gradient(90deg, rgba(255,193,7,0.08) 0%, transparent 100%)',
+            borderBottom: '1px solid rgba(255,193,7,0.15)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                width: 28, height: 28, borderRadius: 8,
+                background: 'rgba(255,193,7,0.12)', border: '1px solid rgba(255,193,7,0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
+              }}>🔁</div>
+              <span style={{ fontSize: 12, fontWeight: 800, color: '#b45309', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                Prêmio Semanal
               </span>
             </div>
-            <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)' }}>toda sexta-feira · 19/06 a 17/07</span>
+            <span style={{ fontSize: 11, color: '#8a8490', fontWeight: 600 }}>toda sexta-feira · 19/06 a 17/07</span>
           </div>
 
-          <div style={{
-            borderRadius:16, padding:'18px 20px',
-            background:'rgba(255,193,7,0.07)', border:'1px solid rgba(255,193,7,0.2)',
-            display:'flex', alignItems:'center', gap:16,
-          }}>
-            <div style={{ fontSize:48, flexShrink:0 }}>🔊</div>
-            <div>
-              <p style={{ margin:'0 0 4px', fontSize:17, fontWeight:900, color:'#ffc107' }}>
-                Caixa de Som
-              </p>
-              <p style={{ margin:0, fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.5 }}>
-                O <strong style={{ color:'#fff' }}>1º lugar do ranking</strong> toda sexta-feira leva uma caixa de som para casa.
-                São <strong style={{ color:'#ffc107' }}>5 premiações semanais</strong> — uma chance a cada semana!
+          {/* Conteúdo */}
+          <div style={{ padding: '20px 20px 16px', display: 'flex', alignItems: 'center', gap: 18 }}>
+            <div style={{
+              width: 64, height: 64, borderRadius: 16, flexShrink: 0,
+              background: 'linear-gradient(135deg, rgba(255,193,7,0.12), rgba(255,193,7,0.06))',
+              border: '1.5px solid rgba(255,193,7,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
+            }}>🔊</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 900, color: '#1a1625' }}>Caixa de Som</p>
+              <p style={{ margin: 0, fontSize: 13, color: '#6b6672', lineHeight: 1.6 }}>
+                O <strong style={{ color: '#422c76' }}>1º lugar do ranking</strong> toda sexta-feira leva uma caixa de som para casa.
+                São <strong style={{ color: '#b45309' }}>5 premiações semanais</strong> — uma chance a cada semana!
               </p>
             </div>
           </div>
 
-          {/* Datas das sextas */}
-          <div style={{ display:'flex', gap:8, marginTop:12, flexWrap:'wrap' }}>
-            {['Sex, 19/06','Sex, 26/06','Sex, 03/07','Sex, 10/07','Sex, 17/07'].map(d => (
+          {/* Datas */}
+          <div style={{ padding: '0 20px 18px', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {['Sex, 19/06', 'Sex, 26/06', 'Sex, 03/07', 'Sex, 10/07', 'Sex, 17/07'].map(d => (
               <span key={d} style={{
-                fontSize:11, fontWeight:700, padding:'4px 12px', borderRadius:20,
-                background:'rgba(255,193,7,0.1)', color:'#ffc107',
-                border:'1px solid rgba(255,193,7,0.2)',
+                fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 20,
+                background: 'rgba(255,193,7,0.08)', color: '#92400e',
+                border: '1px solid rgba(255,193,7,0.2)',
               }}>{d}</span>
             ))}
           </div>
         </div>
 
         {/* ── PRÊMIO FINAL ── */}
-        <div style={{ background:'linear-gradient(135deg, #0d0a20 0%, #0a1520 100%)', padding:'24px 28px', borderBottom:'1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:18 }}>
-            <div style={{
-              padding:'4px 14px', borderRadius:20,
-              background:'rgba(1,225,142,0.12)', border:'1px solid rgba(1,225,142,0.3)',
-            }}>
-              <span style={{ fontSize:12, fontWeight:800, color:'#01E18E', letterSpacing:'0.1em', textTransform:'uppercase' }}>
-                🏅 Prêmio Final da Copa
+        <div className="card" style={{ overflow: 'hidden' }}>
+          {/* Faixa de título */}
+          <div style={{
+            padding: '12px 20px',
+            background: 'linear-gradient(90deg, rgba(66,44,118,0.06) 0%, transparent 100%)',
+            borderBottom: '1px solid rgba(66,44,118,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{
+                width: 28, height: 28, borderRadius: 8,
+                background: 'rgba(66,44,118,0.1)', border: '1px solid rgba(66,44,118,0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
+              }}>🏅</div>
+              <span style={{ fontSize: 12, fontWeight: 800, color: '#422c76', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                Prêmio Final da Copa
               </span>
             </div>
-            <span style={{ fontSize:12, color:'rgba(255,255,255,0.35)' }}>após o encerramento · julho/2026</span>
+            <span style={{ fontSize: 11, color: '#8a8490', fontWeight: 600 }}>após o encerramento · julho/2026</span>
           </div>
 
           {/* Top 3 cards */}
-          <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12 }}>
+          <div style={{ padding: '20px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
 
             {/* 1º Lugar */}
             <div style={{
-              borderRadius:16, overflow:'hidden',
-              boxShadow:'0 0 0 1px rgba(255,215,0,0.3), 0 8px 32px rgba(255,215,0,0.15)',
-              background:'linear-gradient(160deg, rgba(255,215,0,0.12) 0%, rgba(20,12,40,0.95) 60%)',
-              border:'1px solid rgba(255,215,0,0.25)',
+              borderRadius: 16, overflow: 'hidden',
+              border: '2px solid rgba(255,193,7,0.35)',
+              boxShadow: '0 4px 20px rgba(255,193,7,0.1)',
             }}>
-              <div style={{ padding:'14px 14px 4px', textAlign:'center' }}>
-                <div style={{ fontSize:36, marginBottom:4 }}>🥇</div>
-                <p style={{ margin:'0 0 2px', fontSize:11, fontWeight:800, color:'rgba(255,215,0,0.7)', textTransform:'uppercase', letterSpacing:'0.12em' }}>1° Lugar</p>
+              <div style={{
+                padding: '12px 12px 10px', textAlign: 'center',
+                background: 'linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,193,7,0.04))',
+                borderBottom: '1px solid rgba(255,193,7,0.15)',
+              }}>
+                <div style={{ fontSize: 32, marginBottom: 4 }}>🥇</div>
+                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.12em' }}>1° Lugar</p>
               </div>
-              <div style={{ padding:'0 14px 16px', display:'flex', flexDirection:'column', gap:8 }}>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,215,0,0.08)', border:'1px solid rgba(255,215,0,0.15)', textAlign:'center' }}>
-                  <div style={{ fontSize:24 }}>🔊</div>
-                  <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#ffd700', lineHeight:1.3 }}>Caixa de Som</p>
+              <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{
+                  borderRadius: 10, padding: '10px', textAlign: 'center',
+                  background: 'rgba(255,193,7,0.06)', border: '1px solid rgba(255,193,7,0.15)',
+                }}>
+                  <div style={{ fontSize: 22 }}>🔊</div>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, fontWeight: 700, color: '#92400e' }}>Caixa de Som</p>
                 </div>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', textAlign:'center' }}>
+                <div style={{
+                  borderRadius: 10, padding: '12px', textAlign: 'center',
+                  background: '#fafafa', border: '1px solid #e8e4df',
+                }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/centauro.png" alt="Centauro" style={{ height:28, objectFit:'contain', display:'block', margin:'0 auto 6px' }} />
-                  <p style={{ margin:0, fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>R$1.000</p>
-                  <p style={{ margin:'3px 0 0', fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em' }}>Vale-Compras</p>
+                  <img src="/centauro.png" alt="Centauro" style={{ height: 26, objectFit: 'contain', display: 'block', margin: '0 auto 6px' }} />
+                  <p style={{ margin: 0, fontSize: 22, fontWeight: 900, color: '#1a1625', lineHeight: 1 }}>R$1.000</p>
+                  <p style={{ margin: '3px 0 0', fontSize: 9, fontWeight: 700, color: '#8a8490', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Vale-Compras</p>
                 </div>
               </div>
             </div>
 
             {/* 2º Lugar */}
             <div style={{
-              borderRadius:16, overflow:'hidden',
-              background:'linear-gradient(160deg, rgba(192,192,192,0.1) 0%, rgba(15,10,30,0.95) 60%)',
-              border:'1px solid rgba(192,192,192,0.2)',
+              borderRadius: 16, overflow: 'hidden',
+              border: '1.5px solid rgba(148,163,184,0.4)',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
             }}>
-              <div style={{ padding:'14px 14px 4px', textAlign:'center' }}>
-                <div style={{ fontSize:36, marginBottom:4 }}>🥈</div>
-                <p style={{ margin:'0 0 2px', fontSize:11, fontWeight:800, color:'rgba(192,192,192,0.7)', textTransform:'uppercase', letterSpacing:'0.12em' }}>2° Lugar</p>
+              <div style={{
+                padding: '12px 12px 10px', textAlign: 'center',
+                background: 'linear-gradient(135deg, rgba(148,163,184,0.1), rgba(148,163,184,0.04))',
+                borderBottom: '1px solid rgba(148,163,184,0.15)',
+              }}>
+                <div style={{ fontSize: 32, marginBottom: 4 }}>🥈</div>
+                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.12em' }}>2° Lugar</p>
               </div>
-              <div style={{ padding:'0 14px 16px', display:'flex', flexDirection:'column', gap:8 }}>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(192,192,192,0.06)', border:'1px solid rgba(192,192,192,0.15)', textAlign:'center' }}>
-                  <div style={{ fontSize:24 }}>🔊</div>
-                  <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#c0c0c0', lineHeight:1.3 }}>Caixa de Som</p>
+              <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{
+                  borderRadius: 10, padding: '10px', textAlign: 'center',
+                  background: 'rgba(148,163,184,0.06)', border: '1px solid rgba(148,163,184,0.2)',
+                }}>
+                  <div style={{ fontSize: 22 }}>🔊</div>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, fontWeight: 700, color: '#475569' }}>Caixa de Som</p>
                 </div>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', textAlign:'center' }}>
+                <div style={{
+                  borderRadius: 10, padding: '12px', textAlign: 'center',
+                  background: '#fafafa', border: '1px solid #e8e4df',
+                }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/centauro.png" alt="Centauro" style={{ height:28, objectFit:'contain', display:'block', margin:'0 auto 6px' }} />
-                  <p style={{ margin:0, fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>R$500</p>
-                  <p style={{ margin:'3px 0 0', fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em' }}>Vale-Compras</p>
+                  <img src="/centauro.png" alt="Centauro" style={{ height: 26, objectFit: 'contain', display: 'block', margin: '0 auto 6px' }} />
+                  <p style={{ margin: 0, fontSize: 22, fontWeight: 900, color: '#1a1625', lineHeight: 1 }}>R$500</p>
+                  <p style={{ margin: '3px 0 0', fontSize: 9, fontWeight: 700, color: '#8a8490', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Vale-Compras</p>
                 </div>
               </div>
             </div>
 
             {/* 3º Lugar */}
             <div style={{
-              borderRadius:16, overflow:'hidden',
-              background:'linear-gradient(160deg, rgba(205,127,50,0.1) 0%, rgba(15,10,30,0.95) 60%)',
-              border:'1px solid rgba(205,127,50,0.2)',
+              borderRadius: 16, overflow: 'hidden',
+              border: '1.5px solid rgba(205,127,50,0.3)',
+              boxShadow: '0 2px 12px rgba(205,127,50,0.08)',
             }}>
-              <div style={{ padding:'14px 14px 4px', textAlign:'center' }}>
-                <div style={{ fontSize:36, marginBottom:4 }}>🥉</div>
-                <p style={{ margin:'0 0 2px', fontSize:11, fontWeight:800, color:'rgba(205,127,50,0.7)', textTransform:'uppercase', letterSpacing:'0.12em' }}>3° Lugar</p>
+              <div style={{
+                padding: '12px 12px 10px', textAlign: 'center',
+                background: 'linear-gradient(135deg, rgba(205,127,50,0.1), rgba(205,127,50,0.04))',
+                borderBottom: '1px solid rgba(205,127,50,0.15)',
+              }}>
+                <div style={{ fontSize: 32, marginBottom: 4 }}>🥉</div>
+                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.12em' }}>3° Lugar</p>
               </div>
-              <div style={{ padding:'0 14px 16px', display:'flex', flexDirection:'column', gap:8 }}>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(205,127,50,0.06)', border:'1px solid rgba(205,127,50,0.15)', textAlign:'center' }}>
-                  <div style={{ fontSize:24 }}>🔊</div>
-                  <p style={{ margin:'4px 0 0', fontSize:12, fontWeight:700, color:'#cd7f32', lineHeight:1.3 }}>Caixa de Som</p>
+              <div style={{ padding: '12px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{
+                  borderRadius: 10, padding: '10px', textAlign: 'center',
+                  background: 'rgba(205,127,50,0.06)', border: '1px solid rgba(205,127,50,0.2)',
+                }}>
+                  <div style={{ fontSize: 22 }}>🔊</div>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, fontWeight: 700, color: '#92400e' }}>Caixa de Som</p>
                 </div>
-                <div style={{ borderRadius:10, padding:'10px 12px', background:'rgba(255,255,255,0.06)', border:'1px solid rgba(255,255,255,0.12)', textAlign:'center' }}>
+                <div style={{
+                  borderRadius: 10, padding: '12px', textAlign: 'center',
+                  background: '#fafafa', border: '1px solid #e8e4df',
+                }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/centauro.png" alt="Centauro" style={{ height:28, objectFit:'contain', display:'block', margin:'0 auto 6px' }} />
-                  <p style={{ margin:0, fontSize:22, fontWeight:900, color:'#fff', lineHeight:1 }}>R$500</p>
-                  <p style={{ margin:'3px 0 0', fontSize:10, fontWeight:700, color:'rgba(255,255,255,0.5)', textTransform:'uppercase', letterSpacing:'0.08em' }}>Vale-Compras</p>
+                  <img src="/centauro.png" alt="Centauro" style={{ height: 26, objectFit: 'contain', display: 'block', margin: '0 auto 6px' }} />
+                  <p style={{ margin: 0, fontSize: 22, fontWeight: 900, color: '#1a1625', lineHeight: 1 }}>R$500</p>
+                  <p style={{ margin: '3px 0 0', fontSize: 9, fontWeight: 700, color: '#8a8490', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Vale-Compras</p>
                 </div>
               </div>
             </div>
@@ -206,38 +244,45 @@ export default function RegrasPage() {
         </div>
 
         {/* ── PRÊMIO POR UNIDADE ── */}
-        <div style={{ background:'linear-gradient(135deg, #061a10 0%, #0d0a20 100%)', padding:'24px 28px' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
+        <div className="card" style={{ overflow: 'hidden' }}>
+          {/* Faixa de título */}
+          <div style={{
+            padding: '12px 20px',
+            background: 'linear-gradient(90deg, rgba(1,168,102,0.07) 0%, transparent 100%)',
+            borderBottom: '1px solid rgba(1,168,102,0.12)',
+            display: 'flex', alignItems: 'center', gap: 8,
+          }}>
             <div style={{
-              padding:'4px 14px', borderRadius:20,
-              background:'rgba(1,168,102,0.15)', border:'1px solid rgba(1,168,102,0.3)',
-            }}>
-              <span style={{ fontSize:12, fontWeight:800, color:'#01a866', letterSpacing:'0.1em', textTransform:'uppercase' }}>
-                📍 Prêmio por Unidade
-              </span>
-            </div>
+              width: 28, height: 28, borderRadius: 8,
+              background: 'rgba(1,168,102,0.1)', border: '1px solid rgba(1,168,102,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14,
+            }}>📍</div>
+            <span style={{ fontSize: 12, fontWeight: 800, color: '#065f46', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              Prêmio por Unidade
+            </span>
           </div>
 
-          <div style={{
-            borderRadius:16, padding:'20px 22px',
-            background:'rgba(1,168,102,0.07)', border:'1px solid rgba(1,168,102,0.2)',
-            display:'flex', alignItems:'center', gap:18,
-          }}>
-            <div style={{ fontSize:52, flexShrink:0 }}>🌴</div>
-            <div>
-              <p style={{ margin:'0 0 6px', fontSize:19, fontWeight:900, color:'#01E18E', lineHeight:1.2 }}>
+          <div style={{ padding: '20px', display: 'flex', alignItems: 'flex-start', gap: 18 }}>
+            <div style={{
+              width: 64, height: 64, borderRadius: 16, flexShrink: 0,
+              background: 'linear-gradient(135deg, rgba(1,168,102,0.12), rgba(1,168,102,0.05))',
+              border: '1.5px solid rgba(1,168,102,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32,
+            }}>🌴</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: '0 0 4px', fontSize: 17, fontWeight: 900, color: '#1a1625' }}>
                 5 Dias de Folga
               </p>
-              <p style={{ margin:'0 0 8px', fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.6 }}>
-                A <strong style={{ color:'#fff' }}>unidade com mais pontos</strong> ao final da Copa ganha
-                <strong style={{ color:'#01E18E' }}> 5 folgas para sortear</strong> entre os membros que participaram do bolão.
+              <p style={{ margin: '0 0 12px', fontSize: 13, color: '#6b6672', lineHeight: 1.6 }}>
+                A <strong style={{ color: '#422c76' }}>unidade com mais pontos</strong> ao final da Copa ganha
+                {' '}<strong style={{ color: '#065f46' }}>5 folgas para sortear</strong> entre os membros que participaram do bolão.
               </p>
-              <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
-                {['Garuva','Itapevi','Navegantes CD01','Navegantes CD02','Vila Olímpia'].map(u => (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {['Garuva', 'Itapevi', 'Navegantes CD01', 'Navegantes CD02', 'Vila Olímpia'].map(u => (
                   <span key={u} style={{
-                    fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:20,
-                    background:'rgba(1,168,102,0.12)', color:'#01a866',
-                    border:'1px solid rgba(1,168,102,0.2)',
+                    fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20,
+                    background: 'rgba(1,168,102,0.08)', color: '#065f46',
+                    border: '1px solid rgba(1,168,102,0.18)',
                   }}>{u}</span>
                 ))}
               </div>
