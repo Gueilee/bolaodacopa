@@ -492,7 +492,6 @@ export type MatchResultPayload = {
 }
 
 export async function sendResultEmailsForMatch(payload: MatchResultPayload): Promise<void> {
-  if (!RESEND_KEY) return  // sem chave Resend, silencioso
 
   const { db }         = await import('@/lib/db')
   const { users, predictions } = await import('@/db/schema')
