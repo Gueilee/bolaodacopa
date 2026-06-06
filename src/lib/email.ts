@@ -58,7 +58,20 @@ function makeTransport() {
   })
 }
 
+const RESEND_KEY = process.env.RESEND_API_KEY ?? ''
+
 async function sendMail(to: string, subject: string, html: string) {
+  // Prefere Resend API (mais simples, chave já configurada)
+  if (RESEND_KEY) {
+    const res = await fetch('https://api.resend.com/emails', {
+      method:  'POST',
+      headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ from: FROM, to, subject, html }),
+    })
+    if (!res.ok) throw new Error(`Resend HTTP ${res.status}: ${await res.text()}`)
+    return
+  }
+  // Fallback nodemailer (SMTP)
   const transport = makeTransport()
   if (!transport) {
     console.log(`\n📧 [DEV] E-mail para ${to}\n   Assunto: ${subject}\n`)
@@ -369,5 +382,150 @@ export async function sendInviteEmail(
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e)
     return { success: false, error: msg }
+  }
+}
+
+// ─── Notificação de resultado ─────────────────────────────────────────────────
+
+const POINTS_LABEL: Record<number, string> = {
+  10: '⚡ Placar exato!',
+  7:  '🎯 Vencedor + saldo!',
+  5:  '✓ Vencedor certo!',
+  0:  '✗ Sem pontos',
+}
+
+function resultTemplate(data: {
+  name:      string
+  homeTeam:  string
+  awayTeam:  string
+  homeScore: number
+  awayScore: number
+  predHome:  number
+  predAway:  number
+  points:    number
+  total:     number
+  rankUrl:   string
+}): string {
+  const firstName   = data.name.split(' ')[0]
+  const ptLabel     = POINTS_LABEL[data.points] ?? `${data.points} pts`
+  const ptColor     = data.points === 10 ? '#01a866' : data.points >= 5 ? '#d4a017' : '#8a8490'
+
+  return `<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resultado · Bolão Copa 2026</title></head>
+<body style="margin:0;padding:0;background:#f0ede8;font-family:Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
+<table width="520" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
+
+  <!-- Header -->
+  <tr><td style="background:linear-gradient(135deg,#0d0920,#1a0d36);padding:24px 28px;text-align:center">
+    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.12em">Copa do Mundo 2026</p>
+    <p style="margin:0;font-size:22px;font-weight:900;color:#faf9f5">⚽ Resultado do Jogo</p>
+  </td></tr>
+
+  <!-- Placar -->
+  <tr><td style="padding:28px 28px 20px;text-align:center;border-bottom:1px solid #f0ede8">
+    <p style="margin:0 0 16px;font-size:13px;color:#8a8490">Olá, <strong style="color:#1a1625">${firstName}</strong>!</p>
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="text-align:right;padding-right:12px"><span style="font-size:16px;font-weight:700;color:#1a1625">${data.homeTeam}</span></td>
+      <td style="background:#f5f2ef;border-radius:10px;padding:10px 18px;white-space:nowrap;text-align:center">
+        <span style="font-size:28px;font-weight:900;color:#1a1625">${data.homeScore}</span>
+        <span style="font-size:14px;color:#c4bfba;margin:0 6px">×</span>
+        <span style="font-size:28px;font-weight:900;color:#1a1625">${data.awayScore}</span>
+      </td>
+      <td style="text-align:left;padding-left:12px"><span style="font-size:16px;font-weight:700;color:#1a1625">${data.awayTeam}</span></td>
+    </tr></table>
+  </td></tr>
+
+  <!-- Seu palpite -->
+  <tr><td style="padding:20px 28px;border-bottom:1px solid #f0ede8">
+    <table width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td>
+        <p style="margin:0 0 4px;font-size:10px;font-weight:700;color:#8a8490;text-transform:uppercase;letter-spacing:0.1em">Seu palpite</p>
+        <p style="margin:0;font-size:18px;font-weight:700;color:#422c76">${data.predHome} × ${data.predAway}</p>
+      </td>
+      <td style="text-align:right">
+        <p style="margin:0 0 4px;font-size:10px;font-weight:700;color:#8a8490;text-transform:uppercase;letter-spacing:0.1em">Pontos</p>
+        <p style="margin:0;font-size:22px;font-weight:900;color:${ptColor}">${data.points} pts</p>
+        <p style="margin:2px 0 0;font-size:11px;color:${ptColor}">${ptLabel}</p>
+      </td>
+    </tr></table>
+  </td></tr>
+
+  <!-- Total -->
+  <tr><td style="padding:16px 28px 24px;text-align:center">
+    <p style="margin:0 0 4px;font-size:11px;color:#8a8490">Sua pontuação total</p>
+    <p style="margin:0;font-size:28px;font-weight:900;color:#1a1625">${data.total} <span style="font-size:14px;font-weight:600;color:#8a8490">pts</span></p>
+    <a href="${data.rankUrl}" style="display:inline-block;margin-top:14px;background:#422c76;color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:10px 24px;border-radius:10px">
+      Ver minha posição no ranking →
+    </a>
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td style="padding:16px 28px;background:#faf9f5;text-align:center;border-top:1px solid #f0ede8">
+    <p style="margin:0;font-size:11px;color:#aaa8b0">Bolão Copa 2026 · Vendemmia · <a href="${data.rankUrl}/perfil" style="color:#aaa8b0">Gerenciar notificações</a></p>
+  </td></tr>
+
+</table></td></tr></table>
+</body></html>`
+}
+
+export type MatchResultPayload = {
+  matchId:   string
+  homeTeam:  string
+  awayTeam:  string
+  homeScore: number
+  awayScore: number
+}
+
+export async function sendResultEmailsForMatch(payload: MatchResultPayload): Promise<void> {
+  if (!RESEND_KEY) return  // sem chave Resend, silencioso
+
+  const { db }         = await import('@/lib/db')
+  const { users, predictions } = await import('@/db/schema')
+  const { eq, and }    = await import('drizzle-orm')
+
+  // Busca todos os palpites pontuados do jogo + usuários com emailOptIn
+  const rows = await db
+    .select({
+      userName:   users.name,
+      userEmail:  users.email,
+      totalPoints:users.totalPoints,
+      predHome:   predictions.homeScore,
+      predAway:   predictions.awayScore,
+      points:     predictions.points,
+    })
+    .from(predictions)
+    .innerJoin(users, eq(predictions.userId, users.id))
+    .where(and(
+      eq(predictions.matchId, payload.matchId),
+      eq(predictions.isScored, true),
+      eq(users.emailOptIn, true),
+      eq(users.isActive, true),
+    ))
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://bolaodacopa.vendemmia.com.br'
+
+  for (const row of rows) {
+    try {
+      await sendMail(
+        row.userEmail,
+        `⚽ ${payload.homeTeam} ${payload.homeScore}×${payload.awayScore} ${payload.awayTeam} — Resultado do Bolão`,
+        resultTemplate({
+          name:      row.userName,
+          homeTeam:  payload.homeTeam,
+          awayTeam:  payload.awayTeam,
+          homeScore: payload.homeScore,
+          awayScore: payload.awayScore,
+          predHome:  row.predHome,
+          predAway:  row.predAway,
+          points:    row.points,
+          total:     row.totalPoints,
+          rankUrl:   `${baseUrl}/dashboard`,
+        }),
+      )
+    } catch (e) {
+      console.error(`[email] Falha ao enviar resultado para ${row.userEmail}:`, e)
+    }
   }
 }

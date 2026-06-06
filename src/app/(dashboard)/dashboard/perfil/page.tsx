@@ -3,8 +3,8 @@ import { db }                from '@/lib/db'
 import { users }             from '@/db/schema'
 import { eq }                from 'drizzle-orm'
 import { redirect }          from 'next/navigation'
-import { WhatsAppOptInForm } from '@/components/whatsapp-optin-form'
-import { AvatarUpload }      from '@/components/avatar-upload'
+import { NotificationsPrefs } from '@/components/notifications-prefs'
+import { AvatarUpload }       from '@/components/avatar-upload'
 
 export const revalidate = 0
 export const metadata   = { title: 'Meu Perfil | Bolão Copa 2026' }
@@ -22,6 +22,7 @@ export default async function PerfilPage() {
       department:         true,
       phone:              true,
       whatsappOptIn:      true,
+      emailOptIn:         true,
       totalPoints:        true,
       isPredictionLocked: true,
       avatarUrl:          true,
@@ -67,10 +68,12 @@ export default async function PerfilPage() {
         </div>
       </div>
 
-      {/* ── WhatsApp Opt-in ── */}
-      <WhatsAppOptInForm
+      {/* ── Notificações ── */}
+      <NotificationsPrefs
         currentPhone={displayPhone}
-        currentOptIn={user.whatsappOptIn}
+        currentWhatsApp={user.whatsappOptIn}
+        currentEmail={user.emailOptIn}
+        userEmail={user.email}
       />
     </div>
   )

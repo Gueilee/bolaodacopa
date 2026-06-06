@@ -28,7 +28,8 @@ import {
   extractFulltimeScore,
   type MatchResultCode,
 } from '@/lib/football-data-org'
-import { scoreMatchInternal } from '@/lib/scoring-engine'
+import { scoreMatchInternal }         from '@/lib/scoring-engine'
+import { sendResultEmailsForMatch }    from '@/lib/email'
 import type { Match } from '@/db/schema'
 
 // ─── Tipos públicos ───────────────────────────────────────────────────────────
@@ -178,6 +179,18 @@ async function processMatch(
     )
     scored  = result.scored
     updated = true
+
+    // Envia e-mail de resultado para usuários com emailOptIn (fire-and-forget)
+    const ftScore2 = extractFulltimeScore(fdMatch)
+    if (ftScore2) {
+      sendResultEmailsForMatch({
+        matchId:   dbMatch.id,
+        homeTeam:  fdMatch.homeTeam.name,
+        awayTeam:  fdMatch.awayTeam.name,
+        homeScore: ftScore2.home,
+        awayScore: ftScore2.away,
+      }).catch(e => console.error('[email] Falha ao enviar e-mails de resultado:', e))
+    }
 
     // Grava eventos no registro já atualizado pelo scoring
     if (goalsJson || bookingsJson || subsJson) {

@@ -108,3 +108,20 @@ export async function savePhoneAction(
   revalidatePath('/dashboard/perfil')
   return { success: true }
 }
+
+// ─── Usuário: ativar/desativar e-mail ─────────────────────────────────────────
+
+export async function saveEmailOptInAction(
+  optIn: boolean,
+): Promise<{ success: boolean; error?: string }> {
+  const session = await getSession()
+  if (!session) return { success: false, error: 'Não autenticado.' }
+
+  await db
+    .update(users)
+    .set({ emailOptIn: optIn, updatedAt: new Date() })
+    .where(eq(users.id, session.userId))
+
+  revalidatePath('/dashboard/perfil')
+  return { success: true }
+}

@@ -22,6 +22,7 @@ export const users = sqliteTable(
     // WhatsApp: número no formato 5511999999999 (sem + ou espaços)
     phone:             text('phone'),
     whatsappOptIn:     integer('whatsapp_opt_in', { mode: 'boolean' }).notNull().default(false),
+    emailOptIn:        integer('email_opt_in',    { mode: 'boolean' }).notNull().default(false),
     manager:       text('manager'),
     firstAccessAt: integer('first_access_at', { mode: 'timestamp' }),
     isActive: integer('is_active', { mode: 'boolean' }).notNull().default(true),
