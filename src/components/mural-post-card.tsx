@@ -244,12 +244,14 @@ export function MuralPostCard({ post, currentUserId, isAdmin }: Props) {
               onClick={toggleLikes}
               style={{
                 fontSize: 12, background: 'none', border: 'none', cursor: 'pointer',
-                padding: 0, color: showLikes ? '#ff2f69' : '#aaa8b0',
-                fontWeight: showLikes ? 700 : 400,
+                padding: 0, color: showLikes ? '#ff2f69' : '#7c6aaa',
+                fontWeight: 600,
                 display: 'inline-flex', alignItems: 'center', gap: 4,
+                textDecoration: showLikes ? 'none' : 'underline',
+                textUnderlineOffset: 2,
               }}
             >
-              <Heart size={12} strokeWidth={2} fill={showLikes ? '#ff2f69' : 'none'} color={showLikes ? '#ff2f69' : '#aaa8b0'} />
+              <Heart size={12} strokeWidth={2} fill={showLikes ? '#ff2f69' : 'none'} color={showLikes ? '#ff2f69' : '#7c6aaa'} />
               {likesCount} curtida{likesCount !== 1 ? 's' : ''}
             </button>
           ) : <span />}
