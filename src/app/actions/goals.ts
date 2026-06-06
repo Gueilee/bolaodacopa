@@ -64,27 +64,51 @@ export async function removeGoal(goalId: string): Promise<{ success: boolean }> 
   }
 }
 
-// ─── Top artilheiros (gols não-contra) ────────────────────────────────────────
+// ─── Top artilheiros — lê goalsJson das partidas (football-data.org) ──────────
 
 export type TopScorer = {
   playerName: string
   country:    string
   goals:      number
+  penalties:  number
 }
 
 export async function getTopScorers(): Promise<TopScorer[]> {
-  const rows = await db
-    .select({
-      playerName: matchGoals.playerName,
-      country:    matchGoals.country,
-      goals:      sql<number>`cast(count(*) as integer)`,
-    })
-    .from(matchGoals)
-    .where(eq(matchGoals.isOwnGoal, false))
-    .groupBy(matchGoals.playerName, matchGoals.country)
-    .orderBy(desc(sql`count(*)`), matchGoals.playerName)
+  // Busca todas as partidas que têm dados de gols da API
+  const allMatches = await db.query.matches.findMany({
+    columns: { goalsJson: true, homeTeam: true, awayTeam: true },
+  })
 
-  return rows.map(r => ({ ...r, goals: Number(r.goals) }))
+  const map = new Map<string, TopScorer>()
+
+  for (const m of allMatches) {
+    if (!m.goalsJson) continue
+    let goals: Array<{
+      type:   string
+      scorer: string
+      team:   string
+    }>
+    try { goals = JSON.parse(m.goalsJson) } catch { continue }
+
+    for (const g of goals) {
+      if (g.type === 'OWN_GOAL') continue                    // gol contra não conta
+      if (!g.scorer || g.scorer === 'N/A') continue
+
+      // País = time que marcou (traduzir se necessário)
+      const country = g.team ?? ''
+      const key     = `${g.scorer}||${country}`
+
+      if (!map.has(key)) {
+        map.set(key, { playerName: g.scorer, country, goals: 0, penalties: 0 })
+      }
+      const entry = map.get(key)!
+      entry.goals++
+      if (g.type === 'PENALTY') entry.penalties++
+    }
+  }
+
+  return [...map.values()]
+    .sort((a, b) => b.goals - a.goals || a.playerName.localeCompare(b.playerName))
 }
 
 // ─── Líder atual (para bonus scoring) ─────────────────────────────────────────

@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
-import { users, matches, predictions, socialPosts, matchGoals } from '@/db/schema'
+import { users, matches, predictions, socialPosts } from '@/db/schema'
 import { desc, asc, eq, and, count, sql } from 'drizzle-orm'
+import { parseGoals } from '@/lib/match-events'
 import { getRanking, getManagerRanking } from '@/lib/queries'
 import { getPlayerPhotos } from '@/lib/player-photos'
 
@@ -94,7 +95,7 @@ const PRE_COPA_SCORERS: TvScorer[] = [
 ]
 
 export async function getTvData(): Promise<TvData> {
-  const [rankingRaw, allMatches, managersRaw, postsRaw, goalsRaw] = await Promise.all([
+  const [rankingRaw, allMatches, managersRaw, postsRaw] = await Promise.all([
     getRanking(),
     db.query.matches.findMany({ orderBy: [asc(matches.matchDate)] }),
     getManagerRanking(),
@@ -103,16 +104,6 @@ export async function getTvData(): Promise<TvData> {
       with: { user: { columns: { name: true, avatarUrl: true } } },
       limit: 12,
     }),
-    db.select({
-      playerName: matchGoals.playerName,
-      country:    matchGoals.country,
-      goals:      sql<number>`cast(count(*) as integer)`,
-    })
-    .from(matchGoals)
-    .where(eq(matchGoals.isOwnGoal, false))
-    .groupBy(matchGoals.playerName, matchGoals.country)
-    .orderBy(desc(sql`count(*)`))
-    .limit(10),
   ])
 
   const now   = new Date()
@@ -193,12 +184,19 @@ export async function getTvData(): Promise<TvData> {
   // Groups standings
   const groups = computeTvGroups(allMatches)
 
-  // Top scorers: dados reais + complemento pré-Copa até 10
-  const dbScorers: TvScorer[] = goalsRaw.map(r => ({
-    playerName: r.playerName,
-    country:    r.country,
-    goals:      Number(r.goals),
-  }))
+  // Top scorers: agrega goalsJson de todas as partidas (football-data.org)
+  const scorerMap = new Map<string, { playerName: string; country: string; goals: number }>()
+  for (const m of allMatches) {
+    const goals = parseGoals(m.goalsJson)
+    for (const g of goals) {
+      if (g.type === 'OWN_GOAL' || !g.scorer || g.scorer === 'N/A') continue
+      const key = `${g.scorer}||${g.team}`
+      if (!scorerMap.has(key)) scorerMap.set(key, { playerName: g.scorer, country: g.team, goals: 0 })
+      scorerMap.get(key)!.goals++
+    }
+  }
+  const dbScorers: TvScorer[] = [...scorerMap.values()]
+    .sort((a, b) => b.goals - a.goals)
   const dbNames    = new Set(dbScorers.map(s => s.playerName.toLowerCase()))
   const supplement = PRE_COPA_SCORERS.filter(p => !dbNames.has(p.playerName.toLowerCase()))
   const fullList   = [...dbScorers, ...supplement].slice(0, 8)
