@@ -419,68 +419,174 @@ function resultTemplate(data: {
   total:     number
   rankUrl:   string
 }): string {
-  const firstName   = data.name.split(' ')[0]
-  const ptLabel     = POINTS_LABEL[data.points] ?? `${data.points} pts`
-  const ptColor     = data.points === 10 ? '#01a866' : data.points >= 5 ? '#d4a017' : '#8a8490'
+  const firstName = data.name.split(' ')[0]
+  const ptLabel   = POINTS_LABEL[data.points] ?? `${data.points} pts`
+  const ptColor   = data.points === 10 ? '#01a866' : data.points >= 5 ? '#d4a017' : '#9ca3af'
+  const ptBg      = data.points === 10 ? '#f0fdf4' : data.points >= 5 ? '#fffbeb' : '#f9fafb'
+  const ptBorder  = data.points === 10 ? '#bbf7d0' : data.points >= 5 ? '#fde68a' : '#e5e7eb'
+
+  const homeWon = data.homeScore > data.awayScore
+  const awayWon = data.awayScore > data.homeScore
 
   return `<!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Resultado · Bolão Copa 2026</title></head>
-<body style="margin:0;padding:0;background:#f0ede8;font-family:Arial,sans-serif">
-<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:32px 16px">
-<table width="520" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado · Bolão Copa 2026</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f0ede8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0ede8;padding:32px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-  <!-- Header -->
-  <tr><td style="background:linear-gradient(135deg,#0d0920,#1a0d36);padding:24px 28px;text-align:center">
-    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.12em">Copa do Mundo 2026</p>
-    <p style="margin:0;font-size:22px;font-weight:900;color:#faf9f5">⚽ Resultado do Jogo</p>
-  </td></tr>
+        <!-- HEADER -->
+        <tr>
+          <td bgcolor="#2a1a4e" style="background-color:#2a1a4e;border-radius:20px 20px 0 0;padding:28px 40px;text-align:center;">
+            <p style="margin:0 0 4px;font-size:11px;font-weight:700;color:#01E18E;letter-spacing:0.18em;text-transform:uppercase;">
+              Vendemmia Comércio Internacional
+            </p>
+            <div style="font-size:30px;margin:10px 0 6px;">⚽</div>
+            <h1 style="margin:0;font-size:24px;font-weight:900;color:#ffffff;line-height:1.2;letter-spacing:-0.01em;">
+              Resultado do Jogo
+            </h1>
+            <p style="margin:8px 0 0;font-size:13px;color:rgba(255,255,255,0.5);">
+              Copa do Mundo 2026 · Bolão Corporativo Vendemmia
+            </p>
+          </td>
+        </tr>
 
-  <!-- Placar -->
-  <tr><td style="padding:28px 28px 20px;text-align:center;border-bottom:1px solid #f0ede8">
-    <p style="margin:0 0 16px;font-size:13px;color:#8a8490">Olá, <strong style="color:#1a1625">${firstName}</strong>!</p>
-    <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="text-align:right;padding-right:12px"><span style="font-size:16px;font-weight:700;color:#1a1625">${data.homeTeam}</span></td>
-      <td style="background:#f5f2ef;border-radius:10px;padding:10px 18px;white-space:nowrap;text-align:center">
-        <span style="font-size:28px;font-weight:900;color:#1a1625">${data.homeScore}</span>
-        <span style="font-size:14px;color:#c4bfba;margin:0 6px">×</span>
-        <span style="font-size:28px;font-weight:900;color:#1a1625">${data.awayScore}</span>
-      </td>
-      <td style="text-align:left;padding-left:12px"><span style="font-size:16px;font-weight:700;color:#1a1625">${data.awayTeam}</span></td>
-    </tr></table>
-  </td></tr>
+        <!-- BARRA NEON -->
+        <tr>
+          <td style="padding:0;line-height:0;font-size:0;">
+            <div style="height:3px;background-color:#01E18E;"></div>
+          </td>
+        </tr>
 
-  <!-- Seu palpite -->
-  <tr><td style="padding:20px 28px;border-bottom:1px solid #f0ede8">
-    <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td>
-        <p style="margin:0 0 4px;font-size:10px;font-weight:700;color:#8a8490;text-transform:uppercase;letter-spacing:0.1em">Seu palpite</p>
-        <p style="margin:0;font-size:18px;font-weight:700;color:#422c76">${data.predHome} × ${data.predAway}</p>
-      </td>
-      <td style="text-align:right">
-        <p style="margin:0 0 4px;font-size:10px;font-weight:700;color:#8a8490;text-transform:uppercase;letter-spacing:0.1em">Pontos</p>
-        <p style="margin:0;font-size:22px;font-weight:900;color:${ptColor}">${data.points} pts</p>
-        <p style="margin:2px 0 0;font-size:11px;color:${ptColor}">${ptLabel}</p>
-      </td>
-    </tr></table>
-  </td></tr>
+        <!-- SAUDAÇÃO -->
+        <tr>
+          <td bgcolor="#ffffff" style="background-color:#ffffff;padding:28px 40px 0;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;">
+            <p style="margin:0;font-size:16px;color:#1a1625;">
+              Olá, <strong>${firstName}</strong>! Veja como você se saiu nesse jogo:
+            </p>
+          </td>
+        </tr>
 
-  <!-- Total -->
-  <tr><td style="padding:16px 28px 24px;text-align:center">
-    <p style="margin:0 0 4px;font-size:11px;color:#8a8490">Sua pontuação total</p>
-    <p style="margin:0;font-size:28px;font-weight:900;color:#1a1625">${data.total} <span style="font-size:14px;font-weight:600;color:#8a8490">pts</span></p>
-    <a href="${data.rankUrl}" style="display:inline-block;margin-top:14px;background:#422c76;color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:10px 24px;border-radius:10px">
-      Ver minha posição no ranking →
-    </a>
-  </td></tr>
+        <!-- PLACAR -->
+        <tr>
+          <td bgcolor="#ffffff" style="background-color:#ffffff;padding:24px 40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <!-- Time da casa -->
+                <td style="text-align:center;padding:0 8px;">
+                  <p style="margin:0 0 6px;font-size:15px;font-weight:${homeWon ? '900' : '600'};color:${homeWon ? '#1a1625' : '#6b7280'};">
+                    ${data.homeTeam}
+                  </p>
+                </td>
 
-  <!-- Footer -->
-  <tr><td style="padding:16px 28px;background:#faf9f5;text-align:center;border-top:1px solid #f0ede8">
-    <p style="margin:0;font-size:11px;color:#aaa8b0">Bolão Copa 2026 · Vendemmia · <a href="${data.rankUrl}/perfil" style="color:#aaa8b0">Gerenciar notificações</a></p>
-  </td></tr>
+                <!-- Placar central -->
+                <td style="text-align:center;padding:0 12px;" width="120">
+                  <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                    <tr>
+                      <td bgcolor="#f5f2ef" style="background-color:#f5f2ef;border-radius:12px;padding:14px 20px;text-align:center;white-space:nowrap;">
+                        <span style="font-size:36px;font-weight:900;color:${homeWon ? '#422c76' : '#1a1625'};">${data.homeScore}</span>
+                        <span style="font-size:18px;color:#c4bfba;margin:0 8px;">×</span>
+                        <span style="font-size:36px;font-weight:900;color:${awayWon ? '#422c76' : '#1a1625'};">${data.awayScore}</span>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="margin:8px 0 0;font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;">Resultado final</p>
+                </td>
 
-</table></td></tr></table>
-</body></html>`
+                <!-- Time visitante -->
+                <td style="text-align:center;padding:0 8px;">
+                  <p style="margin:0 0 6px;font-size:15px;font-weight:${awayWon ? '900' : '600'};color:${awayWon ? '#1a1625' : '#6b7280'};">
+                    ${data.awayTeam}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- DIVISOR -->
+        <tr>
+          <td bgcolor="#ffffff" style="background-color:#ffffff;padding:0 40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;">
+            <div style="height:1px;background-color:#f0ede8;"></div>
+          </td>
+        </tr>
+
+        <!-- PALPITE + PONTOS -->
+        <tr>
+          <td bgcolor="#ffffff" style="background-color:#ffffff;padding:24px 40px;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <!-- Seu palpite -->
+                <td style="padding-right:12px;">
+                  <p style="margin:0 0 6px;font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.12em;">Seu palpite</p>
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td bgcolor="#f5f0ff" style="background-color:#f5f0ff;border:1px solid #ddd6fe;border-radius:10px;padding:10px 18px;text-align:center;white-space:nowrap;">
+                        <span style="font-size:22px;font-weight:900;color:#422c76;">${data.predHome}</span>
+                        <span style="font-size:14px;color:#a78bfa;margin:0 6px;">×</span>
+                        <span style="font-size:22px;font-weight:900;color:#422c76;">${data.predAway}</span>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+
+                <!-- Pontos -->
+                <td style="text-align:right;">
+                  <p style="margin:0 0 6px;font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.12em;">Pontos conquistados</p>
+                  <table cellpadding="0" cellspacing="0" style="margin-left:auto;">
+                    <tr>
+                      <td bgcolor="${ptBg}" style="background-color:${ptBg};border:1px solid ${ptBorder};border-radius:10px;padding:10px 20px;text-align:center;">
+                        <p style="margin:0;font-size:28px;font-weight:900;color:${ptColor};line-height:1;">${data.points} pts</p>
+                        <p style="margin:4px 0 0;font-size:12px;font-weight:700;color:${ptColor};">${ptLabel}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- TOTAL -->
+        <tr>
+          <td bgcolor="#faf9f7" style="background-color:#faf9f7;padding:24px 40px;text-align:center;border-left:1px solid #e8e4df;border-right:1px solid #e8e4df;border-top:1px solid #f0ede8;">
+            <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.1em;font-weight:700;">Sua pontuação total no bolão</p>
+            <p style="margin:0 0 20px;font-size:40px;font-weight:900;color:#1a1625;letter-spacing:-0.02em;line-height:1.1;">
+              ${data.total} <span style="font-size:18px;font-weight:600;color:#9ca3af;">pts</span>
+            </p>
+            <!-- CTA -->
+            <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
+              <tr>
+                <td bgcolor="#422c76" style="background-color:#422c76;border-radius:12px;">
+                  <a href="${data.rankUrl}" style="display:block;padding:14px 36px;font-size:14px;font-weight:800;color:#ffffff;text-decoration:none;letter-spacing:0.02em;">
+                    Ver minha posição no ranking →
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+          <td bgcolor="#f5f2ef" style="background-color:#f5f2ef;padding:16px 40px;text-align:center;border-radius:0 0 20px 20px;border:1px solid #e8e4df;border-top:none;">
+            <p style="margin:0;font-size:11px;color:#aaa8b0;">
+              Bolão Copa 2026 · Vendemmia &nbsp;·&nbsp;
+              <a href="${data.rankUrl.replace('/dashboard', '/dashboard/perfil')}" style="color:#aaa8b0;text-decoration:underline;">Gerenciar notificações</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`
 }
 
 export type MatchResultPayload = {
