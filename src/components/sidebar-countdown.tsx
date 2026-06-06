@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Zap } from 'lucide-react'
 
 const TARGET = new Date('2026-06-11T20:00:00Z').getTime()
 
@@ -15,6 +14,32 @@ function calc() {
   }
 }
 
+function Block({ value, label }: { value: number; label: string }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+      <div style={{
+        background: 'rgba(1,225,142,0.12)',
+        border: '1.5px solid rgba(1,225,142,0.4)',
+        borderRadius: 8,
+        width: 42, height: 42,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontWeight: 900, fontSize: 17, color: '#01E18E',
+        fontVariantNumeric: 'tabular-nums',
+        boxShadow: '0 0 12px rgba(1,225,142,0.15), inset 0 1px 0 rgba(255,255,255,0.06)',
+        fontFamily: 'var(--font-barlow), sans-serif',
+      }}>
+        {String(value).padStart(2, '0')}
+      </div>
+      <span style={{
+        fontSize: 7, fontWeight: 700, letterSpacing: '0.16em',
+        color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase',
+      }}>
+        {label}
+      </span>
+    </div>
+  )
+}
+
 export function SidebarCountdown() {
   const [t, setT] = useState(calc)
 
@@ -23,42 +48,27 @@ export function SidebarCountdown() {
     return () => clearInterval(id)
   }, [])
 
-  const pad = (n: number) => String(n).padStart(2, '0')
-
   return (
     <div style={{
       margin: '10px 12px',
-      padding: '11px 14px',
-      borderRadius: 12,
-      background: 'rgba(1,225,142,0.07)',
-      border: '1px solid rgba(1,225,142,0.18)',
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10,
+      padding: '12px 14px',
+      borderRadius: 14,
+      background: 'rgba(1,225,142,0.05)',
+      border: '1px solid rgba(1,225,142,0.15)',
     }}>
-      <div style={{
-        width: 30, height: 30, borderRadius: 8, flexShrink: 0,
-        background: 'rgba(1,225,142,0.15)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      <p style={{
+        fontSize: 8, fontWeight: 700, letterSpacing: '0.16em',
+        color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase',
+        margin: '0 0 10px', textAlign: 'center',
+        fontFamily: 'var(--font-barlow), sans-serif',
       }}>
-        <Zap size={14} color="#01E18E" strokeWidth={2.5} />
-      </div>
-      <div style={{ minWidth: 0 }}>
-        <p style={{
-          fontSize: 9, fontWeight: 700, letterSpacing: '0.14em',
-          color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', margin: 0,
-          fontFamily: 'var(--font-barlow), sans-serif',
-        }}>
-          Copa 2026
-        </p>
-        <p style={{
-          fontSize: 13, fontWeight: 400, color: '#01E18E', margin: 0,
-          fontFamily: 'var(--font-anton), sans-serif',
-          letterSpacing: '0.02em',
-          fontVariantNumeric: 'tabular-nums',
-        }}>
-          {t.days}d {pad(t.hours)}h {pad(t.minutes)}m {pad(t.seconds)}s
-        </p>
+        ⚡ Copa 2026
+      </p>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 6 }}>
+        <Block value={t.days}    label="dias" />
+        <Block value={t.hours}   label="horas" />
+        <Block value={t.minutes} label="min" />
+        <Block value={t.seconds} label="seg" />
       </div>
     </div>
   )
