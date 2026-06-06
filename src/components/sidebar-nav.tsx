@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import {
   ClipboardList, Target, Star, Radio, MapPin, Building2,
   Trophy, MessageCircle, User, LayoutDashboard, Monitor,
-  Settings, Users, Mail, Search, Download, Award, ExternalLink, History,
+  Settings, Users, Mail, Search, Download, Award, ExternalLink, History, Bell,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -39,6 +39,7 @@ const navItems: NavItem[] = [
   { href: '/admin/auditoria',         label: 'Auditoria',           icon: Search,          roles: ['rh', 'admin'] },
   { href: '/admin/exportar',          label: 'Exportar',            icon: Download,        roles: ['rh', 'admin'] },
   { href: '/admin/artilheiros',       label: 'Artilheiros',         icon: Award,           roles: ['admin'] },
+  { href: '/admin/notificacoes',     label: 'Notificações',        icon: Bell,            roles: ['admin'] },
 ]
 
 type Props = { role: Role }
